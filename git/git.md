@@ -1,4 +1,8 @@
 # Git
+
+# Git 명령어
+
+## branch  
 ```
 git checkout -t origin/<branch>
 ```
@@ -11,7 +15,29 @@ git checkout -b <branch>
 ```
 git checkout -t -b <branch> origin/<branch>
 ```
-- 로컬에 브랜치를 생성하면서 원격의 브랜치와 연결
+- 로컬에 브랜치를 생성하면서 원격의 브랜치와 연결  
+  
+## commit
+이미 Remote에 Push된 Commit의 Author, Committer, Email을 변경하는 명령어
+```
+OLD_NAME=$1
+NEW_NAME=$2
+NEW_EMAIL=$3
+
+git filter-branch -f --commit-filter "
+    if [ \"\$GIT_COMMITTER_NAME\" = \"$OLD_NAME\" ];
+       then
+	   	   GIT_COMMITTER_NAME=\"$NEW_NAME\";
+	   	   GIT_AUTHOR_NAME=\"$NEW_NAME\";
+           GIT_AUTHOR_EMAIL=\"$NEW_EMAIL\";
+		   git commit-tree \"\$@\";							        
+	   else							
+	   	   git commit-tree \"\$@\";					
+	fi" HEAD
+```
+```
+조심해야할 것은 GIT_AUTHOR_EMAIL 은 명령어 실행시 사용되는 환경변수가 아닌 filter-branch 프로세스 안에서 커밋 하나 하나를 비교할때 사용되는 환경변수이므로 "$GIT_AUTHOR_EMAIL" 란 스트링이 현재 환경변수로 치환되지 않고 그대로 들어가야해서 \"\$GIT_AUTHOR_EMAIL\" 로 사용했고, NEW_EMAIL 등 은 바로 윗줄에서 셋팅해준 환경변수로 치환되어야 하는 값이기 때문에 \"$NEW_EMAIL\" 로 사용했으며, --commit-filter 다음에 single quote' 대신 double quote" 를 사용했다.
+```
 
 # Git Branch 전략
 - Github Flow
