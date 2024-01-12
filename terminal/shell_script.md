@@ -1,13 +1,13 @@
-# Linux/MacOS 호환 Shell Script 정리
+# Linux/MacOS Shell Script
 
-# 환경변수
-> 셸에서 사용하는 환경변수를 선언하는 방법
+# Environment Variable / 환경변수
+> 셸에서 사용하는 환경변수를 선언할 수 있다.
 > - 변수의이름과 '=' 그리고 값 사이에 공백이 존재하면 안 된다.
 ```
 <variable_name>=<value>
 ```
 
-# 문자열
+# String / 문자열
 > echo : 문자열 출력 명령어
 > - -n : 마지막에 붙는 개행 문자(newline) 문자를 출력하지 않음
 > - -e : 문자열에서 백슬래시(\)와 이스케이프 문자를 인용 부호(")로 묶어 인식
@@ -27,11 +27,122 @@ echo ${variable:r}
 echo ${variable:e}
 ```
 
-# SSH
-> Secure Shell
-> - -i : ssh 공개키 인증을 위한 파일 선택
+# Conditional / 조건문
+> 주어진 조건에 따라 분기를 다르게 하는 제어문
+
+> 기본 구조
 ```
-ssh -i "~/coding/aws/.aws/NewKeyPair.pem" ikaman@ec2-3-34-107-69.ap-northeast-2.compute.amazonaws.com
+if [ 조건 ]; then
+    # 조건이 참일 때 실행되는 명령들
+elif [ 다른조건 ]; then
+    # 다른조건이 참일 때 실행되는 명령들
+else
+    # 모든 조건이 거짓일 때 실행되는 명령들
+fi
+```
+> 예시
+```
+if [ $score -ge 90 ]; then
+    echo "A"
+elif [ $score -ge 80 ]; then
+    echo "B"
+elif [ $score -ge 70 ]; then
+    echo "C"
+else
+    echo "F"
+fi
+```
+
+# Loop / 반복문
+
+## for Loop
+> 지정된 범위 또는 리스트의 각 항목에 대해 반복
+
+> 기본 구조
+```
+for <var> in <range>; do
+    # 반복할 명령어들
+done
+```
+> 숫자 1부터 5까지 반복
+```
+for i in {1..5}; do
+    echo "숫자: $i"
+done
+```
+> 파일 목록을 순회하여 출력
+```
+for file in *.txt; do
+    echo "파일: $file"
+done
+```
+
+> 여러 폴더안에 존재하는 같은 이름의 파일 이름을 변경하는 예제
+```
+for dir in ~/Downloads/temp/*; do
+    if [ -d "$dir" ]; then
+        max_num=$(ls "$dir"/*.png | grep -Eo '[0-9]+' | sort -nr | head -n1)
+        new_num=$((max_num + 1))
+        mv "$dir/cover_or_extra_3.png" "$dir/${new_num}.png"
+    fi
+done
+```
+> 폴더 안의 숫자로 된 파일 이름을 일괄적으로 변경
+```
+dir="/Users/main/Downloads/temp/葬送のフリーレン10"
+
+for i in {3..210}; do
+    old_file="$i.png"
+    new_number=$((i - 2))
+    new_file="${new_number}.png"
+    
+    if [ -f "${dir}/$old_file" ]; then
+        mv "${dir}/$old_file" "${dir}/$new_file"
+    fi
+done
+```
+> 파일 이름에 포함된 글자를 다른 글자로 대체하는 반복문
+> - ${variable//pattern/replacement}
+>   > - variable : 처리할 변수
+>   > - // : 해당 패턴을 모두 변경, /은 한 번만 변경
+>   > - pattern : 변경할 패턴
+>   > - replacement : 대체할 패턴
+```
+for file in *.pdf; do mv "$file" "${file// /_}"; done
+```
+
+## While Loop
+> 조건이 참인 동안 반복
+> - [ ] : 조건을 명시하는 명령어. 명령어이기 때문에 반드시 각각 공백 문자로 띄어줘야 한다.
+
+> 기본 구조
+```
+while [ 조건 ]; do
+    # 반복할 명령들
+done
+```
+
+> count가 5보다 작은 동안 반복
+```
+count=1
+
+while [ $count -le 5 ]; do
+    echo "숫자: $count"
+    ((count++))
+done
+```
+# 파일 찾기
+
+## find
+> 파일 시스템을 검색하여 특정 조건에 맞는 파일을 찾는 데 사용
+
+> - ./ : 여러 폴더들이 들어 있는 상위 디렉토리 경로
+> - -name : 찾고자 하는 파일의 이름을 지정
+> - -execdir : find 명령어로 찾은 파일들에 대해 실행할 명령어를 지정
+>   > - {} : find로 찾은 각 파일을 가리키며, 'mv {} \<filename\>'은 해당 파일의 이름을 \<filename\>로 변경
+>   > - '\\;' : 명령어의 끝을 의미
+```
+find ./ -name <search_name> -execdir mv {} <filename> \;
 ```
 
 # 파일 복사
@@ -66,7 +177,6 @@ scp -i "keypair.pem" <source> <user>@<IP Address or Domain>:<target>
 > - -m : 전송할 때 빈 디렉터리 제외
 > - -vvv : 파일을 전송하는 동안 디버그 정보 제공
 > - --delete : 대상 디렉터리에 소스에 없는 파일이 있으면 제거한다.  
-
 > - --exclude : 파일의 상대 경로를 통해 특정 파일을 전송에서 제외한다.  
 >   > - 여러 파일이나 디렉터리를 제외하려면 여러번 사용할 수 있다.
 >   > - 단일 옵션으로 사용하려면 쉼표로 구분된 {}에 제외할 파일을 나열한다.
@@ -79,7 +189,6 @@ scp -i "keypair.pem" <source> <user>@<IP Address or Domain>:<target>
 >   >   > dir1/*
 >   >   > dir2
 >   >   > ```
-
 > - --files-from=- : 표준 입력의 파일(find 명령으로부터 전달받은 파일)만 포함한다.  
 ```
 rsync -avz --delete -e 'ssh -p 22' <source> <User>@<IP Address or Domain>:<target>  
@@ -92,8 +201,16 @@ find <source_dir> -name "*.jpg" -printf %P\\0\\n | rsync -a --files-from=- <sour
 # Link
 
 ## Soft/Symbolic link
-> 심볼릭 링크 : 다른 파일이나 폴더를 가리키는 링크
+> 다른 파일이나 폴더를 가리키는 링크
 > - Windows OS의 '바로가기'와 유사
 ```
 ln -s <source> <target>
+```
+
+# SSH
+> Secure Shell
+> 원격의 컴퓨터와 암호화된 통신을 주고받음
+> - -i : ssh 공개키 인증을 위한 파일 선택
+```
+ssh -i "~/coding/aws/.aws/NewKeyPair.pem" ikaman@ec2-3-34-107-69.ap-northeast-2.compute.amazonaws.com
 ```
