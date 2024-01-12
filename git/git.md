@@ -17,7 +17,7 @@ git checkout -t -b <branch> origin/<branch>
 ```
 - 로컬에 브랜치를 생성하면서 원격의 브랜치와 연결  
   
-## commit
+## filter-branch
 이미 Remote에 Push된 Commit의 Author, Committer, Email을 변경하는 명령어
 ```
 OLD_NAME=$1
