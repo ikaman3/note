@@ -1,4 +1,4 @@
-# Python 문법 정리
+# Python Syntax
 
 [Python Official Documents](https://docs.python.org/ko/3.13/library/functions.html)
 
