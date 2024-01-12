@@ -49,9 +49,9 @@ git filter-branch -f --commit-filter "
 ```ex) feature/A-14-kjk```
 ✔️ 생성 조건
 
-> main Branch에서 분기시켜 생성
-> local repo와 remote repo 둘 다 생성
-> 기능 개발건 ➡️ feature Branch 1개 생성
+> main Branch에서 분기시켜 생성  
+> local repo와 remote repo 둘 다 생성  
+> 기능 개발건 ➡️ feature Branch 1개 생성  
 
 > feature Branch의 이슈번호 생성 및 관리
 > 
