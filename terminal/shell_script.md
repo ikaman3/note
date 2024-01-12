@@ -1,14 +1,24 @@
 # Linux/MacOS Shell Script
 
+# Shebang / 셔뱅
+> 스크립트 파일이 어떤 셸로 실행되어야 하는지를 지정하는 shebang(셔뱅)라고 불리는 특별한 주석  
+> shebang은 스크립트가 어떤 인터프리터로 실행되어야 하는지를 지정하는데 사용되며, 스크립트의 첫 줄에 위치
+```
+#!/bin/bash
+#!/bin/zsh
+```
+
 # Environment Variable / 환경변수
-> 셸에서 사용하는 환경변수를 선언할 수 있다.
+> 셸에서 사용하는 환경변수를 선언
 > - 변수의이름과 '=' 그리고 값 사이에 공백이 존재하면 안 된다.
 ```
 <variable_name>=<value>
 ```
 
-# String / 문자열
-> echo : 문자열 출력 명령어
+# 문자열 입출력
+
+## echo
+> 문자열 출력 명령어
 > - -n : 마지막에 붙는 개행 문자(newline) 문자를 출력하지 않음
 > - -e : 문자열에서 백슬래시(\)와 이스케이프 문자를 인용 부호(")로 묶어 인식
 > - -E : 문자열에서 백슬래시와 이스케이프 문자를 비활성화(default)
@@ -26,6 +36,7 @@ echo $variable
 echo ${variable:r}
 echo ${variable:e}
 ```
+## print
 
 # Conditional / 조건문
 > 주어진 조건에 따라 분기를 다르게 하는 제어문
@@ -76,7 +87,6 @@ for file in *.txt; do
     echo "파일: $file"
 done
 ```
-
 > 여러 폴더안에 존재하는 같은 이름의 파일 이름을 변경하는 예제
 ```
 for dir in ~/Downloads/temp/*; do
@@ -110,7 +120,25 @@ done
 ```
 for file in *.pdf; do mv "$file" "${file// /_}"; done
 ```
+> fdisk를 반복 실행하는 구문
+```
+enter=echo -e "\n"
 
+for alpha in b c d e f g h i j;
+do
+	fdisk /dev/sd${alpha} <<EOF
+	n
+	p
+	1
+	${enter}
+	${enter}
+	t
+	fd
+	p
+	w
+EOF
+done
+```
 ## While Loop
 > 조건이 참인 동안 반복
 > - [ ] : 조건을 명시하는 명령어. 명령어이기 때문에 반드시 각각 공백 문자로 띄어줘야 한다.
@@ -213,4 +241,92 @@ ln -s <source> <target>
 > - -i : ssh 공개키 인증을 위한 파일 선택
 ```
 ssh -i "~/coding/aws/.aws/NewKeyPair.pem" ikaman@ec2-3-34-107-69.ap-northeast-2.compute.amazonaws.com
+```
+
+# Make use of script
+
+## sshd_update
+> 팀프로젝트 GATI의 서버 운영 중, 팀원들이 내 AWS 서버에 ssh로 접속할 수 있도록 설정하기위해 작성한 스크립트
+```
+#!/bin/bash
+
+# DDNS 주소 설정
+DDNS_ADDRESS="<Domain>"
+
+# DDNS 주소로부터 IP 주소 가져오기
+IP=$(nslookup $DDNS_ADDRESS | awk '/^Address: / { print $2 }')
+
+# sshd_config 파일 백업
+cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+
+# AllowUsers 라인 업데이트
+sed -i "s/^AllowUsers .*$/AllowUsers <user1>@<IP Address> <user2>@<IP Address> ec2-user@$IP ikaman@$IP/" /etc/ssh/sshd_config
+
+# SSH 서비스 재시작
+/usr/sbin/service sshd restart
+```
+
+## 파일 분할
+> 졸업작품이자 첫 팀프로젝트인 GATI를 진행하던중, 네이버 뉴스를 스크래핑한 csv파일의 용량이 너무 커서 분할하기 위해 작성한 스크립트
+```
+# 파일 이름 정의
+file_name="article.csv"
+
+# 분할할 그룹 수
+n=5
+
+# 파일 총 행 수 구하기
+total_rows=$(wc -l < $file_name)
+chunk_size=$((total_rows / n))
+
+# 파일을 n 그룹으로 분할하고 .csv 확장자를 붙여서 저장
+split -l $chunk_size $file_name chunk_
+for file in chunk_*
+do
+    mv "$file" "$file.csv"
+done
+
+# 헤더를 가진 파일 생성
+header_file="header.csv"
+head -n 1 $file_name | tr -d '\r' > $header_file
+
+# 각 분할 파일에 헤더 추가
+for file in chunk_*.csv; do
+	if [[ "$file" != "chunk_aa.csv" ]]; then
+        # 임시 파일 생성
+        tmp_file=$(mktemp)
+
+        # 헤더 추가
+        cat "$header_file" "$file" > "$tmp_file" && mv "$tmp_file" "$file"
+    fi
+done
+
+# 임시 헤더 파일 삭제
+rm $header_file
+```
+
+## namechanger
+> 각 만화의 이미지 파일들의 이름을 일관성있게 유지하기 위해 작성한 파일 이름 변경 스크립트
+```
+cd ~/Desktop/temp
+
+#for folder in ゆるキャン△*巻; do
+	# 현재 폴더 안에 cover_1.jpg 파일이 존재하는지 확인하는 조건문
+	# -f는 파일이 존재하는지 여부를 확인하는 파일 테스트 연산자
+ #   if [ -f "$folder/cover_1.jpg" ]; then
+ #      mv "$folder/cover_1.jpg" "$folder/0.jpg"
+ #      echo "Renamed $folder/cover_1.jpg to $folder/0.jpg"
+ #   else
+ #      echo "No cover_1.jpg file found in $folder"
+ #   fi
+#done
+
+for folder in *; do
+    if [ -f "$folder/0.pdf" ]; then
+        mv "$folder/0.pdf" "${folder}/${folder}.pdf"
+        echo "Renamed $folder/0.pdf to ${folder}/${folder}.pdf"
+    else
+        echo "No 0.pdf file found in $folder"
+    fi
+done
 ```
