@@ -1,5 +1,32 @@
 # Linux/MacOS 호환 Shell Script 정리
 
+# 환경변수
+> 셸에서 사용하는 환경변수를 선언하는 방법
+> - 변수의이름과 '=' 그리고 값 사이에 공백이 존재하면 안 된다.
+```
+<variable_name>=<value>
+```
+
+# 문자열
+> echo : 문자열 출력 명령어
+> - -n : 마지막에 붙는 개행 문자(newline) 문자를 출력하지 않음
+> - -e : 문자열에서 백슬래시(\)와 이스케이프 문자를 인용 부호(")로 묶어 인식
+> - -E : 문자열에서 백슬래시와 이스케이프 문자를 비활성화(default)
+> - '>' : 리다이렉션, 해당 경로에 파일이 존재하지 않으면 echo의 출력 내용으로 새 파일 생성  
+> 존재한다면 출력 내용으로 파일을 '덮어쓰기'로 저장
+> - '>>' : 리다이렉션, 해당 경로에 파일이 존재하지 않으면 echo의 출력 내용으로 새 파일 생성  
+> 존재한다면 출력 내용으로 파일을 '이어쓰기'로 저장
+> - :r : 환경변수의 이름만 추출하는 명령어
+> - :e : 환경변수의 확장자만 추출하는 명령어
+```
+echo "<text>"
+echo "<text>" > <file_name>
+echo "<text>" >> <file_name>
+echo $variable
+echo ${variable:r}
+echo ${variable:e}
+```
+
 # SSH
 > Secure Shell
 > - -i : ssh 공개키 인증을 위한 파일 선택
@@ -8,14 +35,18 @@ ssh -i "~/coding/aws/.aws/NewKeyPair.pem" ikaman@ec2-3-34-107-69.ap-northeast-2.
 ```
 
 # 파일 복사
+
+## cp
 > 가장 기본적인 파일 복사  
 ```
 cp <source> <target>
 ```  
+## scp
 > ssh를 이용한 원격 파일 복사  
 ```
 scp -i "keypair.pem" <source> <user>@<IP Address or Domain>:<target>
 ```
+## rsync
 > rsync를 이용한 원격 파일 동기화  
 > - rsync는 SSH를 통한 파일 동기화 명령어다.  
 > 실시간 동기화 기능을 제공하는 lsyncd보다는 강력하지 않으며, 한 대의 컴퓨터에서 여러 대의 대상을 백업하는 rsnapshot만큼 유연하지 않다.  
@@ -57,3 +88,12 @@ rsync -e "ssh -i .aws/keypair.pem" --exclude=".git*" --exclude=".DS_Store" --exc
 
 find <source_dir> -name "*.jpg" -printf %P\\0\\n | rsync -a --files-from=- <source> <target>
 ```  
+
+# Link
+
+## Soft/Symbolic link
+> 심볼릭 링크 : 다른 파일이나 폴더를 가리키는 링크
+> - Windows OS의 '바로가기'와 유사
+```
+ln -s <source> <target>
+```
