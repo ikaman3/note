@@ -2,14 +2,14 @@
 
 [Python Official Documents](https://docs.python.org/ko/3.13/library/functions.html)
 
-# 숫자
+# Numeric / 숫자
 ## sum
 > iterable 객체의 모든 요소를 더한 값을 반환한다.  
 > 숫자 list, stack.data, tuble 등 사용할 수 있다.
 ```
 sum(numStack.data)
 ```  
-# 문자열
+# String / 문자열
 ## split
 > 문자열을 sep(구분자)로 나눠 리스트로 반환한다.  
 > 반환된 리스트의 원소들은 문자열이다.  
@@ -20,3 +20,16 @@ sum(numStack.data)
 > str.split(',')  
 > str.split(',', 1)  
 > str.split(sep=',', maxsplit=2)  
+
+# List / 리스트
+## append
+> 리스트의 맨 끝에 원소를 덧붙이는 메서드
+```
+list.append(5)
+```
+## pop
+> 리스트의 맨 끝에서 원소를 꺼내는 메서드(원소 자체가 리스트에서 제거됨)
+```
+list.pop()
+```
+> append, pop 메서드를 함께 사용하면 리스트를 Stack 자료구조로 사용할 수 있다.
