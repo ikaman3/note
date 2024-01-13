@@ -1,5 +1,7 @@
 # Python Syntax
 
+# 목차
+
 [Python Official Documents](https://docs.python.org/ko/3.13/library/functions.html)
 
 # Numeric / 숫자
