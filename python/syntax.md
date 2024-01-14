@@ -88,6 +88,11 @@ sha256_hash = hashlib.sha256(data.encode()).hexdigest()
 > - dict([(key1=val1), (key2=val2)]) : 리스트로 튜플을 나열하는 방법
 > - dict({key1: val1, key2: val2})  
 
+> .get() : 딕셔너리의 각 키에 대응하는 값을 얻는 메서드
+> - ```d.get('A', 0)```  
+> - 'A'라는 키와 값이 존재한다면 그 값을 반환
+> - 존재하지 않는다면 기본값 (위에서는 0) 을 반환
+
 > .keys() : 딕셔너리의 키를 얻는 메서드  
 > - 반환 값 : ```dict_keys(['leo', 'kiki', 'eden'])```  
 
