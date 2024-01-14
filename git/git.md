@@ -2,6 +2,10 @@
 
 # Git 명령어
 
+## diff
+> add 되지않은 (staging 되지않은) 파일의 수정 전, 후 차이를 보여주는 명령어  
+```git diff```  
+
 ## branch  
 ```
 git checkout -t origin/<branch>
