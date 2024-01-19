@@ -44,10 +44,18 @@ git filter-branch -f --commit-filter "
 ```
 
 # Git Branch 전략
+
+## Fork를 사용하는 방법
+1. 단체 계정을 만들고 해당 repo에서 각자 fork를 하여 로컬 repo를 만든다.  
+2. 단체 repo에는 main branch만, 개인 repo에는 main, dev branch를 둔다. 
+3. 개인 repo에서 필요할 경우 추가 branch를 생성하여 사용한다.
+4. 개인 repo에서 작업을 끝내고 단체 repo에 PR을 보내 Merge한다.
+
+## feature Branch 규칙
 - Github Flow
 	- main Branch
 	- feature Branch
-## feature Branch 규칙
+  
 ✔️ feature/{팀명}-{이슈번호}-{영문이름이니셜}
 
 ```ex) feature/A-14-kjk```
@@ -144,3 +152,13 @@ Resolves: #123
 Ref: #456
 Related to: #48, #45
 ```  
+
+# Error
+
+## 파일 이름이 한글인 경우 유니코드로 표시되는 문제
+Git은 일반적이지 않은 문자를 Escape 문자로 처리하는 기능을 수행한다.  
+그래서 한글 앞에 탈출 문자를 붙인 탓에 정상적으로 표기되지 않았다.  
+터미널에 다음 명령어를 입력하여 git global 설정을 변경하여 해결한다.  
+```
+git config --global core.quotepath off
+```
