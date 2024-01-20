@@ -23,6 +23,16 @@ sum(numStack.data)
 > str.split(',', 1)  
 > str.split(sep=',', maxsplit=2)  
 
+# Conditional statement / 조건문
+
+## 조건부 표현식(Conditional Expression)
+간단한 조건에 따라 값을 선택하고 반환
+> 만약 조건(condition)이 참이면 a, 그렇지 않으면 b  
+> - ```x = a if condition else b```  
+
+> 만약 self.left가 존재하면 self.left.size() 호출, 아니면 0
+> - ```l = self.left.size() if self.left else 0```
+
 # Class / 클래스
 ## dir()
 > Python의 내장 함수로, 어떤 객체를 인자로 넣어주면 해당 객체가 어떤 변수와 메서드를 가지고 있는지 나열한다.
@@ -64,6 +74,31 @@ list.pop(0)
 > pop 메서드를 아무 인자없이 호출하면 맨 끝의 원소를 삭제하면서 반환한다.  
 > pop 메서드에 인덱스를 주고 호출하면 해당 인덱스 원소를 삭제하면서 반환한다.  
 > - 이때 뒤의 원소들은 한 칸씩 앞으로 당겨진다.
+
+# Tuple / 튜플
+## 선언 및 원소 접근
+### Indexing / 인덱싱
+튜플에서 특정 위치의 원소에 접근하는 기본적인 방법  
+인덱스는 0부터 시작
+```
+my_tuple = (10, 20, 30)
+first_element = my_tuple[0]
+print(first_element)  # 출력: 10
+```
+### Unpacking / 언패킹
+튜플의 원소를 여러 변수에 할당하는 방법  
+```
+my_tuple = (10, 20, 30)
+a, b, c = my_tuple
+print(a, b, c)  # 출력: 10 20 30
+```
+### Slicing / 슬라이싱
+슬라이싱을 사용하여 튜플의 일부분을 추출하는 방법  
+```
+my_tuple = (10, 20, 30, 40, 50)
+subset = my_tuple[1:4]
+print(subset)  # 출력: (20, 30, 40)
+```
 
 # Hash / 해시
 ## hash()
