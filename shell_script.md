@@ -310,23 +310,22 @@ rm $header_file
 ```
 cd ~/Desktop/temp
 
-#for folder in ゆるキャン△*巻; do
+for folder in 僕の心のヤバイやつ*; do
 	# 현재 폴더 안에 cover_1.jpg 파일이 존재하는지 확인하는 조건문
 	# -f는 파일이 존재하는지 여부를 확인하는 파일 테스트 연산자
- #   if [ -f "$folder/cover_1.jpg" ]; then
- #      mv "$folder/cover_1.jpg" "$folder/0.jpg"
- #      echo "Renamed $folder/cover_1.jpg to $folder/0.jpg"
- #   else
- #      echo "No cover_1.jpg file found in $folder"
- #   fi
-#done
+   if [ -f "$folder/cover_1.jpg" ]; then
+      mv "$folder/cover_1.jpg" "$folder/0_0.jpg"
+      echo "Renamed $folder/cover_1.jpg to $folder/0_0.jpg"
+   else
+      echo "No cover_1.jpg file found in $folder"
+   fi
 
-for folder in *; do
-    if [ -f "$folder/0.pdf" ]; then
-        mv "$folder/0.pdf" "${folder}/${folder}.pdf"
-        echo "Renamed $folder/0.pdf to ${folder}/${folder}.pdf"
-    else
-        echo "No 0.pdf file found in $folder"
-    fi
+   if [ -f "$folder/cover_or_extra_1.png" ]; then
+      mv "$folder/cover_or_extra_1.png" "$folder/0_1.jpg"
+      echo "Renamed $folder/cover_or_extra_1.png to $folder/0_1.jpg"
+   else
+      echo "No cover_or_extra_1.png file found in $folder"
+   fi
+
 done
 ```
