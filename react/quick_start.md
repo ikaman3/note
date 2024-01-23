@@ -1,4 +1,4 @@
-# React Qucik Start
+# React Quick Start
 리액트 공식문서의 Quick Start를 학습하며 정리하는 마크다운 문서  
 
 # 기본 개념
