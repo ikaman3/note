@@ -4,3 +4,9 @@
 
 ## 소스코드 창만 보기
 > Ctrl + m  
+
+## 파일 찾기
+> Ctrl + h
+
+## Resource 찾기
+> Ctrl + Shift + r
