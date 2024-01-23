@@ -1,5 +1,5 @@
-# react/syntax
-리액트를 학습하며 정리하는 마크다운 문서  
+# React Qucik Start
+리액트 공식문서의 Quick Start를 학습하며 정리하는 마크다운 문서  
 
 # 기본 개념
 
@@ -261,13 +261,68 @@ function MyButton() {
   // ...
 ```
 ```useState```로부터 현재 state (```count```)와 이를 업데이트할 수 있는 함수(```setCount```)를 얻을 수 있다.  
-이들을 어떤 이름으로도 지정할 수 있지만 ```[something, setSomething]``` 으로 작성하는 것이 일반적이다.  
+- 이들을 어떤 이름으로도 지정할 수 있지만 ```[something, setSomething]``` 으로 작성하는 것이 일반적이다.
+
 버튼이 처음 표시될 때는 ```useState()``` 에 ```0```을 전달했기 때문에 ```count```가 ```0```이 된다.  
 state를 변경하고 싶다면 ```setCount()``` 를 실행하고 새 값을 전달한다.  
 이 버튼을 클릭하면 카운터가 증가한다.  
+```
+function MyButton() {
+  const [count, setCount] = useState(0);
 
+  function handleClick() {
+    setCount(count + 1);
+  }
 
+  return (
+    <button onClick={handleClick}>
+      Clicked {count} times
+    </button>
+  );
+}
+```
+React가 컴포넌트 함수를 다시 호출하면, 이번에는 ```count``` 가 ```1```이 되고, 그 다음에는 ```2```가 될 것이다.  
+같은 컴포넌트를 여러 번 렌더링하면 각각의 컴포넌트는 고유한 state를 얻게 됩니다.  
+각 버튼을 개별적으로 클릭해 보자.  
+```
+// App.js
 
+import { useState } from 'react';
+
+export default function MyApp() {
+  return (
+    <div>
+      <h1>Counters that update separately</h1>
+      <MyButton />
+      <MyButton />
+    </div>
+  );
+}
+
+function MyButton() {
+  const [count, setCount] = useState(0);
+
+  function handleClick() {
+    setCount(count + 1);
+  }
+
+  return (
+    <button onClick={handleClick}>
+      Clicked {count} times
+    </button>
+  );
+}
+```
+- 각 버튼이 고유한 ```count``` state를 '기억'하고 다른 버튼에 영향을 주지 않는 방식에 주목하자
+
+## Using Hooks(Hooks 사용하기)
+```use```로 시작하는 함수를 Hooks라고 한다.  
+```useState```는 React에서 제공하는 내장 Hook이다.  
+다른 내장 Hooks는 API 레퍼런스에서 찾아볼 수 있다.  
+또한 기존의 것들을 조합하여 자신만의 Hooks를 작성할 수도 있다.  
+Hooks는 다른 함수보다 더 제한적이다.  
+- 컴포넌트(또는 다른 Hooks)의 상단에서만 Hooks를 호출할 수 있다.  
+- 조건이나 반복에서 ```useState```를 사용하고 싶다면 새 컴포넌트를 추출하여 그곳에 넣는다.
 
 
 
