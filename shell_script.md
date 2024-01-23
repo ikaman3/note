@@ -1,4 +1,5 @@
 # Linux/MacOS Shell Script
+Linux, MacOS 환경에서 사용할 수 있는 셸 스크립트에 대한 내용을 정리하는 마크다운 문서  
 
 # Shebang / 셔뱅
 > 스크립트 파일이 어떤 셸로 실행되어야 하는지를 지정하는 shebang(셔뱅)라고 불리는 특별한 주석  
