@@ -24,4 +24,27 @@ export default function MyApp() {
     </div>
   );
 }
+```  
+
+리액트 컴포넌트는 대문자로 시작한다( MyButton /> )  
+리액트 컴포넌트는 항상 대문자로 시작해야 하며, HTML 태그는 소문자여야 한다.
+```
+// App.js
+
+function MyButton() {
+  return (
+    <button>
+      I'm a button
+    </button>
+  );
+}
+
+export default function MyApp() {
+  return (
+    <div>
+      <h1>Welcome to my app</h1>
+      <MyButton />
+    </div>
+  );
+}
 ```
