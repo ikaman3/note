@@ -1,7 +1,7 @@
 # react/syntax
-리액트 공식문서의 Quick Start를 학습하며 정리하는 마크다운 문서  
+리액트를 학습하며 문법을 정리하는 마크다운 문서  
 
-# 기본 개념
+# Quick Start
 
 ## Creating and nesting components(컴포넌트 생성 및 중첩하기)
 리액트 앱은 컴포넌트로 구성된다.  
@@ -324,5 +324,133 @@ Hooks는 다른 함수보다 더 제한적이다.
 - 컴포넌트(또는 다른 Hooks)의 상단에서만 Hooks를 호출할 수 있다.  
 - 조건이나 반복에서 ```useState```를 사용하고 싶다면 새 컴포넌트를 추출하여 그곳에 넣는다.
 
+## Sharing data between components(컴포넌트 간에 데이터 공유하기)
+위의 예제에서는 각각의 ```MyButton```에 독립적인 ```count```가 있었고, 각 버튼을 클릭하면 클릭한 버튼의 ```count```만 변경되었다.  
+```
+        MyApp                       MyApp
+          |                           |
+     /----------\               /----------\
+MyButton    MyButton        MyButton    MyButton
+count|0     count|0         count|1     count|0 
+```
+하지만 데이터를 공유하고 항상 함께 업데이트하기 위한 컴포넌트가 필요한 경우가 많다.  
+두 ```MyButton``` 컴포넌트가 동일한 ```count```를 표시하고 함께 업데이트하려면,  
+state를 개별 버튼에서 모든 버튼이 포함된 가장 가까운 컴포넌트로 “위쪽”으로 이동해야 한다.  
+```
+        MyApp                       MyApp
+        count|0                     count|1
+          |                           |
+    /----------\                /----------\
+count|0     count|0         count|1     count|1
+    |          |                |          |
+MyButton    MyButton        MyButton    MyButton
+```
+- 처음에 ```MyApp```의 ```count``` state는 ```0```이며 두 자식에게 모두 전달된다.
+- 클릭 시 ```MyApp```은 ```count``` state를 ```1```로 업데이트하고 두 자식에게 전달한다.
 
+이제 두 버튼 중 하나를 클릭하면 ```MyApp```의 ```count```가 변경되어 ```MyButton```의 카운트가 모두 변경된다.  
+이를 코드로 표현하는 방법은 다음과 같다. 먼저 ```MyButton```에서 ```MyApp```으로 state를 위로 이동합니다.  
+```
+export default function MyApp() {
+  const [count, setCount] = useState(0);
 
+  function handleClick() {
+    setCount(count + 1);
+  }
+
+  return (
+    <div>
+      <h1>Counters that update separately</h1>
+      <MyButton />
+      <MyButton />
+    </div>
+  );
+}
+
+function MyButton() {
+  // ... we're moving code from here ...
+}
+```
+그 다음 공유된 클릭 핸들러와 함께 ```MyApp```에서 각 ```MyButton```으로 state를 전달한다.  
+이전에 ```<img>``` 와 같은 기본 제공 태그를 사용했던 것처럼 JSX 중괄호를 사용하여 ```MyButton```에 정보를 전달할 수 있다:  
+```
+export default function MyApp() {
+  const [count, setCount] = useState(0);
+
+  function handleClick() {
+    setCount(count + 1);
+  }
+
+  return (
+    <div>
+      <h1>Counters that update together</h1>
+      <MyButton count={count} onClick={handleClick} />
+      <MyButton count={count} onClick={handleClick} />
+    </div>
+  );
+}
+```
+이렇게 전달한 정보를 props라고 한다.  
+이제 ```MyApp``` 컴포넌트는 ```count``` state와 ```handleClick``` 이벤트 핸들러를 포함하며, 이 두 가지를 각 버튼에 props로 전달한다.  
+마지막으로 부모 컴포넌트에서 전달한 props를 읽도록 ```MyButton```을 변경한다:  
+```
+function MyButton({ count, onClick }) {
+  return (
+    <button onClick={onClick}>
+      Clicked {count} times
+    </button>
+  );
+}
+```
+버튼을 클릭하면 ```onClick``` 핸들러가 실행된다. 각 버튼의 ```onClick``` prop는 ```MyApp``` 내부의 ```handleClick``` 함수로 설정되었으므로 그 안에 있는 코드가 실행된다.  
+- 이 코드는 ```setCount(count + 1)``` 를 실행하여 ```count``` state 변수를 증가시킨다.
+- 새로운 ```count``` 값은 각 버튼에 prop로 전달되므로 모든 버튼에는 새로운 값이 표시된다.
+
+이를 “lifting state up(state 올리기)”라고 한다. state를 위로 이동함으로써 컴포넌트 간에 state를 공유하게 된다.  
+```
+// App.js
+
+import { useState } from 'react';
+
+export default function MyApp() {
+  const [count, setCount] = useState(0);
+
+  function handleClick() {
+    setCount(count + 1);
+  }
+
+  return (
+    <div>
+      <h1>Counters that update together</h1>
+      <MyButton count={count} onClick={handleClick} />
+      <MyButton count={count} onClick={handleClick} />
+    </div>
+  );
+}
+
+function MyButton({ count, onClick }) {
+  return (
+    <button onClick={onClick}>
+      Clicked {count} times
+    </button>
+  );
+}
+```
+
+## 개념 요약 
+1. 리액트 앱은 컴포넌트로 구성되며, 컴포넌트란 '고유한 로직과 모양을 가진 UI의 일부'다. 컴포넌트는 버튼만큼 작을 수도, 전체 페이지만큼 클 수도 있다.
+2. 리액트 컴포넌트는 마크업을 반환하는 자바스크립트 함수다.
+3. 선언한 컴포넌트는 다른 컴포넌트 안에 중첩할 수 있다.
+4. 컴포넌트의 이름은 항상 대문자로 시작한다.
+5. JSX는 선택사항이지만 대부분의 리액트 프로젝트는 JSX를 사용한다.
+6. JSX는 항상 태그를 닫아야 한다.
+7. 컴포넌트는 여러 개의 JSX 태그를 반환할 수 없다.
+8. 리액트는 ```className``` 으로 CSS class를 지정한다. 이것은 HTML의 ```class``` 어트리뷰트와 동일한 방식으로 동작한다.
+9. 리액트는 CSS 파일을 추가하는 방법을 규정하지 않는다.
+10. 컴포넌트가 특정 정보를 기억하기를 원한다면 state를 사용한다.
+11. 같은 컴포넌트를 여러 번 렌더링하면 각각의 컴포넌트는 고유한 state를 얻는다.
+12. ```use``` 로 시작하는 함수를 Hooks라고 한며, ```useState``` 는 리액트에서 제공하는 내장 Hook이다.
+13. Hooks는 다른 함수보다 더 제한적이다. 컴포넌트(또는 다른 Hooks)의 상단에서만 Hooks를 호출할 수 있다.
+14. 컴포넌트 간에 데이터를 공유하고 싶다면, 해당 컴포넌트들을 모두 포함하는 상위 컴포넌트에 state를 선언하고 두 자식 컴포넌트에 전달한다.
+15. 자식 컴포넌트에 JSX 중괄호를 사용해서 전달하는 정보를 props라고 한다.
+16. props를 사용한 컴포넌트 간의 state 공유를 'state 올리기'라고 한다. state를 위로 이동하여 컴포넌트 간에 state를 공유하는 것이다.
