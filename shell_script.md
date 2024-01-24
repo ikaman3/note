@@ -1,7 +1,9 @@
 # Linux/MacOS Shell Script
+
 Linux, MacOS 환경에서 사용할 수 있는 셸 스크립트에 대한 내용을 정리하는 마크다운 문서  
 
 # Shebang / 셔뱅
+
 > 스크립트 파일이 어떤 셸로 실행되어야 하는지를 지정하는 shebang(셔뱅)라고 불리는 특별한 주석  
 > shebang은 스크립트가 어떤 인터프리터로 실행되어야 하는지를 지정하는데 사용되며, 스크립트의 첫 줄에 위치
 ```
@@ -10,6 +12,7 @@ Linux, MacOS 환경에서 사용할 수 있는 셸 스크립트에 대한 내용
 ```
 
 # Environment Variable / 환경변수
+
 > 셸에서 사용하는 환경변수를 선언
 > - 변수의이름과 '=' 그리고 값 사이에 공백이 존재하면 안 된다.
 ```
@@ -19,6 +22,7 @@ Linux, MacOS 환경에서 사용할 수 있는 셸 스크립트에 대한 내용
 # 문자열 입출력
 
 ## echo
+
 > 문자열 출력 명령어
 > - -n : 마지막에 붙는 개행 문자(newline) 문자를 출력하지 않음
 > - -e : 문자열에서 백슬래시(\)와 이스케이프 문자를 인용 부호(")로 묶어 인식
@@ -37,9 +41,11 @@ echo $variable
 echo ${variable:r}
 echo ${variable:e}
 ```
+
 ## print
 
 # Conditional / 조건문
+
 > 주어진 조건에 따라 분기를 다르게 하는 제어문
 
 > 기본 구조
@@ -68,6 +74,7 @@ fi
 # Loop / 반복문
 
 ## for Loop
+
 > 지정된 범위 또는 리스트의 각 항목에 대해 반복
 
 > 기본 구조
@@ -141,6 +148,7 @@ EOF
 done
 ```
 ## While Loop
+
 > 조건이 참인 동안 반복
 > - [ ] : 조건을 명시하는 명령어. 명령어이기 때문에 반드시 각각 공백 문자로 띄어줘야 한다.
 
@@ -163,6 +171,7 @@ done
 # 파일 찾기
 
 ## find
+
 > 파일 시스템을 검색하여 특정 조건에 맞는 파일을 찾는 데 사용
 
 > - ./ : 여러 폴더들이 들어 있는 상위 디렉토리 경로
@@ -177,16 +186,21 @@ find ./ -name <search_name> -execdir mv {} <filename> \;
 # 파일 복사
 
 ## cp
+
 > 가장 기본적인 파일 복사  
 ```
 cp <source> <target>
 ```  
+
 ## scp
+
 > ssh를 이용한 원격 파일 복사  
 ```
 scp -i "keypair.pem" <source> <user>@<IP Address or Domain>:<target>
 ```
+
 ## rsync
+
 > rsync를 이용한 원격 파일 동기화  
 > rsync는 SSH를 통한 파일 동기화 명령어다.  
 > 실시간 동기화 기능을 제공하는 lsyncd보다는 강력하지 않으며, 한 대의 컴퓨터에서 여러 대의 대상을 백업하는 rsnapshot만큼 유연하지 않다.  
@@ -230,6 +244,7 @@ find <source_dir> -name "*.jpg" -printf %P\\0\\n | rsync -a --files-from=- <sour
 # Link
 
 ## Soft/Symbolic link
+
 > 다른 파일이나 폴더를 가리키는 링크
 > - Windows OS의 '바로가기'와 유사
 ```
@@ -237,6 +252,7 @@ ln -s <source> <target>
 ```
 
 # SSH
+
 > Secure Shell
 > 원격의 컴퓨터와 암호화된 통신을 주고받음
 > - -i : ssh 공개키 인증을 위한 파일 선택
@@ -247,6 +263,7 @@ ssh -i "~/coding/aws/.aws/NewKeyPair.pem" ikaman@ec2-3-34-107-69.ap-northeast-2.
 # Make use of script
 
 ## sshd_update
+
 > 팀프로젝트 GATI의 서버 운영 중, 팀원들이 내 AWS 서버에 ssh로 접속할 수 있도록 설정하기위해 작성한 스크립트
 ```
 #!/bin/bash
@@ -268,6 +285,7 @@ sed -i "s/^AllowUsers .*$/AllowUsers <user1>@<IP Address> <user2>@<IP Address> e
 ```
 
 ## 파일 분할
+
 > 졸업작품이자 첫 팀프로젝트인 GATI를 진행하던중, 네이버 뉴스를 스크래핑한 csv파일의 용량이 너무 커서 분할하기 위해 작성한 스크립트
 ```
 # 파일 이름 정의
@@ -307,6 +325,7 @@ rm $header_file
 ```
 
 ## namechanger
+
 > 각 만화의 이미지 파일들의 이름을 일관성있게 유지하기 위해 작성한 파일 이름 변경 스크립트
 ```
 cd ~/Desktop/temp
