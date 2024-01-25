@@ -195,6 +195,7 @@ cp <source> <target>
 ## scp
 
 > ssh를 이용한 원격 파일 복사  
+
 ```
 scp -i "keypair.pem" <source> <user>@<IP Address or Domain>:<target>
 ```
@@ -204,7 +205,9 @@ scp -i "keypair.pem" <source> <user>@<IP Address or Domain>:<target>
 > rsync를 이용한 원격 파일 동기화  
 > rsync는 SSH를 통한 파일 동기화 명령어다.  
 > 실시간 동기화 기능을 제공하는 lsyncd보다는 강력하지 않으며, 한 대의 컴퓨터에서 여러 대의 대상을 백업하는 rsnapshot만큼 유연하지 않다.  
+
 그러나 정의한 일정에 따라 두 대의 컴퓨터를 최신 상태로 유지할 수 있는 기능을 제공한다.
+
 > - -a : [archive] rsync를 사용하는 가장 일반적인 옵션으로, 아래의 여러 옵션을 포함하고 있다.  
 >   > - -r : 디렉터리 재귀
 >   > - -l : 심볼릭 링크를 심볼릭 링크로 유지
@@ -233,6 +236,7 @@ scp -i "keypair.pem" <source> <user>@<IP Address or Domain>:<target>
 >   >   > dir2
 >   >   > ```
 > - --files-from=- : 표준 입력의 파일(find 명령으로부터 전달받은 파일)만 포함한다.  
+
 ```
 rsync -avz --delete -e 'ssh -p 22' <source> <User>@<IP Address or Domain>:<target>  
 
@@ -247,6 +251,7 @@ find <source_dir> -name "*.jpg" -printf %P\\0\\n | rsync -a --files-from=- <sour
 
 > 다른 파일이나 폴더를 가리키는 링크
 > - Windows OS의 '바로가기'와 유사
+
 ```
 ln -s <source> <target>
 ```
@@ -256,6 +261,7 @@ ln -s <source> <target>
 > Secure Shell
 > 원격의 컴퓨터와 암호화된 통신을 주고받음
 > - -i : ssh 공개키 인증을 위한 파일 선택
+
 ```
 ssh -i "~/coding/aws/.aws/NewKeyPair.pem" ikaman@ec2-3-34-107-69.ap-northeast-2.compute.amazonaws.com
 ```
@@ -265,6 +271,7 @@ ssh -i "~/coding/aws/.aws/NewKeyPair.pem" ikaman@ec2-3-34-107-69.ap-northeast-2.
 ## sshd_update
 
 > 팀프로젝트 GATI의 서버 운영 중, 팀원들이 내 AWS 서버에 ssh로 접속할 수 있도록 설정하기위해 작성한 스크립트
+
 ```
 #!/bin/bash
 
@@ -287,6 +294,7 @@ sed -i "s/^AllowUsers .*$/AllowUsers <user1>@<IP Address> <user2>@<IP Address> e
 ## 파일 분할
 
 > 졸업작품이자 첫 팀프로젝트인 GATI를 진행하던중, 네이버 뉴스를 스크래핑한 csv파일의 용량이 너무 커서 분할하기 위해 작성한 스크립트
+
 ```
 # 파일 이름 정의
 file_name="article.csv"
@@ -327,6 +335,7 @@ rm $header_file
 ## namechanger
 
 > 각 만화의 이미지 파일들의 이름을 일관성있게 유지하기 위해 작성한 파일 이름 변경 스크립트
+
 ```
 cd ~/Desktop/temp
 
