@@ -1,11 +1,14 @@
 # note
+
 개발, 학습을 하면서 정리한 마크다운 노트 저장소  
 이 문서는 Markdown Syntax 자체를 다룸  
 
 # 목차
+
 > [TOC/목차 생성](#toc-table-of-content)
 
 # TOC (Table Of Content)
+
 마크다운에서 목차를 생성하는 방법  
 헤딩 태그(#)을 기준으로 생성되므로 각 섹션의 제목은 헤딩 태그를 사용하는 것을 권장한다.  
 ```

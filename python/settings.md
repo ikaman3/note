@@ -32,6 +32,7 @@ VSCode의 설정 ( Command + , ) (setting.json) 에서 'Python: Default Interpre
 [reference](https://blog.devwon.site/python/2021/08/01/Vscode-venv-python-interpreter/)
 
 # Error
+
 ## ImportError: attempted relative import with no known parent package
 모듈을 제대로 인식하지 못하는 문제   
 - 디렉토리를 추가하여 해결함  
