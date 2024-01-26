@@ -5,7 +5,7 @@
 
 # 목차
 
-> [TOC/목차 생성](#toc-table-of-content)
+ - [TOC/목차 생성](#toc-table-of-content)
 
 # TOC (Table Of Content)
 
@@ -17,4 +17,15 @@
 # 문서 내에 작성한 제목
 ```
 
+# 줄바꿈
+
+줄의 맨 끝에 공백 두 번  
+
 # 인용 구문
+
+인용 구문을 표현할 떄
+
+```
+> 텍스트
+>   > 텍스트
+```
