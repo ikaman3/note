@@ -1,4 +1,4 @@
-# Python Syntax
+# python/syntax
 
 # 목차
 
