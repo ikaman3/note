@@ -1,6 +1,6 @@
-# react/syntax
+# react/quick_start
 
-리액트를 학습하며 문법을 정리하는 마크다운 문서  
+리액트 공식문서 '빠르게 시작하기'를 학습하고 개념을 요약한 마크다운 
 
 # Quick Start
 
