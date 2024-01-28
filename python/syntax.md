@@ -5,14 +5,20 @@
 [Python Official Documents](https://docs.python.org/ko/3.13/library/functions.html)
 
 # Numeric / 숫자
+
 ## sum
+
 > iterable 객체의 모든 요소를 더한 값을 반환한다.  
 > 숫자 list, stack.data, tuble 등 사용할 수 있다.
+
 ```
 sum(numStack.data)
 ```  
+
 # String / 문자열
+
 ## split
+
 > 문자열을 sep(구분자)로 나눠 리스트로 반환한다.  
 > 반환된 리스트의 원소들은 문자열이다.  
 > sep를 지정하지 않으면 기본은 공백문자, 줄바꿈이다.  
@@ -23,9 +29,20 @@ sum(numStack.data)
 > str.split(',', 1)  
 > str.split(sep=',', maxsplit=2)  
 
-# Conditional statement / 조건문
+# Assignment Operator(대입 연산자)
+
+## 두 변수의 값 바꾸기
+
+```python
+a = 3; b = 5
+a, b = b, a
+# 결과: a = 5, b = 3
+```
+
+# Conditional statement(조건문)
 
 ## 조건부 표현식(Conditional Expression)
+
 간단한 조건에 따라 값을 선택하고 반환
 > 만약 조건(condition)이 참이면 a, 그렇지 않으면 b  
 > - ```x = a if condition else b```  
@@ -34,66 +51,92 @@ sum(numStack.data)
 > - ```l = self.left.size() if self.left else 0```
 
 # Class / 클래스
+
 ## dir()
+
 > Python의 내장 함수로, 어떤 객체를 인자로 넣어주면 해당 객체가 어떤 변수와 메서드를 가지고 있는지 나열한다.
+
 ```
 Q = Queue()
 dir(Q)
 ```
 
 # List / 리스트
+
 ## List[-1]
+
 > 리스트의 맨 끝 원소에 접근하는 방법  
 > 음수를 입력하면 리스트의 뒤에서부터 접근  
+
 ```
 list[-1]
 ```
 
 ## append
+
 > 리스트의 맨 끝에 원소를 덧붙이는 메서드
+
 ```
 list.append(5)
 ```
+
 > 딕셔너리의 키와 값으로 이루어진 튜플의 리스트 생성  
+
 ```
 list_of_tuples = list(my_dict.items())
 # 출력: [('a', 1), ('b', 2), ('c', 3)]
 ```
+
 > 딕셔너리의 키와 값으로 이루어진 리스트 생성  
+
 ```
 list_of_lists = [[key, value] for key, value in my_dict.items()]
 # 출력: [['a', 1], ['b', 2], ['c', 3]]
 ```
+
 ## pop
+
 > 리스트의 맨 끝에서 원소를 꺼내는 메서드(원소 자체가 리스트에서 제거됨)
+
 ```
 list.pop()
 list.pop(0)
 ```
+
 > append, pop 메서드를 함께 사용하면 리스트를 Stack 자료구조로 사용할 수 있다.  
 > pop 메서드를 아무 인자없이 호출하면 맨 끝의 원소를 삭제하면서 반환한다.  
 > pop 메서드에 인덱스를 주고 호출하면 해당 인덱스 원소를 삭제하면서 반환한다.  
 > - 이때 뒤의 원소들은 한 칸씩 앞으로 당겨진다.
 
 # Tuple / 튜플
+
 ## 선언 및 원소 접근
+
 ### Indexing / 인덱싱
+
 튜플에서 특정 위치의 원소에 접근하는 기본적인 방법  
 인덱스는 0부터 시작
+
 ```
 my_tuple = (10, 20, 30)
 first_element = my_tuple[0]
 print(first_element)  # 출력: 10
 ```
+
 ### Unpacking / 언패킹
+
 튜플의 원소를 여러 변수에 할당하는 방법  
+
 ```
 my_tuple = (10, 20, 30)
 a, b, c = my_tuple
 print(a, b, c)  # 출력: 10 20 30
 ```
+
 ### Slicing / 슬라이싱
+
 슬라이싱을 사용하여 튜플의 일부분을 추출하는 방법  
+
 ```
 my_tuple = (10, 20, 30, 40, 50)
 subset = my_tuple[1:4]
@@ -101,23 +144,30 @@ print(subset)  # 출력: (20, 30, 40)
 ```
 
 # Hash / 해시
+
 ## hash()
+
 > 내장 함수이며 입력된 객체의 해시 값을 반환한다.  
 > 일반적으로 immutable한 객체들은 동일한 입력이 주어진 경우 항상 동일한 해시 값을 반환한다.  
 > - 숫자, 문자열, 튜플 등이 해당
+
 ```
 hashValue = hash("example")
 ```
+
 ## hashlib
+
 > 다양한 해시 함수를 제공하는 모듈  
 > 주로 데이터의 무결성을 확인하는 데 사용된다.  
+
 ```
 import hashlib
 data = "example"
 sha256_hash = hashlib.sha256(data.encode()).hexdigest()
 ```
 
-# Dictionary / 딕셔너리
+# Dictionary(딕셔너리)
+
 > 해시 가능한 자료형을 활용  
 > 딕셔너리의 키로 사용되는 객체는 해시 가능 (hashable) 해야 한다.  
 > - 즉, 동일한 키 값은 동일한 해시 값을 가져야 한다.
@@ -145,6 +195,7 @@ sha256_hash = hashlib.sha256(data.encode()).hexdigest()
 > - 반환 값 : ```dict_items([('leo', 1), ('kiki', 0), ('eden', 0)])```  
 
 > 리스트 컴프리헨션과 조건문을 사용하여 딕셔너리의 값을 조건에 따라 처리하는 방법  
+
 ```
 keys_with_nonzero_values = [key for key, value in my_dict.items() if value != 0]
 # 출력: ['a', 'c', 'e']
@@ -156,6 +207,7 @@ keys_with_nonzero_values = [key for key, value in my_dict.items() if value != 0]
 > # 결과
 > # Counter({'leo': 1, 'kiki': 1, 'eden': 1})
 > ```
+
 ```
 # 기본적인 딕셔너리 생성 방법
 dict = {'a': 1, 'b': 2}
