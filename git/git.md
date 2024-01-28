@@ -4,7 +4,10 @@
 
 ## diff
 > add 되지않은 (staging 되지않은) 파일의 수정 전, 후 차이를 보여주는 명령어  
-```git diff```  
+
+```
+git diff
+```  
 
 ## branch  
 ```
@@ -103,7 +106,7 @@ git filter-branch -f --commit-filter "
 제목에 기입되는 커밋의 유형
 ```  
   
-| Type Name  | Description |
+| Type Name | Description |
 | :--- | :--- |
 | Feat  | 새로운 기능을 추가|
 | Fix  | 버그 수정  |
