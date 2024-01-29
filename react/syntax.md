@@ -290,6 +290,9 @@ export default function TodoList() {
     </div>
   );
 }
+
+# 자바스크립트 표현식을 사용한 URL 생성
+src={baseUrl + person.imageId + person.imageSize + ".jpg"}
 ```
 
 ### 이중 중괄호 사용하기 : JSX의 CSS와 다른 객체
