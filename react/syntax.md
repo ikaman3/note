@@ -2,7 +2,7 @@
 
 [https://ko.react.dev/learn/describing-the-ui](https://ko.react.dev/learn/describing-the-ui)  
   
-공식 문서를 보며 필요한 문법 부분만 정리해두는 문서  
+공식 문서를 보며 기초 개념과 필요한 문법을 정리해두는 문서  
 
 ## 컴포넌트
 
@@ -129,6 +129,8 @@ default import를 사용하는 경우 원한다면 `import` 단어 후에 다른
 
 ## JSX
 
+JSX는 JavaScript를 사용하여 데이터와 논리를 구성할 수 있는 매우 작은 템플릿 언어이다.  
+
 ### 개념
 
 JSX와 React는 서로 다른 별개의 개념  
@@ -220,6 +222,97 @@ JSX는 자바스크립트로 바뀌고 JSX에서 작성된 어트리뷰트는 �
 
 **주의사항**  
 역사적인 이유로, `aria-*`와 `data-*`의 어트리뷰트는 HTML과 동일하게 대시(-)를 사용한다.  
+
+### JSX 안에서 JS 사용하기
+
+문자열 어트리뷰트를 JSX에 전달하려면 작은/큰 따옴표로 묶어야 한다.  
+- `className="avatar"`, `src="https://i.imgur.com/7vQD0fPs.jpg"`  
+
+이러한 문자열 값들을 동적으로 지정하려면 {}를 사용하여 자바스크립트의 값을 사용할 수 있다.  
+
+```
+export default function Avatar() {
+  const avatar = 'https://i.imgur.com/7vQD0fPs.jpg';
+  const description = 'Gregorio Y. Zara';
+  return (
+    <img
+      className="avatar"
+      src={avatar}
+      alt={description}
+    />
+  );
+}
+```
+
+JSX는 자바스크립트를 작성하는 특별한 방법이고, 중괄호 사이에서 자바스크립트를 사용할 수 있다.  
+`formatDate()`와 같은 함수 호출을 포함해 모든 자바스크립트 표현식은 중괄호 사이에서 작동한다.  
+
+```
+const today = new Date();
+
+function formatDate(date) {
+  return new Intl.DateTimeFormat(
+    'en-US',
+    { weekday: 'long' }
+  ).format(date);
+}
+
+export default function TodoList() {
+  return (
+    <h1>To Do List for {formatDate(today)}</h1>
+  );
+}
+```
+
+JSX 안에서 중괄호는 두 가지 방법으로만 사용할 수 있다.  
+
+1. JSX 태그 안의 문자: `<h1>{name}'s To Do List</h1>` 는 작동하지만, 
+`<{tag}>Gregorio Y. Zara's To Do List</{tag}>`는 작동하지 않는다.  
+2. `=` 바로 뒤의 어트리뷰트: `src={avatar}`는 `avatar` 변수를 읽지만 `src="{avatar}"`는 `"{avatar}"` 문자열을 전달한다.  
+
+### 중괄호 안의 JSX로 하나의 객체 참조하기
+
+여러 표현식을 한 객체로 옮기고 중괄호 안의 JSX에서 참조할 수 있다.  
+
+```
+const person = {
+  name: 'Gregorio Y. Zara',
+  theme: {
+    backgroundColor: 'black',
+    color: 'pink'
+  }
+};
+
+export default function TodoList() {
+  return (
+    <div style={person.theme}>
+      <h1>{person.name}'s Todos</h1>
+    </div>
+  );
+}
+```
+
+### 이중 중괄호 사용하기 : JSX의 CSS와 다른 객체
+
+JSX는 문자열, 숫자 및 기타 자바스크립트 표현식뿐만 아니라 객체를 전달할 수 있다.  
+또한 객체는 중괄호로 표시되는데, 따라서 JSX에서 객체를 전달하려면 `person={{ name: "Hedy Lamarr", inventions: 5 }}`와 같이 다른 중괄호 쌍으로 감싸야 한다.  
+  
+JSX에서 이중 중괄호는 자바스크립트 객체에 불과하다는 것을 명심하자.  
+
+JSX의 인라인 CSS 스타일에서도 이중 중괄호를 사용한다. 리액트에서 인라인 스타일을 사용할 필요가 없이 CSS 클래스는 대부분 잘 작동한다.  
+인라인 스타일이 필요하면 `style` 어트리뷰트에 객체로 전달한다.  
+
+- 인라인 `style` 프로퍼티는 HTML과 다르게 카멜 케이스로 작성하는 것에 주의  
+
+```
+<ul style={{
+      backgroundColor: 'black',
+      color: 'pink'
+    }}>
+        ...
+</ul>
+```
+
 
 ## CSS
 
