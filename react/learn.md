@@ -1,5 +1,3 @@
-# react/learn
-
 # UI 표현하기
 
 [https://ko.react.dev/learn/describing-the-ui](https://ko.react.dev/learn/describing-the-ui)  
