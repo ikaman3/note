@@ -316,7 +316,6 @@ JSX의 인라인 CSS 스타일에서도 이중 중괄호를 사용한다. 리액
 </ul>
 ```
 
-
 ## CSS
 
 1. 리액트는 ```className``` 으로 CSS class를 지정한다. 이것은 HTML의 ```class``` 어트리뷰트와 동일한 방식으로 동작한다.
@@ -335,11 +334,77 @@ JSX의 인라인 CSS 스타일에서도 이중 중괄호를 사용한다. 리액
 
 ### 개념
 
-1. ```use``` 로 시작하는 함수를 Hooks라고 하며, ```useState``` 는 리액트에서 제공하는 내장 Hook이다.
-2. Hooks는 다른 함수보다 더 제한적이다. 컴포넌트(또는 다른 Hooks)의 상단에서만 Hooks를 호출할 수 있다.
+```use``` 로 시작하는 함수를 *Hooks*라고 하며, ```useState``` 는 리액트에서 제공하는 내장 Hook이다.  
+Hooks는 다른 함수보다 더 제한적이다. 컴포넌트(또는 다른 Hooks)의 상단에서만 Hooks를 호출할 수 있다.  
 
 ## props
 
 ### 개념
 
-1. 자식 컴포넌트에 JSX 중괄호를 사용해서 전달하는 정보를 props라고 한다.
+*props*란?
+
+- 자식 컴포넌트에 JSX 중괄호를 사용해서 전달하는 정보  
+- JSX 태그에 전달하는 정보  
+- 객체, 배열, 함수를 포함한 모든 자바스크립트 값을 props로 전달할 수 있다.  
+- props를 사용하여 부모와 자식 컴포넌트를 독립적으로 생각할 수 있다.  
+- props는 컴포넌트에 대한 유일한 인자다 = 리액트 컴포넌트 함수는 props 객체만을 인자로 받는다.  
+
+이미 JSX 태그에 props를 전달하여 사용하고 있었다.  
+
+- `<img>` 태그 등에 전달할 수 있는 props는 미리 정의되어 있다.  
+
+직접 생성한 컴포넌트에도 props를 전달할 수 있다.  
+
+```
+function Avatar({ person, size }) {
+    return (
+        <img
+        className="avatar"
+        src={getImageUrl(person)}
+        alt={person.name}
+        width={size}
+        height={size}
+        />
+    );
+}
+
+export default function Profile() {
+    return (
+        <Avatar
+            person={{ name: 'Lin Lanying', imageId: '1bX5QH6' }}
+            size={100}
+        />
+    );
+}
+```
+
+- `{ person, size }` : 구조 분해 할당(Destructuring assignment)  
+- 배열이나 객체의 속성을 해체하여 그 값을 개별 변수에 담는 자바스크립트의 문법이다.  
+- 아래의 코드와 논리적으로 동등하다.  
+
+```
+function Avatar(props) {
+    let person = props.person;
+    let size = props.size;
+    // ...
+}
+```
+
+### prop 기본값 지정
+
+기본값은 자바스크립트의 문법이다.  
+변수 바로 뒤에 `=` 과 함께 기본값을 넣어 구조 분해 할당할 수 있다.  
+
+```
+function Avatar({ person, size = 100 }) {
+    // ...
+}
+```
+
+- 이제 `<Avatar person={...} />`가 `size` prop 없이 렌더링 된다면, `size`는 `100`으로 설정된다.  
+
+기본값은 해당 prop이 존재하지 않거나, `undefined`로 전달될 때 사용된다.  
+`null` 또는 `0`으로 전달되면 기본값는 사용되지 **않는다.**  
+
+- 기본값이 적용됨 : `size` 없음, `size={undefined}`  
+- 기본값이 적용되지 않음 : `size={null}`, `size={0}`
