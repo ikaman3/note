@@ -408,3 +408,72 @@ function Avatar({ person, size = 100 }) {
 
 - 기본값이 적용됨 : `size` 없음, `size={undefined}`  
 - 기본값이 적용되지 않음 : `size={null}`, `size={0}`
+
+### spread 문법으로 props 전달
+
+아래와 같이 props를 반복적으로 전달할 때가 있다.  
+
+```
+function Profile({ person, size, isSepia, thickBorder }) {
+    return (
+        <div className="card">
+        <Avatar
+            person={person}
+            size={size}
+            isSepia={isSepia}
+            thickBorder={thickBorder}
+        />
+        </div>
+    );
+}
+```
+
+반복적인 코드는 가독성을 높일 수 있다는 점에서 잘못된 것은 아니지만, 간결함이 중요할 때도 있다.  
+위에서 `Profile`은 props를 직접 사용하지 않고 자식 컴포넌트에 전달만 한다.  
+이런 경우 *spread* 문법을 사용하는 것이 합리적이다.  
+
+```
+function Profile(props) {
+    return (
+        <div className="card">
+        <Avatar {...props} />
+        </div>
+    );
+}
+```
+
+단, spread 문법은 제한적으로 사용할 것.  
+다른 모든 컴포넌트에 이 구문을 사용한다면,  
+컴포넌트를 분할하여 자식을 JSX로 전달해야 함을 나타낸다.  
+
+### 자식을 JSX로 전달
+
+자체 컴포넌트를 중첩할 수 있다.  
+JSX 태그 내에 콘텐츠를 중첩하면, 부모 컴포넌트는 해당 콘텐츠를 prop으로 받는다.  
+예를 들어 아래의 `Card` 컴포넌트는 `text`로 설정된 `children` prop을 받아서 래퍼 div에 렌더링한다.  
+
+```
+function Card({ children }) {
+    return (
+        <div className="card">
+            {children}
+        </div>
+    );
+}
+
+export default function Profile() {
+    return (
+        <Card>
+            'text'
+        </Card>
+    );
+}
+```
+
+```
+<Card>
+    <Avatar />
+</Card>
+```
+
+- 여기에서는 `Card` 컴포넌트에 `<Avatar />`로 설정된 `children` prop을 받는다.  
