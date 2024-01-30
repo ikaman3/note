@@ -159,15 +159,13 @@ JSX는 선택사항이지만 대부분의 리액트 프로젝트는 JSX를 사�
 
 ```
 <div>
-  <h1>Hedy Lamarr's Todos</h1>
-  <img
-    src="https://i.imgur.com/yXOvdOSs.jpg"
-    alt="Hedy Lamarr"
-    class="photo"
-  >
-  <ul>
-    ...
-  </ul>
+    <h1>...</h1>
+    <img
+        ...
+    >
+    <ul>
+        ...
+    </ul>
 </div>
 ```
 
@@ -176,15 +174,13 @@ JSX는 선택사항이지만 대부분의 리액트 프로젝트는 JSX를 사�
 
 ```
 <>
-  <h1>Hedy Lamarr's Todos</h1>
-  <img
-    src="https://i.imgur.com/yXOvdOSs.jpg"
-    alt="Hedy Lamarr"
-    class="photo"
-  >
-  <ul>
-    ...
-  </ul>
+    <h1>...</h1>
+    <img
+        ...
+    >
+    <ul>
+        ...
+    </ul>
 </>
 ```
 
@@ -276,20 +272,15 @@ JSX 안에서 중괄호는 두 가지 방법으로만 사용할 수 있다.
 
 ```
 const person = {
-  name: 'Gregorio Y. Zara',
-  theme: {
-    backgroundColor: 'black',
-    color: 'pink'
-  }
+    name: 'Gregorio Y. Zara',
+    theme: {
+        backgroundColor: 'black',
+        color: 'pink'
+    }
 };
-
-export default function TodoList() {
-  return (
-    <div style={person.theme}>
-      <h1>{person.name}'s Todos</h1>
-    </div>
-  );
-}
+<div style={person.theme}>
+    <h1>{person.name}'s Todos</h1>
+</div>
 
 # 자바스크립트 표현식을 사용한 URL 생성
 src={baseUrl + person.imageId + person.imageSize + ".jpg"}
@@ -476,4 +467,15 @@ export default function Profile() {
 </Card>
 ```
 
-- 여기에서는 `Card` 컴포넌트에 `<Avatar />`로 설정된 `children` prop을 받는다.  
+- 여기에서는 `Card` 컴포넌트가 `<Avatar />`로 설정된 `children` prop을 받는다.  
+- 패널, 그리드 등의 시각적 래퍼에 종종 `children` prop을 사용한다.  
+
+### 시간에 따라 props가 변하는 방식
+
+props는 항상 고정되어 있지 않다. props는 컴포넌트의 데이터를 처음에만 반영하는 것이 아니라 모든 시점에 반영한다.  
+  
+그러나 props는 컴퓨터 과학에서 '변경할 수 없다'라는 의미의 불변성을 가진다.  
+컴포넌트가 props를 변경해야 한다면, 부모 컴포넌트에 다른 props = 새로운 객체를 전달하도록 **요청**해야 한다.  
+
+- 이전의 props는 버려지고, 자바스크립트 엔진이 기존 props가 차지했던 메모리를 회수한다.  
+- props를 변경하지 마라. 사용자 입력에 반응해야 하는 경우는 'set state'를 사용한다.  
