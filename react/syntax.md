@@ -470,6 +470,25 @@ export default function Profile() {
 - 여기에서는 `Card` 컴포넌트가 `<Avatar />`로 설정된 `children` prop을 받는다.  
 - 패널, 그리드 등의 시각적 래퍼에 종종 `children` prop을 사용한다.  
 
+자식과 props를 함께 전달할 수도 있다.  
+
+```
+function Card({ children, title }) {
+  return (
+    <div className="card">
+      <div className="card-content">
+        <h1>{title}</h1>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+<Card title="About">
+    <p>...</p>
+</Card>
+```
+
 ### 시간에 따라 props가 변하는 방식
 
 props는 항상 고정되어 있지 않다. props는 컴포넌트의 데이터를 처음에만 반영하는 것이 아니라 모든 시점에 반영한다.  
