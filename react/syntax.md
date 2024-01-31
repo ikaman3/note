@@ -307,6 +307,19 @@ JSX의 인라인 CSS 스타일에서도 이중 중괄호를 사용한다. 리액
 </ul>
 ```
 
+## 조건부 렌더링
+
+`<Item isPacked={true} />` 이러한 컴포넌트가 있을 때,  
+
+```
+if (isPacked) {
+  return <li className="item">{name} ✔</li>;
+}
+return <li className="item">{name}</li>;
+```
+
+자바스크립트의 if/else 문으로 분기할 수 있다.  
+
 ## CSS
 
 1. 리액트는 ```className``` 으로 CSS class를 지정한다. 이것은 HTML의 ```class``` 어트리뷰트와 동일한 방식으로 동작한다.
