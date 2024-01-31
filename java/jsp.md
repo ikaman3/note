@@ -340,3 +340,4 @@ JSP에서 사용되는 커스텀 태그나 JSTL의 태그들에 대한 설정 �
 `web.xml`과 마찬가지로 웹 어플리케이션(src/main/webapp) 경로의 `WEB-INF` 디렉토리 하위에 작성해야 인식됨  
 JSP 1.2 버전의 경우 `web.xml` 파일에 tld 파일에 대한 추가 설정이 필요하며,  
 JSP 2.0 이상인 경우 `WEB-INF` 하위에만 작성하면 자동으로 인식된다.  
+tld 파일은 XML 기반이며 `dtd`나 `schema`를 tld 파일 상단에 명시해야 한다.  
