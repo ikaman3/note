@@ -1,11 +1,15 @@
-# JSTL (JSP Standard Tag Library)
+# JSP
+
+JSP 관련 개념과 문법 등을 기록하는 문서  
+
+## JSTL (JSP Standard Tag Library)
 
 JSP를 사용하는 여러 프로그램이 공통으로 사용할 수 있도록 JSP 태그를 라이브러리 형태로 만들어놓은 것  
 보통의 라이브러리와는 다르게 JSP 페이지 안에서 사용 할 수 있는 커스텀과 함수를 제공한다.  
 일반적으로 EL (Expression Language)과 함께 쓰이며, 이를 통해 HTML 코드 내에서 자바 코드를 사용할 수 있게 해주는 스크립틀릿을 가독성 좋게 사용할 수 있다.  
 최근에는 뷰와 비즈니스 로직의 분리와 가독성 이슈로 스크립툴릿 대신 JSTL을 많이 사용한다.  
 
-# JSTL로 할 수 있는 일
+## JSTL로 할 수 있는 일
 
 1. 간단한 프로그램 로직 구사 (자바 변수 선언, if문, for문 등)
 2. 다른 JSP 페이지 호출 (<c:redirect><c:import>)
@@ -14,36 +18,36 @@ JSP를 사용하는 여러 프로그램이 공통으로 사용할 수 있도록 
 5. XML 문서 처리
 6. 문자열 처리 함수 호출 등
 
-# 대표적 라이브러리와 기능
+## 대표적 라이브러리와 기능
 
-## 라이브러리
+### 라이브러리
 
-### Core 
+#### Core 
 
 > 접두어: c  
 > 기능: 일반 프로그램 언어에서 제공하는 변수선언, 조건/제어/반복문 등의 기능 제공  
 
-### Formatting
+#### Formatting
 
 > 접두어: fmt  
 > 기능: 숫자, 날짜, 시간을 포맷팅하는 기능 그리고 국제화, 다국어 지원기능 제공  
 
-### Function
+#### Function
 
 > 접두어: fn  
 > 기능: 문자열을 처리하는 함수 제공 
 
-### Database
+#### Database
 
 > 접두어: sql  
 > 기능: 데이터베이스의 데이터 CRUD 기능 제공
 
-### XML 처리
+#### XML 처리
 
 > 접두어: x  
 > 기능: XML 문서를 처리할 때 필요한 기능 제공  
 
-## 라이브러리 선언 (JSP 문서 선언부에 작성)
+### 라이브러리 선언 (JSP 문서 선언부에 작성)
 
 ```
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -53,9 +57,9 @@ JSP를 사용하는 여러 프로그램이 공통으로 사용할 수 있도록 
 <%@ taglib prefix="x" uri="https://java.sun.com/jsp/jstl/xml" %>
 ```
 
-# 사용 예시
+## 사용 예시
 
-## 변수 선언
+### 변수 선언
 
 > JSP page에서 사용할 변수 설정  
 > JSP의 setAttribute와 비슷한 역할  
@@ -84,7 +88,7 @@ scope="변수의 유효 범위 page|request|session|application" />
 <a href="${url}/member/loginForm">로그인</a>
 ```
 
-## 변수 제거
+### 변수 제거
 
 > JSP의 removeAttribute()와 비슷한 역할
 > - var="변수명"  
@@ -94,7 +98,7 @@ scope="변수의 유효 범위 page|request|session|application" />
 <c:remove var="country" scope="request" />
 ```
 
-## 출력
+### 출력
 
 > JSP의 <%=...> 표현식을 대체  
 > - var="변수명"  
@@ -110,7 +114,7 @@ scope="변수의 유효 범위 page|request|session|application" />
 <p>${country}</p><p>${intArray[0]}</p>
 ```
 
-## 예외 처리
+### 예외 처리
 
 > Body에서 실행되는 코드의 예외 처리
 > - var="에러메시지가 포함될 변수명"
@@ -123,7 +127,7 @@ scope="변수의 유효 범위 page|request|session|application" />
 Error Msg: ${ex} <br/>
 ```
 
-## 반복문 (forEach)
+### 반복문 (forEach)
 
 > - var="현재 아이템의 변수명"  
 > - items="반복 데이터가 있는 아이템 Collection 명"  
@@ -193,7 +197,7 @@ Error Msg: ${ex} <br/>
 </c:forEach>
 ```
 
-## 반복문 (forTokens)
+### 반복문 (forTokens)
 
 > 문자열을 구분자(delimiter)로 분할
 > - var="현재 아이템의 변수 명"
@@ -226,7 +230,7 @@ Error Msg: ${ex} <br/>
 </b>
 ```
 
-## 조건문 (if) - else 구문이 없음
+### 조건문 (if) - else 구문이 없음
 
 > - test="조건식"  
 > - var="조건식 결과를 저장할 변수 선언"
@@ -250,7 +254,7 @@ Error Msg: ${ex} <br/>
 <c:if test="${!empty country}"><p><b>${country}</b></p></c:if>
 ```
 
-## 조건문 (choose, when, otherwise)
+### 조건문 (choose, when, otherwise)
 
 > - test="조건식"
 
@@ -273,7 +277,7 @@ Error Msg: ${ex} <br/>
 </c:choose>
 ```
 
-## URL
+### URL
 
 > URL 생성
 > - var="생성한 URL이 저장될 변수 명"
@@ -286,7 +290,7 @@ Error Msg: ${ex} <br/>
 </a>
 ```
 
-## Parameter
+### Parameter
 
 > 파라미터 추가
 > - name="파라미터 명"
@@ -303,7 +307,7 @@ Error Msg: ${ex} <br/>
 </a>
 ```
 
-## import
+### import
 
 > 페이지 첨부  
 > import 태그 내에서 param 태그도 사용할 수 있다.
@@ -317,7 +321,7 @@ Error Msg: ${ex} <br/>
 </c:import>
 ```
 
-## redirect
+### redirect
 
 > sendRedirect()와 비슷
 > - url="이동할 URL"
@@ -325,3 +329,14 @@ Error Msg: ${ex} <br/>
 ```
 <c:redirect url="http://localhost:8080" />
 ```
+
+## TLD(Tag Library Descriptor)
+
+JSP에서 사용되는 커스텀 태그나 JSTL의 태그들에 대한 설정 파일  
+개발한 태그 핸들러에 대해 속성이나 속성의 타입, 태그명, uri 등을 정의해두는 설정  
+  
+확장자 : `*.tld`  
+  
+`web.xml`과 마찬가지로 웹 어플리케이션(src/main/webapp) 경로의 `WEB-INF` 디렉토리 하위에 작성해야 인식됨  
+JSP 1.2 버전의 경우 `web.xml` 파일에 tld 파일에 대한 추가 설정이 필요하며,  
+JSP 2.0 이상인 경우 `WEB-INF` 하위에만 작성하면 자동으로 인식된다.  
