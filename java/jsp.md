@@ -1,5 +1,3 @@
-# java/jsp
-
 # JSTL (JSP Standard Tag Library)
 
 JSP를 사용하는 여러 프로그램이 공통으로 사용할 수 있도록 JSP 태그를 라이브러리 형태로 만들어놓은 것  
