@@ -320,6 +320,103 @@ return <li className="item">{name}</li>;
 
 자바스크립트의 if/else 문으로 분기할 수 있다.  
 
+### null 반환
+
+컴포넌트는 반드시 무언가를 반환해야 하는데 아무것도 렌더링하고 싶지 않을 수 있다.  
+이 경우에 `null`을 반환할 수 있다.  
+
+```
+if (isPacked) {
+  return null;
+}
+return <li className="item">{name}</li>;
+```
+
+- 실제로 컴포넌트가 `null`을 반환하면 개발자가 렌더링하려고 할 때 놀랄 수 있으므로 흔한 경우는 아니다.  
+- 또한, `<li>` 중복코드가 유지 보수를 어렵게 할 수 있다.  
+
+### 삼항 조건 연산자
+
+```
+return (
+    <li className="item">
+        {isPacked ? name + ' ✔' : name}
+    </li>
+);
+
+return (
+    <li className="item">
+        {isPacked ? (
+        <del>
+            {name + ' ✔'}
+        </del>
+        ) : (
+            name
+        )}
+    </li>
+);
+```
+
+[위의 예제](#조건부-렌더링)와의 차이는 전혀 없다.  
+
+> 두 가지 다른 `<li>` 인스턴스를 만들 수 있으므로 미묘하게 다르다고 생각할 수 있으나  
+> JSX 엘리먼트는 내부 상태를 보유하지 않으며 실제 DOM 노드가 아니므로 인스턴스가 아니다. 따라서 두 예시 코드는 *완전히 동일*하다.  
+> 이 스타일은 간단한 조건에는 어울리지만, 중첩 마크업이 많다면 자식 컴포넌트를 추출하여 정리하라.  
+
+### 논리 AND 연산자(`&&`)
+
+자바스크립트의 `&&` 표현식을 사용
+
+- 왼쪽(조건)이 `true`이면 오른쪽(체크 표시)의 값을 반환  
+- 조건이 `false`이면 전체 표현식이 `false`  
+- 리액트는 `false`를 `null` 또는 `undefined`처럼 JSX 트리의 구멍으로 간주하고 아무것도 렌더링하지 않음  
+
+```
+<li className="item">
+    {name} {isPacked && '✔'}
+</li>
+```
+
+- `isPacked`이면 '✔' 표시를 렌더링하고, 그렇지 않으면 아무것도 렌더링하지 않음  
+
+**주의사항**  
+> `&&` 왼쪽에 숫자를 두지 말 것  
+> 자바스크립트는 왼쪽을 boolean으로 변환한다. 왼쪽이 `0`이면 전체 식이(`0`)을 얻고, 리액트는 `0`을 렌더링한다.  
+> 흔한 실수: `messageCount && <p>New messages</p>`  
+> 올바른 예시: `messageCount > 0 && <p>New messages</p>`  
+>   > 왼쪽을 boolean으로 만들 것
+
+### 변수에 조건부로 JSX를 할당
+
+`if` 문과 변수를 사용해서 보기좋게 정리할 수 있다.  
+
+```
+let itemContent = name;
+if (isPacked) {
+    itemContent = name + " ✔";
+}
+
+<li className="item">
+    {itemContent}
+</li>
+```
+
+```
+let itemContent = name;
+if (isPacked) {
+    itemContent = (
+        <del>
+            {name + " ✔"}
+        </del>
+    );
+}
+return (
+    <li className="item">
+        {itemContent}
+    </li>
+);
+```
+
 ## CSS
 
 1. 리액트는 ```className``` 으로 CSS class를 지정한다. 이것은 HTML의 ```class``` 어트리뷰트와 동일한 방식으로 동작한다.
