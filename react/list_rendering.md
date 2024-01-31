@@ -7,7 +7,7 @@
 
 1. 데이터를 배열로 이동  
 
-```
+```javascript
 const people = [
     'Creola Katherine Johnson: mathematician',
     'Mario José Molina-Pasquel Henríquez: chemist',
@@ -29,7 +29,7 @@ const people = [
 
 더 구조화된 데이터에서 직업이 `chemist`인 사람만 표시하는 방법  
 
-```
+```javascript
 const people = [{
     id: 0,
     name: 'Creola Katherine Johnson',
@@ -61,7 +61,7 @@ const chemists = people.filter(person =>
 
 2. `chemists` 매핑  
 
-```
+```javascript
 const listItems = chemists.map(person =>
     <li>
         <img
@@ -81,6 +81,34 @@ const listItems = chemists.map(person =>
 
 `return <ul>{listItems}</ul>;`  
 
+## 여러 번의 `filter`를 줄이기
+
+두 번의 `filter` 호출을 통해 두 배열을 얻을 수 있다.  
+
+```javascript
+const chemists = people.filter(person =>
+    person.profession === 'chemist'
+);
+const everyoneElse = people.filter(person =>
+    person.profession !== 'chemist'
+);
+```
+
+로직이 더 복잡하다면 `filter` 대신  
+수동으로 배열을 구성하고 조건문과 반복문으로 대체할 수 있다.  
+
+```javascript
+let chemists = [];
+let everyoneElse = [];
+people.forEach(person => {
+    if (person.profession === 'chemist') {
+        chemists.push(person);
+    } else {
+        everyoneElse.push(person);
+    }
+});
+```
+
 ## 리스트 항목 순서대로 유지
 
 각 배열 항목에 고유하게 식별가능한 문자열 또는 숫자를 `key`로 지정해야 한다.  
@@ -93,7 +121,7 @@ key는 각 컴포넌트가 어떤 항목에 해당하는지 리액트에 알려�
 정렬이나 삽입, 삭제하는 경우 중요해진다.  
 즉석에서 key를 생성하는 대신 데이터 안에 key를 포함해야 한다.  
 
-```
+```javascript
 export const people = [{
     id: 0, // JSX에서 key로 사용됩니다.
     ...
@@ -125,7 +153,7 @@ export const people = [{
 짧은 `<></>` fragment 구문으로 key를 전달할 수 없으므로  
 key를 단일 `<div>`로 그룹화하거나 명시적인 `<Fragment>` 문법을 사용한다.  
 
-```
+```javascript
 import { Fragment } from 'react';
 
 // ...
@@ -164,3 +192,34 @@ Fragment는 DOM에서 사라지므로 `<h1>`, `<p>`, `<h1>`, `<p>` 등의 평평
 > 컴포넌트는 key를 prop으로 받지 않는다.  
 > key는 리액트 자체에서 힌트로만 사용된다.  
 > 컴포넌트에 ID가 필요하다면 `<Profile key={id} userId={id} />` 처럼 별도의 prop으로 전달한다.  
+
+> 아래 코드에서 `key`는 `Recipe`에서 반환된 루트 `<div>`가 아니라 `<Recipe>` 자체에 지정된다.  
+> 이 `key`가 주변 배열의 context 내에서 직접 필요하기 때문이다.  
+
+```javascript
+function Recipe({ id, name, ingredients }) {
+  return (
+    <div>
+      <h2>{name}</h2>
+      <ul>
+        {ingredients.map(ingredient =>
+          <li key={ingredient}>
+            {ingredient}
+          </li>
+        )}
+      </ul>
+    </div>
+  );
+}
+
+export default function RecipeList() {
+    return (
+        <div>
+        <h1>Recipes</h1>
+        {recipes.map(recipe =>
+            <Recipe {...recipe} key={recipe.id} />
+        )}
+        </div>
+    );
+}
+```

@@ -320,6 +320,21 @@ function Drink({ name }) {
 }
 ```
 
+## spread
+
+props를 직접 사용하지 않고 자식 컴포넌트에 전달만 할 때가 있다.    
+이런 경우 *spread* 문법을 사용하는 것이 합리적이다.  
+
+```javascript
+function Recipe({ id, name, ingredients }) {
+    ...
+}
+
+<Recipe {...recipe} key={recipe.id} />
+// 동일한 의미의 코드
+<Recipe id={recipe.id} name={recipe.name} ingredients={recipe.ingredients} />    
+```
+
 ## 화살표 함수
 
 ### 암시적 반환
