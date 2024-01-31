@@ -319,3 +319,26 @@ function Drink({ name }) {
     );
 }
 ```
+
+## 화살표 함수
+
+### 암시적 반환
+
+화살표 함수는 암시적으로 `=>` 바로 뒤에 식을 반환하기 때문에 `return` 문이 필요없다.  
+
+```
+const listItems = chemists.map(person =>
+    <li>...</li> // 암시적 반환!
+);
+```
+
+하지만 `=>` 뒤에 `{` 중괄호가 오는 경우 `return`을 명시적으로 작성해야 한다.  
+
+```
+const listItems = chemists.map(person => { // 중괄호
+    return <li>...</li>;
+});
+```
+
+중괄호를 가진 화살표 함수를 "block body"를 가지고 있다고 말한다.  
+한 줄 이상의 코드를 작성할 수 있지만 `return` 문이 반드시 필요하다.  

@@ -82,6 +82,9 @@ Next.js의 경우 root 컴포넌트는 `pages/index.js`에 정의된다.
 ## export, import
 
 `export default` 접두사는 표준 자바스크립트 구문이다.  
+변수와 상수도 export 할 수 있다.  
+
+`export const people = [{...}]`  
 
 컴포넌트는 세 단계를 거쳐 별도의 파일로 옮길 수 있다. 
 
