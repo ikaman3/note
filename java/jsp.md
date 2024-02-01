@@ -48,17 +48,17 @@ JSP를 사용하는 여러 프로그램이 공통으로 사용할 수 있도록 
 
 ```xml
 <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"> 
-		<property name="basenames"> 
-			<list>
-			 	<value>메세지파일경로</value>
-			</list>
-	 	</property> 
-		<!--인코딩 설정-->
-	 	<property name="defaultEncoding" value="UTF-8" /> 
-	 	 
-	 	<!-- properties 체크--> 
-	 	<property name="cacheSeconds" value="값" /> 
-	 </bean> 
+    <property name="basenames"> 
+        <list>
+            <value>메세지파일경로</value>
+        </list>
+    </property> 
+    <!--인코딩 설정-->
+    <property name="defaultEncoding" value="UTF-8" /> 
+        
+    <!-- properties 체크--> 
+    <property name="cacheSeconds" value="값" /> 
+</bean> 
 ```
 
 - `id`, `class` 등은 변경하지 않음
@@ -68,7 +68,6 @@ JSP를 사용하는 여러 프로그램이 공통으로 사용할 수 있도록 
 ```
 @Bean
 public MessageSource messageSource() { // Bean 이름은 messageSource여아 한다.
-   
     ResourceBundleMessageSource ms = new ResourceBundleMessageSource();
     ms.getBasenames("파일명"); // resources/ 이후 경로
     ms.setDefaultEncoding("UTF-8"); // 인코딩 설정
