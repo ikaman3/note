@@ -12,11 +12,31 @@ JSP를 사용하는 여러 프로그램이 공통으로 사용할 수 있도록 
 ## JSTL로 할 수 있는 일
 
 1. 간단한 프로그램 로직 구사 (자바 변수 선언, if문, for문 등)
-2. 다른 JSP 페이지 호출 (<c:redirect><c:import>)
+2. 다른 JSP 페이지 호출 (`<c:redirect>`, `<c:import>`)
 3. Formatting(숫자, 날짜, 시간)
 4. 데이터베이스 CRUD
 5. XML 문서 처리
 6. 문자열 처리 함수 호출 등
+
+## import Java Class
+
+`<%@ page import = "mes.cmm.util.MberHelber" %>`  
+
+- `src/main/java/mes/cmm/util/MberHelber` Class를 임포트 하는 구문  
+- 이때 Class는 public이어야 함  
+
+## Directive(지시자) 또는 태그 라이브러리에 의한 공백 제거
+
+`<%@ page trimDirectiveWhitespaces="true" %>`  
+
+- JSP 페이지에서 지시자와 태그 라이브러리를 사용하면 최종 출력 HTML에 지시자 또는 태그가 사용된 곳에 빈 줄이 삽입되어 페이지 소스를 보기 어렵게 하고,  
+페이지 용량도 늘어난다.  
+- JSP 2.1 이상에서 제공한다.  
+
+`<%@ page contentType="text/html; charset=utf-8" trimDirectiveWhitespaces="true" %>`  
+
+- `page` 지시자의 다른 속성과 함께 사용할 수 있다.  
+- 이 방식은 include된 페이지에는 적용되지 않으므로 각각 적용해주어야 한다.  
 
 ## 대표적 라이브러리와 기능
 
