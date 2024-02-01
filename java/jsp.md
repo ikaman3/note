@@ -38,6 +38,72 @@ JSP를 사용하는 여러 프로그램이 공통으로 사용할 수 있도록 
 - `page` 지시자의 다른 속성과 함께 사용할 수 있다.  
 - 이 방식은 include된 페이지에는 적용되지 않으므로 각각 적용해주어야 한다.  
 
+## 다국어 지원 및 반복적인 문자열 사용
+
+1. `src/main/resources` 밑에 사용할 문자열을 작성한 `properties` 등록
+
+- 확장자: `*.properties`
+
+2. `context-*.xml`에 `bean` 등록(둘 중 하나 선택)
+
+```xml
+<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"> 
+		<property name="basenames"> 
+			<list>
+			 	<value>메세지파일경로</value>
+			</list>
+	 	</property> 
+		<!--인코딩 설정-->
+	 	<property name="defaultEncoding" value="UTF-8" /> 
+	 	 
+	 	<!-- properties 체크--> 
+	 	<property name="cacheSeconds" value="값" /> 
+	 </bean> 
+```
+
+- `id`, `class` 등은 변경하지 않음
+
+2. 자바 파일로 bean 등록(둘 중 하나 선택)
+
+```
+@Bean
+public MessageSource messageSource() { // Bean 이름은 messageSource여아 한다.
+   
+    ResourceBundleMessageSource ms = new ResourceBundleMessageSource();
+    ms.getBasenames("파일명"); // resources/ 이후 경로
+    ms.setDefaultEncoding("UTF-8"); // 인코딩 설정
+    return ms;
+}
+```
+
+3. jsp 상단에 `taglib` 추가
+
+`<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>`
+
+4. `spring:message` 태그 이용해서 문자열 출력
+
+```jsp
+<spring:messsage code="fail.common" text="code 값이 없을 시 출력 할 메시지 설정"/>
+
+msg.text={0}님, 반갑습니다
+msg.fruits={0}, {1} 그리고 {2}
+<spring:message code="msg.text" arguments="스미스"/>
+<!-- 출력: 스미스님, 반갑습니다. -->
+
+<spring:message code="msg.fruits" arguments="사과, 포도, 오렌지"/>
+<!-- 출력: 사과, 포도 그리고 오렌지 -->
+
+<spring message code="msg.text" var="greeting">
+${greeting}
+<!-- 출력: 안녕하세요 -->
+```
+
+- `code`: 불러올 텍스트의 key 값
+- `text`: code 값이 없을 시 출력할 메시지
+- `arguments`: 지정된 부가 인자({0},{1}, ...) 값을 출력
+  - 부가인자의 갯수만큼 `arguments`가 등록되지 않으면 `사과, 포도 그리고 {2}`처럼 출력
+- `var`: 값을 변수로 할당
+
 ## 대표적 라이브러리와 기능
 
 ### 라이브러리
