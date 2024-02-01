@@ -106,7 +106,7 @@ default와 named export는 한 파일에서 사용할 수도 있다.
 
 export 방식에 따라 import 방식이 정해져 있다. default export한 값을 named import로 가져오려고 하면 **Error**가 발생한다.  
 
-| Syntax | export 구문 | import 구문 |
+| Syntax | <center>export 구문</center> | <center>import 구문</center> |
 | :---: | :--- | :--- |
 | Default | `export default function Button() {}` |	`import Button from './button.js';` |
 | Named | `export function Button() {}` | `import { Button } from './button.js';` |
