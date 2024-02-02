@@ -147,8 +147,30 @@ function Recipe({ drinkers }) {
 2. 입력이 변경되지 않은 컴포넌트 렌더링을 건너뛰어 성능 향상 : 순수 함수는 항상 동일 결과를 반환하므로 캐시하기에 안전함  
 3. 깊은 컴포넌트 트리를 렌더링하는 도중에 일부 데이터가 변경되는 경우 : 오래된 렌더링을 완료하는 데 시간을 낭비하지 않고 렌더링을 다시 시작함.  
 이때 순수함은 언제든지 연산을 중단하는 것을 안전하게 유지해줌  
+4. 리액트는 컴포넌트 함수가 특정 순서로 실행된다는 것을 보장하지 않음 : 변수로 컴포넌트 함수간에 통신할 수 없음  
 
 ## Side Effects(사이드 이펙트)
+
+> 사이트 이펙트의 예시  
+> - 아래 코드는 작동하지 않음  
+
+1. DOM 수정
+
+```javascript
+export default function Clock({ time }) {
+    let hours = time.getHours();
+    if (hours >= 0 && hours <= 6) {
+        document.getElementById('time').className = 'night';
+    } else {
+        document.getElementById('time').className = 'day';
+    }
+    return (
+        <h1 id="time">
+            {time.toLocaleTimeString()}
+        </h1>
+    );
+}
+```
 
 리액트의 렌더링 과정은 항상 순수해야 한다.  
 
