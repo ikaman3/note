@@ -1,29 +1,29 @@
-# shell_script
-
 # Linux/MacOS Shell Script
 
 Linux, MacOS 환경에서 사용할 수 있는 셸 스크립트에 대한 내용을 정리하는 마크다운 문서  
 
-# Shebang / 셔뱅
+## Shebang(셔뱅)
 
 > 스크립트 파일이 어떤 셸로 실행되어야 하는지를 지정하는 shebang(셔뱅)라고 불리는 특별한 주석  
 > shebang은 스크립트가 어떤 인터프리터로 실행되어야 하는지를 지정하는데 사용되며, 스크립트의 첫 줄에 위치
-```
+
+```bash
 #!/bin/bash
 #!/bin/zsh
 ```
 
-# Environment Variable / 환경변수
+## Environment Variable(환경변수)
 
 > 셸에서 사용하는 환경변수를 선언
 > - 변수의이름과 '=' 그리고 값 사이에 공백이 존재하면 안 된다.
+
 ```
 <variable_name>=<value>
 ```
 
-# 문자열 입출력
+## 문자열 입출력
 
-## echo
+### echo
 
 > 문자열 출력 명령어
 > - -n : 마지막에 붙는 개행 문자(newline) 문자를 출력하지 않음
@@ -35,7 +35,8 @@ Linux, MacOS 환경에서 사용할 수 있는 셸 스크립트에 대한 내용
 > 존재한다면 출력 내용으로 파일을 '이어쓰기'로 저장
 > - :r : 환경변수의 이름만 추출하는 명령어
 > - :e : 환경변수의 확장자만 추출하는 명령어
-```
+
+```bash
 echo "<text>"
 echo "<text>" > <file_name>
 echo "<text>" >> <file_name>
@@ -44,14 +45,46 @@ echo ${variable:r}
 echo ${variable:e}
 ```
 
-## print
+### printf
 
-# Conditional / 조건문
+### print
+
+zsh에서만 사용할 수 있는 내장 명령어
+
+#### Format
+
+`command [-option] ( formal or non formal — remembering name )`
+
+#### print -a (align)
+
+> 컬럼 증가를 먼저 표시하는 인자를 출력한다. -c 및 -C 옵션과 함께 사용하는 것이 유용하다.  
+
+```bash
+$ print -a -c "Alice" "Bob" "Carol" "\nDavid" "Eric" "Fred"
+Alice  Bob    Carol
+David  Eric   Fred
+```
+
+#### print -C (Cols)
+
+> -C cols  
+>  
+> 인자를 cols 열에 맞춰 출력한다. -a 옵션이 주어지지 않는 한, 행을 먼저 증가시켜 인자를 출력한다.  
+
+```bash
+$ print -C 2 Alice Bob Carol David Eric
+Alice  David
+Bob    Eric
+Carol
+```
+
+## Conditional(조건문)
 
 > 주어진 조건에 따라 분기를 다르게 하는 제어문
 
 > 기본 구조
-```
+
+```bash
 if [ 조건 ]; then
     # 조건이 참일 때 실행되는 명령들
 elif [ 다른조건 ]; then
@@ -60,8 +93,10 @@ else
     # 모든 조건이 거짓일 때 실행되는 명령들
 fi
 ```
+
 > 예시
-```
+
+```bash
 if [ $score -ge 90 ]; then
     echo "A"
 elif [ $score -ge 80 ]; then
@@ -73,32 +108,39 @@ else
 fi
 ```
 
-# Loop / 반복문
+## Loop(반복문)
 
-## for Loop
+### for Loop
 
 > 지정된 범위 또는 리스트의 각 항목에 대해 반복
 
 > 기본 구조
-```
+
+```bash
 for <var> in <range>; do
     # 반복할 명령어들
 done
 ```
+
 > 숫자 1부터 5까지 반복
-```
+
+```bash
 for i in {1..5}; do
     echo "숫자: $i"
 done
 ```
+
 > 파일 목록을 순회하여 출력
-```
+
+```bash
 for file in *.txt; do
     echo "파일: $file"
 done
 ```
+
 > 여러 폴더안에 존재하는 같은 이름의 파일 이름을 변경하는 예제
-```
+
+```bash
 for dir in ~/Downloads/temp/*; do
     if [ -d "$dir" ]; then
         max_num=$(ls "$dir"/*.png | grep -Eo '[0-9]+' | sort -nr | head -n1)
@@ -107,8 +149,10 @@ for dir in ~/Downloads/temp/*; do
     fi
 done
 ```
+
 > 폴더 안의 숫자로 된 파일 이름을 일괄적으로 변경
-```
+
+```bash
 dir="/Users/main/Downloads/temp/葬送のフリーレン10"
 
 for i in {3..210}; do
@@ -121,17 +165,21 @@ for i in {3..210}; do
     fi
 done
 ```
+
 > 파일 이름에 포함된 글자를 다른 글자로 대체하는 반복문
 > - ${variable//pattern/replacement}
 >   > - variable : 처리할 변수
 >   > - // : 해당 패턴을 모두 변경, /은 한 번만 변경
 >   > - pattern : 변경할 패턴
 >   > - replacement : 대체할 패턴
-```
+
+```bash
 for file in *.pdf; do mv "$file" "${file// /_}"; done
 ```
+
 > fdisk를 반복 실행하는 구문
-```
+
+```bash
 enter=echo -e "\n"
 
 for alpha in b c d e f g h i j;
@@ -149,20 +197,23 @@ do
 EOF
 done
 ```
-## While Loop
+
+### While Loop
 
 > 조건이 참인 동안 반복
 > - [ ] : 조건을 명시하는 명령어. 명령어이기 때문에 반드시 각각 공백 문자로 띄어줘야 한다.
 
 > 기본 구조
-```
+
+```bash
 while [ 조건 ]; do
     # 반복할 명령들
 done
 ```
 
 > count가 5보다 작은 동안 반복
-```
+
+```bash
 count=1
 
 while [ $count -le 5 ]; do
@@ -170,9 +221,10 @@ while [ $count -le 5 ]; do
     ((count++))
 done
 ```
-# 파일 찾기
 
-## find
+## 파일 찾기
+
+### find
 
 > 파일 시스템을 검색하여 특정 조건에 맞는 파일을 찾는 데 사용
 
@@ -181,34 +233,35 @@ done
 > - -execdir : find 명령어로 찾은 파일들에 대해 실행할 명령어를 지정
 >   > - {} : find로 찾은 각 파일을 가리키며, 'mv {} \<filename\>'은 해당 파일의 이름을 \<filename\>로 변경
 >   > - '\\;' : 명령어의 끝을 의미
-```
+
+```bash
 find ./ -name <search_name> -execdir mv {} <filename> \;
 ```
 
-# 파일 복사
+## 파일 복사
 
-## cp
+### cp
 
 > 가장 기본적인 파일 복사  
-```
+
+```bash
 cp <source> <target>
 ```  
 
-## scp
+### scp
 
 > ssh를 이용한 원격 파일 복사  
 
-```
+```bash
 scp -i "keypair.pem" <source> <user>@<IP Address or Domain>:<target>
 ```
 
-## rsync
+### rsync
 
 > rsync를 이용한 원격 파일 동기화  
 > rsync는 SSH를 통한 파일 동기화 명령어다.  
 > 실시간 동기화 기능을 제공하는 lsyncd보다는 강력하지 않으며, 한 대의 컴퓨터에서 여러 대의 대상을 백업하는 rsnapshot만큼 유연하지 않다.  
-
-그러나 정의한 일정에 따라 두 대의 컴퓨터를 최신 상태로 유지할 수 있는 기능을 제공한다.
+> 그러나 정의한 일정에 따라 두 대의 컴퓨터를 최신 상태로 유지할 수 있는 기능을 제공한다.  
 
 > - -a : [archive] rsync를 사용하는 가장 일반적인 옵션으로, 아래의 여러 옵션을 포함하고 있다.  
 >   > - -r : 디렉터리 재귀
@@ -239,7 +292,7 @@ scp -i "keypair.pem" <source> <user>@<IP Address or Domain>:<target>
 >   >   > ```
 > - --files-from=- : 표준 입력의 파일(find 명령으로부터 전달받은 파일)만 포함한다.  
 
-```
+```bash
 rsync -avz --delete -e 'ssh -p 22' <source> <User>@<IP Address or Domain>:<target>  
 
 rsync -e "ssh -i .aws/keypair.pem" --exclude=".git*" --exclude=".DS_Store" --exclude="__pycache__" -av <source> <User>@<IP Address or Domain>:<target>
@@ -247,34 +300,34 @@ rsync -e "ssh -i .aws/keypair.pem" --exclude=".git*" --exclude=".DS_Store" --exc
 find <source_dir> -name "*.jpg" -printf %P\\0\\n | rsync -a --files-from=- <source> <target>
 ```  
 
-# Link
+## Link
 
-## Soft/Symbolic link
+### Soft/Symbolic link
 
 > 다른 파일이나 폴더를 가리키는 링크
 > - Windows OS의 '바로가기'와 유사
 
-```
+```bash
 ln -s <source> <target>
 ```
 
-# SSH
+## SSH
 
 > Secure Shell
 > 원격의 컴퓨터와 암호화된 통신을 주고받음
 > - -i : ssh 공개키 인증을 위한 파일 선택
 
-```
+```bash
 ssh -i "~/coding/aws/.aws/NewKeyPair.pem" ikaman@ec2-3-34-107-69.ap-northeast-2.compute.amazonaws.com
 ```
 
-# Make use of script
+## Make use of script
 
-## sshd_update
+### sshd_update
 
 > 팀프로젝트 GATI의 서버 운영 중, 팀원들이 내 AWS 서버에 ssh로 접속할 수 있도록 설정하기위해 작성한 스크립트
 
-```
+```bash
 #!/bin/bash
 
 # DDNS 주소 설정
@@ -293,11 +346,11 @@ sed -i "s/^AllowUsers .*$/AllowUsers <user1>@<IP Address> <user2>@<IP Address> e
 /usr/sbin/service sshd restart
 ```
 
-## 파일 분할
+### 파일 분할
 
 > 졸업작품이자 첫 팀프로젝트인 GATI를 진행하던중, 네이버 뉴스를 스크래핑한 csv파일의 용량이 너무 커서 분할하기 위해 작성한 스크립트
 
-```
+```bash
 # 파일 이름 정의
 file_name="article.csv"
 
@@ -334,11 +387,11 @@ done
 rm $header_file
 ```
 
-## namechanger
+### namechanger
 
 > 각 만화의 이미지 파일들의 이름을 일관성있게 유지하기 위해 작성한 파일 이름 변경 스크립트
 
-```
+```bash
 cd ~/Desktop/temp
 
 for folder in 僕の心のヤバイやつ*; do
