@@ -1,30 +1,30 @@
-# python/settings.md
+# Python Development Environment
 
-Python으로 개발을 하면서 설정했던 개발 환경을 기록해두는 문서
+Python으로 개발을 하면서 설정했던 개발 환경을 기록해두는 문서  
 
-# Python Virtual Environment
+## Python Virtual Environment
 
-## 가상환경 만들기  
+### 가상환경 만들기  
 
-```
+```bash
 python -m venv <venv_name>
 ```  
 
-## 가상환경 적용  
+### 가상환경 적용  
 
-```
+```bash
 source <venv_dir>/bin/activate
 ```  
 
-## Python 가상환경 해제  
+### Python 가상환경 해제  
 
 작업 위치에 상관 없음  
 
-```
+```bash
 deactivate
 ```  
 
-## 생성한 가상환경의 인터프리터를 VSCode에서 사용하는 방법  
+### 생성한 가상환경의 인터프리터를 VSCode에서 사용하는 방법  
 
 VSCode의 설정 ( Command + , ) (setting.json) 에서 'Python: Default Interpreter Path'를 가상환경의 python interpreter로 설정한다.  
 
@@ -36,9 +36,9 @@ VSCode의 설정 ( Command + , ) (setting.json) 에서 'Python: Default Interpre
 
 [reference](https://blog.devwon.site/python/2021/08/01/Vscode-venv-python-interpreter/)
 
-# Error
+## Error
 
-## ImportError: attempted relative import with no known parent package
+### ImportError: attempted relative import with no known parent package
 
 모듈을 제대로 인식하지 못하는 문제   
 
@@ -47,7 +47,7 @@ VSCode의 설정 ( Command + , ) (setting.json) 에서 'Python: Default Interpre
 
 [reference](https://iq-inc.com/importerror-attempted-relative-import/)(Option 2: Just Make an Actual Package)
 
-## konlpy 설치 에러
+### konlpy 설치 에러
 
 konlpy 모듈 설치를 하지 못하는 에러
 

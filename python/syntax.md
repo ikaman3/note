@@ -1,23 +1,21 @@
-# python/syntax
+# Python Syntax
 
-# 목차
+Python 문법을 정리하는 문서  
 
-[Python Official Documents](https://docs.python.org/ko/3.13/library/functions.html)
+## Numeric / 숫자
 
-# Numeric / 숫자
-
-## sum
+### sum
 
 > iterable 객체의 모든 요소를 더한 값을 반환한다.  
 > 숫자 list, stack.data, tuble 등 사용할 수 있다.
 
-```
+```python
 sum(numStack.data)
 ```  
 
-# String / 문자열
+## String / 문자열
 
-## split
+### split
 
 > 문자열을 sep(구분자)로 나눠 리스트로 반환한다.  
 > 반환된 리스트의 원소들은 문자열이다.  
@@ -29,9 +27,9 @@ sum(numStack.data)
 > str.split(',', 1)  
 > str.split(sep=',', maxsplit=2)  
 
-# Assignment Operator(대입 연산자)
+## Assignment Operator(대입 연산자)
 
-## 두 변수의 값 바꾸기
+### 두 변수의 값 바꾸기
 
 ```python
 a = 3; b = 5
@@ -39,9 +37,9 @@ a, b = b, a
 # 결과: a = 5, b = 3
 ```
 
-# Conditional statement(조건문)
+## Conditional statement(조건문)
 
-## 조건부 표현식(Conditional Expression)
+### 조건부 표현식(Conditional Expression)
 
 간단한 조건에 따라 값을 선택하고 반환
 > 만약 조건(condition)이 참이면 a, 그렇지 않으면 b  
@@ -50,55 +48,55 @@ a, b = b, a
 > 만약 self.left가 존재하면 self.left.size() 호출, 아니면 0
 > - ```l = self.left.size() if self.left else 0```
 
-# Class / 클래스
+## Class / 클래스
 
-## dir()
+### dir()
 
 > Python의 내장 함수로, 어떤 객체를 인자로 넣어주면 해당 객체가 어떤 변수와 메서드를 가지고 있는지 나열한다.
 
-```
+```python
 Q = Queue()
 dir(Q)
 ```
 
-# List / 리스트
+## List / 리스트
 
-## List[-1]
+### List[-1]
 
 > 리스트의 맨 끝 원소에 접근하는 방법  
 > 음수를 입력하면 리스트의 뒤에서부터 접근  
 
-```
+```python
 list[-1]
 ```
 
-## append
+### append
 
 > 리스트의 맨 끝에 원소를 덧붙이는 메서드
 
-```
+```python
 list.append(5)
 ```
 
 > 딕셔너리의 키와 값으로 이루어진 튜플의 리스트 생성  
 
-```
+```python
 list_of_tuples = list(my_dict.items())
 # 출력: [('a', 1), ('b', 2), ('c', 3)]
 ```
 
 > 딕셔너리의 키와 값으로 이루어진 리스트 생성  
 
-```
+```python
 list_of_lists = [[key, value] for key, value in my_dict.items()]
 # 출력: [['a', 1], ['b', 2], ['c', 3]]
 ```
 
-## pop
+### pop
 
 > 리스트의 맨 끝에서 원소를 꺼내는 메서드(원소 자체가 리스트에서 제거됨)
 
-```
+```python
 list.pop()
 list.pop(0)
 ```
@@ -108,65 +106,65 @@ list.pop(0)
 > pop 메서드에 인덱스를 주고 호출하면 해당 인덱스 원소를 삭제하면서 반환한다.  
 > - 이때 뒤의 원소들은 한 칸씩 앞으로 당겨진다.
 
-# Tuple / 튜플
+## Tuple / 튜플
 
-## 선언 및 원소 접근
+### 선언 및 원소 접근
 
-### Indexing / 인덱싱
+#### Indexing / 인덱싱
 
 튜플에서 특정 위치의 원소에 접근하는 기본적인 방법  
 인덱스는 0부터 시작
 
-```
+```python
 my_tuple = (10, 20, 30)
 first_element = my_tuple[0]
 print(first_element)  # 출력: 10
 ```
 
-### Unpacking / 언패킹
+#### Unpacking / 언패킹
 
 튜플의 원소를 여러 변수에 할당하는 방법  
 
-```
+```python
 my_tuple = (10, 20, 30)
 a, b, c = my_tuple
 print(a, b, c)  # 출력: 10 20 30
 ```
 
-### Slicing / 슬라이싱
+#### Slicing / 슬라이싱
 
 슬라이싱을 사용하여 튜플의 일부분을 추출하는 방법  
 
-```
+```python
 my_tuple = (10, 20, 30, 40, 50)
 subset = my_tuple[1:4]
 print(subset)  # 출력: (20, 30, 40)
 ```
 
-# Hash / 해시
+## Hash / 해시
 
-## hash()
+### hash()
 
 > 내장 함수이며 입력된 객체의 해시 값을 반환한다.  
 > 일반적으로 immutable한 객체들은 동일한 입력이 주어진 경우 항상 동일한 해시 값을 반환한다.  
 > - 숫자, 문자열, 튜플 등이 해당
 
-```
+```python
 hashValue = hash("example")
 ```
 
-## hashlib
+### hashlib
 
 > 다양한 해시 함수를 제공하는 모듈  
 > 주로 데이터의 무결성을 확인하는 데 사용된다.  
 
-```
+```python
 import hashlib
 data = "example"
 sha256_hash = hashlib.sha256(data.encode()).hexdigest()
 ```
 
-# Dictionary(딕셔너리)
+## Dictionary(딕셔너리)
 
 > 해시 가능한 자료형을 활용  
 > 딕셔너리의 키로 사용되는 객체는 해시 가능 (hashable) 해야 한다.  
@@ -196,19 +194,19 @@ sha256_hash = hashlib.sha256(data.encode()).hexdigest()
 
 > 리스트 컴프리헨션과 조건문을 사용하여 딕셔너리의 값을 조건에 따라 처리하는 방법  
 
-```
+```python
 keys_with_nonzero_values = [key for key, value in my_dict.items() if value != 0]
 # 출력: ['a', 'c', 'e']
 ```
 
 > Counter() : 등장한 원소의 개수를 세는 데 유용한 클래스  
-> ```
+> ```python
 > print(Counter(participant))
 > # 결과
 > # Counter({'leo': 1, 'kiki': 1, 'eden': 1})
 > ```
 
-```
+```python
 # 기본적인 딕셔너리 생성 방법
 dict = {'a': 1, 'b': 2}
 lux1 = dict(health=490, mana=334, melee=550, armor=18.72)
