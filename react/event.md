@@ -193,3 +193,36 @@ export default function Toolbar() {
 > 디자인 시스템을 적용한다면 버튼과 같은 컴포넌트는 동작을 지정하지 않고 스타일만 지정하는 것이 일반적이다.  
 > 그 대신 `PlayButton`과 `UploadButton` 같은 컴포넌트가 이벤트 핸들러를 전달하도록 한다.  
 
+## Event propagation(이벤트 전파)
+
+이벤트 핸들러는 해당 컴포넌트가 가진 자식 컴포넌트의 이벤트를 수신할 수 있다.  
+
+> 이를 이벤트가 트리를 따라 "bubble"되거나 "전파된다"고 표현한다.  
+> 이때 이벤트는 발생 지점에서 시작하여 트리를 따라 위로 전달된다.  
+
+아래 `<div>`는 두 개의 버튼을 포함하고, `<div>`와 각 버튼은 각자의 `onClick` 핸들러를 갖는다.  
+
+```
+export default function Toolbar() {
+    return (
+        <div className="Toolbar" onClick={() => {
+            alert('You clicked on the toolbar!');
+        }}>
+        <button onClick={() => alert('Playing!')}>
+            Play Movie
+        </button>
+            <button onClick={() => alert('Uploading!')}>
+                Upload Image
+            </button>
+        </div>
+    );
+}
+```
+
+- 둘 중의 어느 버튼을 클릭해도 해당 버튼의 `onClick`이 실행된 후 부모인 `<div>`의 `onClick`이 실행됨  
+- 툴바 자체를 클릭하면 부모인 `<div>`의 `onClick`만 실행됨  
+
+**주의사항**  
+
+> 부여된 JSX 태그 내에서만 실행되는 `onScroll`을 제외한 React 내의 모든 이벤트는 전파된다.  
+
