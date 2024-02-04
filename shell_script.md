@@ -57,7 +57,9 @@ zsh에서만 사용할 수 있는 내장 명령어
 
 #### print -a (align)
 
-> 컬럼 증가를 먼저 표시하는 인자를 출력한다. -c 및 -C 옵션과 함께 사용하는 것이 유용하다.  
+> -a  
+>  
+> 컬럼 증가를 먼저 표시하는 인자를 출력한다. -c 및 -C 옵션과 함께 사용하는 것이 유용  
 
 ```bash
 $ print -a -c "Alice" "Bob" "Carol" "\nDavid" "Eric" "Fred"
@@ -69,13 +71,168 @@ David  Eric   Fred
 
 > -C cols  
 >  
-> 인자를 cols 열에 맞춰 출력한다. -a 옵션이 주어지지 않는 한, 행을 먼저 증가시켜 인자를 출력한다.  
+> 인자를 cols 열에 맞춰 출력한다. -a 옵션이 주어지지 않는 한, 행을 먼저 증가시켜 인자를 출력  
 
 ```bash
 $ print -C 2 Alice Bob Carol David Eric
 Alice  David
 Bob    Eric
 Carol
+```
+
+#### print -D (Directory replacing)
+
+> -D  
+>  
+> 인자를 경로로 처리하며, 디렉토리 접두어를 해당하는 디렉토리 이름에 대응되는 ~ 표현식으로 대체
+
+```bash
+$ print -D /Users/yuma/tmp ~/tmp
+~/tmp ~/tmp
+```
+
+#### print -i (independently)
+
+> -i  
+>  
+> -o 또는 -O와 함께 주어지면 대소문자를 구분하지 않고 정렬  
+
+Sorting  
+  
+ASC  
+
+```bash
+$ print -i -o Bob Carol Alice
+Alice Bob Carol
+```
+
+DESC
+
+```bash
+$ print -i -O Bob Carol Alice
+Carol Bob Alice
+```
+
+#### print -l
+
+```bash
+print -l "Alice" "Bob" "Carol"
+Alice
+Bob
+Carol
+```
+
+#### print -m
+
+```bash
+$ print -m "Bob" "Alice" "Bob" "Carol"
+Bob
+```
+
+#### print -n (no newline)
+
+> 이 경우에 %는 줄 끝을 나타냄(no newline)
+
+```bash
+print -n "Alice"
+Alice%
+```
+
+#### print -N (NULL)
+
+> 인자를 널(null)로 구분하고 종료하여 출력  
+
+```bash
+print -N "Alice" "Bob" "Carol"
+AliceBobCarol%
+```
+
+#### print -p
+
+> -p  
+>  
+> 인자를 coprocess의 입력으로 출력  
+
+#### print -P
+
+> -P  
+>  
+> 프롬프트 확장을 수행(Prompt Expansion 참조)  
+> '-f'와 함께 사용되면 프롬프트 이스케이프 시퀀스는 형식 문자열 내에서가 아니라 보간된 인자 내에서만 구문 분석됨  
+
+#### print -r
+
+> -r  
+>  
+> echo의 이스케이프 규칙을 무시  
+
+#### print -R
+
+> -R  
+>  
+> BSD echo 명령을 흉내 내며, -e 플래그가 주어지지 않으면 이스케이프 시퀀스를 처리하지 않음  
+> -n 플래그는 뒤따르는 줄바꿈을 방지함  
+> -R 이후에는 -e 및 -n 플래그만 인식되며, 다른 모든 인자와 옵션은 출력됨  
+
+#### print -s
+
+> -s  
+>  
+> 결과를 표준 출력이 아닌 히스토리 목록에 넣음  
+> print 명령에 대한 각 인자는 그 내용에 관계없이 히스토리에서 단일 단어로 처리됨  
+
+#### print -S
+
+> -S  
+>  
+> 결과를 표준 출력이 아닌 히스토리 목록에 넣음  
+> 이 경우에는 하나의 인자만 허용되며, 이는 마치 완전한 셸 명령 줄처럼 단어로 분할됨  
+> 이 효과는 `HIST_LEX_WORDS` 옵션이 활성화된 상태에서 히스토리 파일에서 라인을 읽는 것과 유사함  
+
+```bash
+$ print -S "Alice"
+$ history | tail -n 1
+28580  Alice
+```
+
+#### print -u
+
+> -u n  
+>  
+> 인자를 파일 디스크립터 n으로 출력  
+
+#### print -v
+
+> -v name  
+>  
+> 출력된 인자를 매개변수 이름의 값으로 저장  
+
+#### print -x
+
+> -x tab-stop  
+>  
+> 출력된 문자열의 각 행에서 선행하는 탭을 확장하고, 탭 간격은 `tab-stop` 문자 수로 가정함  
+> 이는 탭으로 들여쓰기된 코드를 서식 지정하는 데 적합함  
+> 주의할 점은 `print`에 전달되는 모든 인자의 선행 탭이 확장되며, `print`가 인자를 분리할 때 스페이스를 사용하더라도 (열 카운트는 인자 간에 유지되지만 이전에 확장되지 않은 탭으로 인해 출력에서 오류가 발생할 수 있음) 첫 번째 인자뿐만 아니라 모든 인자의 선행 탭이 확장됨  
+
+> 각 print 명령의 출력 시작은 탭 스톱과 맞춰진 것으로 가정함  
+> 멀티바이트 문자의 너비는 `MULTIBYTE` 옵션이 활성화된 경우 처리됨  
+> 이 옵션은 다른 서식 옵션이 적용된 경우 무시되며, 구체적으로 열 맞춤 또는 `printf` 스타일이나 셸 히스토리 또는 명령 행 편집기와 같은 특수 위치로 출력되는 경우에도 무시됨  
+
+#### print -X
+
+> -X tab-stop  
+>  
+> 이는 `-x`와 유사하지만 출력된 문자열의 모든 탭이 확장됨  
+> 이는 인자의 탭이 테이블 형식을 생성하는 데 사용되는 경우에 적합함  
+
+#### print -z
+
+> `echo Alice`는 명령 결과의 표준 출력(stdout)이 아닌 콘솔 입력 버퍼로 입력됨
+
+```bash
+$ print -z echo ABC
+$ echo Alice
 ```
 
 ## Conditional(조건문)
