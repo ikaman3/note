@@ -239,7 +239,7 @@ $ echo Alice
 
 > 주어진 조건에 따라 분기를 다르게 하는 제어문
 
-> 기본 구조
+### Format
 
 ```bash
 if [ 조건 ]; then
@@ -251,7 +251,7 @@ else
 fi
 ```
 
-> 예시
+### Examples
 
 ```bash
 if [ $score -ge 90 ]; then
@@ -271,13 +271,15 @@ fi
 
 > 지정된 범위 또는 리스트의 각 항목에 대해 반복
 
-> 기본 구조
+#### Format
 
 ```bash
 for <var> in <range>; do
     # 반복할 명령어들
 done
 ```
+
+#### Examples
 
 > 숫자 1부터 5까지 반복
 
@@ -324,7 +326,7 @@ done
 ```
 
 > 파일 이름에 포함된 글자를 다른 글자로 대체하는 반복문
-> - ${variable//pattern/replacement}
+> - `${variable//pattern/replacement}`
 >   > - variable : 처리할 변수
 >   > - // : 해당 패턴을 모두 변경, /은 한 번만 변경
 >   > - pattern : 변경할 패턴
@@ -360,13 +362,15 @@ done
 > 조건이 참인 동안 반복
 > - [ ] : 조건을 명시하는 명령어. 명령어이기 때문에 반드시 각각 공백 문자로 띄어줘야 한다.
 
-> 기본 구조
+#### Format
 
 ```bash
 while [ 조건 ]; do
     # 반복할 명령들
 done
 ```
+
+#### Examples
 
 > count가 5보다 작은 동안 반복
 
