@@ -1,8 +1,8 @@
-# note/README.md
+# README.md
 
 개발 및 학습을 하면서 정리한 마크다운 저장소  
 
-이 문서는 Markdown Syntax 자체를 다룸  
+이 문서는 Markdown Syntax 자체를 정리하는 용도  
 
 ## 목차
 
