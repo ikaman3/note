@@ -2,6 +2,8 @@
 
 git 명령어와 브랜치 전략 등 그 활용법을 정리하는 문서  
 
+`git remote prune origin`
+
 ## diff
 
 > add 되지않은 (staging 되지않은) 파일의 수정 전, 후 차이를 보여주는 명령어  
