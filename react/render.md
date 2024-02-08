@@ -63,3 +63,165 @@
 
 > 렌더링이 완료되고 리액트가 DOM을 업데이트한 후 브라우저는 화면을 다시 그린다.  
 > 이 단계를 "브라우저 렌더링"이라고 하지만 혼동을 피하고자 "페인팅"으로 지칭한다.  
+
+## state과 렌더링
+
+리액트에서는 state를 설정하면 리렌더링을 수행한다. 즉, 인터페이스가 이벤트에 반응하려면 state를 업데이트해야 한다.  
+
+```javascript
+export default function Form() {
+    const [isSent, setIsSent] = useState(false);
+    const [message, setMessage] = useState('Hi!');
+    ...
+    return (
+        <form onSubmit={(e) => {
+            e.preventDefault();
+            setIsSent(true);
+            sendMessage(message);
+        }}>
+            <textarea
+                placeholder="Message"
+                value={message}
+                onChange={e => setMessage(e.target.value)}
+            />
+            <button type="submit">Send</button>
+        </form>
+    );
+}
+```
+
+- 위의 코드에서 버튼을 클릭하면 다음과 같은 일이 발생한다.  
+
+1. `onSubmit` 이벤트 핸들러가 실행
+2. `setIsSent(true)`가 `isSent`를 `true`로 설정하고 새로운 렌더링을 큐에 넣음
+3. 리액트가 새로운 `isSent` 값에 따라 컴포넌트 리렌더링
+
+함수가 반환된 후 사라지는 일반 변수와 다르게 state는 함수 외부, 리액트 자체에 존재한다.  
+리액트가 컴포넌트를 호출하면 특정 렌더링에 대한 state의 스냅샷을 제공한다.  
+컴포넌트는 **해당 렌더링의 state 값을 사용해** 계산된 새로운 props 세읕와 이벤트 핸들러가 포함된 UI의 스냅샷을 JSX에 반환한다.  
+
+1. 리액트에 state 업데이트 명령
+2. 리액트가 state 값을 업데이트
+3. 리액트는 state 값의 스냅샷을 컴포넌트에 전달
+
+## 렌더링은 그 시점의 스냅샷을 찍음
+
+렌더링이란 리액트가 컴포넌트, 즉 함수를 호출한다는 뜻이다.  
+해당 함수에서 반환하는 JSX는 시간상 UI의 스냅샷과 같다.  
+prop, 이벤트 핸들러, 로컬 변수 모두 렌더링 당시의 state를 사용해 계산된다.  
+  
+사진이나 동영상 프레임과 달리 반환하는 *UI 스냅샷*은 대화형이다.  
+여기에는 입력에 대한 응답으로 어떤 일이 일어날지 지정하는 이벤트 핸들러 같은 로직이 포함된다.  
+그럼 리액트는 이 스냅샷과 일치하도록 화면을 업데이트하고 이벤트 핸들러를 연결한다.  
+결과적으로 버튼을 누르면 JSX의 클릭 핸들러가 발동된다.  
+
+### 리액트가 컴포넌트를 리렌더링할 때
+
+1. 리액트가 함수를 다시 호출
+2. 함수가 새로운 JSX 스냅샷을 반환(스냅샷 계산)
+3. 리액트는 함수가 반환한 스냅샷과 일치하도록 화면을 업데이트(DOM Tree 업데이트)
+
+## state와 렌더링
+
+함수가 반환된 후 사라지는 일반 변수와 다르게 state는 함수 외부, 리액트 자체에 존재한다.  
+리액트가 컴포넌트를 호출하면 특정 렌더링에 대한 state의 스냅샷을 제공한다.  
+컴포넌트는 **해당 렌더링의 state 값을 사용해** 계산된 새로운 props 세읕와 이벤트 핸들러가 포함된 UI의 스냅샷을 JSX에 반환한다.  
+
+1. 리액트에 state 업데이트 명령
+2. 리액트가 state 값을 업데이트
+3. 리액트는 state 값의 스냅샷을 컴포넌트에 전달
+
+```javascript
+export default function Counter() {
+    const [number, setNumber] = useState(0);
+    return (
+        <>
+            <h1>{number}</h1>
+            <button onClick={() => {
+                setNumber(number + 1);
+                setNumber(number + 1);
+                setNumber(number + 1);
+            }}>+3</button>
+        </>
+    )
+}
+```
+
+- 위 코드의 버튼을 클릭해도 `number`는 클릭당 한 번만 증가함  
+
+**state를 설정하면 다음 렌더링에 대해서만 변경된다.**  
+이 버튼의 클릭 핸들러가 리액트에 지시하는 작업은 다음과 같다.  
+
+> 1. `setNumber(number + 1)`: `number`는 0이므로 `setNumber(0 + 1)`입니다.
+> - React는 다음 렌더링에서 `number`를 1로 변경할 준비를 합니다.
+> 2. `setNumber(number + 1)`: `number`는 0이므로 `setNumber(0 + 1)`입니다.
+> - React는 다음 렌더링에서 `number`를 1로 변경할 준비를 합니다.
+> 3. `setNumber(number + 1)`: `number`는 0이므로 `setNumber(0 + 1)`입니다.
+> - React는 다음 렌더링에서 `number`를 1로 변경할 준비를 합니다.
+>  
+> `setNumber(number + 1)`를 세 번 호출했지만, 이 렌더링의 이벤트 핸들러에서 `number`는 항상 `0`이므로 state를 `1`로 세 번 설정한 것  
+
+state 변수를 해당 값으로 대입하여 생각할 수 있다.  
+
+```javascript
+<button onClick={() => {
+    setNumber(0 + 1);
+    setNumber(0 + 1);
+    setNumber(0 + 1);
+}}>+3</button>
+```
+
+다음 렌더링
+
+```javascript
+<button onClick={() => {
+    setNumber(1 + 1);
+    setNumber(1 + 1);
+    setNumber(1 + 1);
+}}>+3</button>
+```
+
+## 시간 경과에 따른 state
+
+```javascript
+export default function Counter() {
+    const [number, setNumber] = useState(0);
+    return (
+        <>
+            <h1>{number}</h1>
+            <button onClick={() => {
+                setNumber(number + 5);
+                setTimeout(() => {
+                    alert(number);
+                }, 3000);
+            }}>+5</button>
+        </>
+    )
+}
+
+// alert()에 전달된 state의 스냅샷
+setNumber(0 + 5);
+setTimeout(() => {
+    alert(0);
+}, 3000);
+```
+
+state 변수의 값(컴포넌트를 호출해 리액트가 UI의 스냅샷을 찍을 때 고정된 값)은 이벤트 핸들러의 코드가 비동기적이더라도 **렌더링 내에서 절대 변경되지 않는다.**  
+
+## state 업데이트 큐
+
+state 변수를 설정하면 다음 렌더링이 큐에 들어간다.  
+때에 따라 다음 렌더링을 큐에 넣기 전에, 값에 여러 작업을 수행할 수 있다.  
+
+### 리액트 state batches 업데이트
+
+리액트는 **state를 업데이트하기 전에 이벤트 핸들러의 모든 코드가 실행될 때까지 기다린다.**  
+이러면 너무 많은 리렌더링 없이 여러 컴포넌트에서 나온 다수의 state 변수를 업데이트할 수 있다.  
+하지만 이는 이벤트 핸들러와 그 안의 코드가 완료될 때까지 UI가 업데이트되지 않는다는 의미이기도 하다.  
+
+- '**batching**'라고도 하는 이 동작은 리액트 앱이 훨씬 빠르게 실행되게 한다.  
+- 또한, 일부 변수만 업데이트된 미완성 렌더링을 처리하지 않아도 된다.  
+
+클릭과 같은 여러 의도적인 이벤트에 대해 batch 않으며, 각 클릭은 개별적으로 처리된다.  
+
+- 예를 들어, 첫 번째 클릭으로 양식이 비활성화되면 두 번째 클릭으로 양식이 다시 제출되지 않도록 보장함  
