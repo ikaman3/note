@@ -89,3 +89,7 @@ state 변수와 state setter 함수의 이름은 원하는 대로 지을 수 있
 ## 시간 경과에 따른 state
 
 `render.md` 내용 참조
+
+## state 업데이트 큐
+
+`render.md` 내용 참조
