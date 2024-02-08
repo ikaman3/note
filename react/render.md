@@ -303,3 +303,26 @@ setEnabled(enabled => !enabled);
 // 접두사 사용
 setEnabled(prevEnabled => !prevEnabled)
 ```
+
+### 리액트가 최종 state를 계산하는 알고리즘
+
+> `baseState`: 초기 state(예: `0`)  
+> `queue`: 숫자(예: `5`)와 업데이터 함수(예: `n => n + 1`)가 추가된, 순서대로 섞여있는 배열  
+
+```javascript
+export function getFinalState(baseState, queue) {
+    let finalState = baseState;
+
+    for (let update of queue) {
+        if (typeof update === 'function') {
+            // Apply the updater function.
+            finalState = update(finalState);
+        } else {
+            // Replace the next state.
+            finalState = update;
+        }
+    }
+
+    return finalState;
+}
+```
