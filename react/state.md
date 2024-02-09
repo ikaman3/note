@@ -294,6 +294,194 @@ let obj3 = {
 > `obj3.artwork`, `obj2.artwork`, `obj1`이 같은 객체이기 때문이다.  
 > 이처럼 객체를 중첩된 것으로 이해하지 말고, 프로퍼티를 통해 서로를 **'가리키는'** 각각의 객체로 이해하자.  
 
+## 배열 state 업데이트
+
+> 자바스크립트에서 배열은 다른 종류의 객체다. 객체와 마찬가지로 읽기 전용으로 처리해야 한다.  
+> 즉, `arr[0] = 'bird'`처럼 배열 내부의 항목을 재할당하면 안 되며 `push()`나 `pop()` 같은 함수로 변경해서도 안 된다.  
+> 대신 배열을 업데이트할 때마다 새 배열을 state 설정 함수에 전달한다.  
+> 원본 배열을 변경하지 않는 `filter()`, `map()` 같은 함수를 사용한다.  
+
+일반적인 배열 연산에 대한 참조 표  
+
+> 리액트 state 내에서 배열을 다룰 땐, 오른쪽 열의 함수를 선호한다.  
+
+| | <center>비선호 (배열을 변경)</center> | <center>선호 (새 배열을 반환)</center> |
+| :---: | :--- | :--- |
+| 추가 | `push`, `unshift` | `concat`, `[...arr]` 전개 연산자 |
+| 제거 | `pop`, `shift`, `splice` | `filter`, `slice` |
+| 교체 | `splice`, `arr[i] = ...` 할당 | `map` |
+| 정렬 | `reverse`, `sort` | 배열을 복사한 이후 처리 |
+
+- `slice`: 배열 또는 그 일부를 복사  
+- `splice`: 배열을 **변경**(항목을 추가하거나 제거)  
+
+### 배열에 항목 추가
+
+```javascript
+// 원치 않는 방식
+artists.push({
+    id: nextId++,
+    name: name,
+});
+
+// 바람직한 방식(push()와 동등한 결과)
+setArtists( // 아래의 새로운 배열로 state를 변경
+    [
+        // 배열 전개 구문
+        ...artists, // 기존 배열의 모든 항목에,
+        { id: nextId++, name: name } // 마지막에 새 항목을 추가
+    ]
+);
+
+// 기존 배열 앞에 항목을 배치하는 방법(unshift()와 동등한 결과)
+setArtists([
+    { id: nextId++, name: name }, // 추가할 항목을 앞에 배치하고,
+    ...artists // 기존 배열의 항목들을 뒤에 배치
+]);
+```
+
+### 배열에서 항목 제거
+
+> `filter` 함수를 사용하여 필터링한다.  
+> 즉, 해당 항목을 포함하지 않는 새 배열을 제공한다.  
+
+```javascript
+setArtists(
+    artists.filter(a => a.id !== artist.id)
+);
+```
+
+- "`artist.id`와 ID가 다른 `artists`로 구성된 배열을 생성한다" 라는 의미  
+
+### 배열 변환하기
+
+> `map()`을 사용해 배열의 일부 또는 전체 항목이 변경된 새로운 배열을 생성한다.  
+> `map`에 전달할 함수는 데이터나 인덱스(또는 둘 다)를 기반으로 각 항목을 어떻게 처리할지 결정할 수 있다.  
+
+```javascript
+function handleClick() {
+    const nextShapes = shapes.map(shape => {
+    if (shape.type === 'square') {
+        // 변경시키지 않고 반환합니다.
+        return shape;
+    } else {
+        // 50px 아래로 이동한 새로운 원을 반환합니다.
+        return {
+            ...shape,
+            y: shape.y + 50,
+        };
+    }
+    });
+    // 새로운 배열로 리렌더링합니다.
+    setShapes(nextShapes);
+}
+```
+
+### 배열 내 항목 교체하기
+
+> 이 경우에도 `map`을 사용하는 편이 좋다.  
+> `map`을 이용해서 새로운 배열을 만들 때 두 번째 인수로 항목의 인덱스를 받을 수 있다.  
+> 인덱스는 원래 항목(첫 번째 인수)을 반환할지 다른 항목을 반환할지를 결정할 때 사용한다.  
+
+```javascript
+function handleIncrementClick(index) {
+    const nextCounters = counters.map((c, i) => {
+    if (i === index) {
+        // 클릭된 counter를 증가시킵니다.
+        return c + 1;
+    } else {
+        // 변경되지 않은 나머지를 반환합니다.
+        return c;
+    }
+    });
+    setCounters(nextCounters);
+}
+```
+
+### 배열에 항목 삽입하기
+
+항목을 시작, 끝이 아닌 중간에 삽입하는 경우 `...` 전개 구문과 `slice()` 함수를 사용한다.  
+삽입 지점 앞에 자른 배열을 전개하고, 새 항목과 원본 배열의 나머지 부분을 전개하는 배열을 만든다.  
+
+- 이 예시에서 삽입 버튼은 항상 인덱스 `1`에 삽입된다.  
+- `slice(start, end - 1)`  
+
+```javascript
+function handleClick() {
+    const insertAt = 1; // 모든 인덱스가 될 수 있다.
+    const nextArtists = [
+        // 삽입 지점 이전 항목
+        ...artists.slice(0, insertAt), // 0 ~ insertAt
+        // 새 항목
+        { id: nextId++, name: name },
+        // 삽입 지점 이후 항목
+        ...artists.slice(insertAt) // insertAt ~ 
+    ];
+    setArtists(nextArtists);
+    setName('');
+}
+```
+
+### 배열에 기타 변경 적용
+
+> 전개 구문과 `map()`, `filter()` 같은 비-변경 함수들만으로는 할 수 없는 일이 몇 가지 있다.  
+> 예를 들어, 배열을 뒤집거나 정렬하는 `reverse()` 및 `sort()` 함수는 원본 배열을 변경시키므로 직접 사용하지 못한다.  
+> 대신, **먼저 배열을 복사한 뒤 변경**한다.  
+
+```javascript
+    function handleClick() {
+        const nextList = [...list];
+        nextList.reverse();
+        setList(nextList);
+    }
+```
+
+**그러나 배열을 복사하더라도 배열 내부에 기존 항목을 직접 변경해서는 안 된다.**  
+
+> 얕은 복사이기 때문에 복사한 새 배열은 원본 배열과 동일한 항목이 포함된다.  
+> 따라서 복사된 배열 내부의 객체를 수정하면 기존 state가 변경된다.  
+> 아래와 같은 코드가 문제가 된다.  
+
+```javascript
+// 잘못된 예시
+const nextList = [...list];
+nextList[0].seen = true; // 문제: list[0]을 변경시킨다.
+setList(nextList);
+```
+
+- `nextList`와 `list`는 서로 다른 배열이지만,  
+- **`nextList[0]`과 `list[0]`은 동일한 객체를 가리킨다.**  
+    - 따라서 `nextList[0].seen`을 변경하면 `list[0].seen`도 변경된다.  
+- 변경하려는 개별 항목을 변경하는 대신 복사한다. 방법은 [아래](#배열-내부의-객체-업데이트)와 같다.  
+
+## 배열 내부의 객체 업데이트
+
+> 객체는 실제로는 배열 '내부'에 위치하지 않는다. 코드에서 '내부'로 나타낼 수 있어도  
+> 배열의 각 객체는 배열이 '가리키는' 별도의 값이다.  
+> 중첩된 state를 업데이트할 때, **업데이트하려는 지점부터 최상위 레벨까지의 복사본을 만들어야 한다.**  
+
+```javascript
+// 잘못된 예시
+const myNextList = [...myList];
+const artwork = myNextList.find(a => a.id === artworkId);
+artwork.seen = nextSeen; // 문제: 기존 항목을 변경시킨다.
+setMyList(myNextList);
+```
+
+**`map`을 사용하면 이전 항목의 변경 없이 업데이트된 버전으로 대체할 수 있다.**  
+
+```javascript
+setMyList(myList.map(artwork => {
+    if (artwork.id === artworkId) {
+        // 변경된 *새* 객체를 만들어 반환
+        return { ...artwork, seen: nextSeen };
+    } else {
+        // 변경시키지 않고 반환
+        return artwork;
+    }
+}));
+```
+
 ## 왜 state를 변경하는 것을 권장하지 않는가
 
 - 디버깅: 만약 `console.log`를 사용하고 state를 변경하지 않는다면, 과거 로그들은 가장 최근 state 변경 사항에 의해 지워지지 않는다.  
