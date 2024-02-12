@@ -14,7 +14,20 @@
 
 직접 생성한 컴포넌트에도 props를 전달할 수 있다.  
 
-```
+```javascript
+// props 객체로 받아서 사용하는 방법
+function Avatar(props) {
+    return (
+        <img
+        className="avatar"
+        src={getImageUrl(props.person)}
+        alt={props.person.name}
+        width={props.size}
+        height={props.size}
+        />
+    );
+}
+// 구조 분해 할당 문법을 써서 각 변수로 나누어 사용하는 방법
 function Avatar({ person, size }) {
     return (
         <img
@@ -41,7 +54,7 @@ export default function Profile() {
 - 배열이나 객체의 속성을 해체하여 그 값을 개별 변수에 담는 자바스크립트의 문법이다.  
 - 아래의 코드와 논리적으로 동등하다.  
 
-```
+```javascript
 function Avatar(props) {
     let person = props.person;
     let size = props.size;
@@ -54,7 +67,7 @@ function Avatar(props) {
 기본값은 자바스크립트의 문법이다.  
 변수 바로 뒤에 `=` 과 함께 기본값을 넣어 구조 분해 할당할 수 있다.  
 
-```
+```javascript
 function Avatar({ person, size = 100 }) {
     // ...
 }
@@ -72,7 +85,7 @@ function Avatar({ person, size = 100 }) {
 
 아래와 같이 props를 반복적으로 전달할 때가 있다.  
 
-```
+```javascript
 function Profile({ person, size, isSepia, thickBorder }) {
     return (
         <div className="card">
@@ -91,7 +104,7 @@ function Profile({ person, size, isSepia, thickBorder }) {
 위에서 `Profile`은 props를 직접 사용하지 않고 자식 컴포넌트에 전달만 한다.  
 이런 경우 *spread* 문법을 사용하는 것이 합리적이다.  
 
-```
+```javascript
 function Profile(props) {
     return (
         <div className="card">
@@ -111,7 +124,7 @@ function Profile(props) {
 JSX 태그 내에 콘텐츠를 중첩하면, 부모 컴포넌트는 해당 콘텐츠를 prop으로 받는다.  
 예를 들어 아래의 `Card` 컴포넌트는 `text`로 설정된 `children` prop을 받아서 래퍼 div에 렌더링한다.  
 
-```
+```javascript
 function Card({ children }) {
     return (
         <div className="card">
@@ -129,7 +142,7 @@ export default function Profile() {
 }
 ```
 
-```
+```javascript
 <Card>
     <Avatar />
 </Card>
@@ -140,7 +153,7 @@ export default function Profile() {
 
 자식과 props를 함께 전달할 수도 있다.  
 
-```
+```javascript
 function Card({ children, title }) {
   return (
     <div className="card">
