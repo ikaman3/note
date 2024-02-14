@@ -46,7 +46,7 @@ JSP를 사용하는 여러 프로그램이 공통으로 사용할 수 있도록 
 
 2. `context-*.xml`에 `bean` 등록(둘 중 하나 선택)
 
-```xml
+```html
 <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"> 
     <property name="basenames"> 
         <list>
@@ -81,7 +81,7 @@ public MessageSource messageSource() { // Bean 이름은 messageSource여아 한
 
 4. `spring:message` 태그 이용해서 문자열 출력
 
-```jsp
+```html
 <spring:messsage code="fail.common" text="code 값이 없을 시 출력 할 메시지 설정"/>
 
 msg.text={0}님, 반갑습니다
@@ -134,7 +134,7 @@ ${greeting}
 
 ### 라이브러리 선언 (JSP 문서 선언부에 작성)
 
-```
+```html
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -153,7 +153,7 @@ ${greeting}
 > - property="자바빈 객체 or Map 객체 값을 설정할 프로퍼티 값"
 > - scope="변수 공유 범위"  
 
-```
+```html
 <!-- 변수의 선언 -->
 <c:set var="변수명" value="값"/>
 <c:set var="num1" value= "1"/>
@@ -179,7 +179,7 @@ scope="변수의 유효 범위 page|request|session|application" />
 > - var="변수명"  
 > - scope="변수 공유 범위"  
 
-```
+```html
 <c:remove var="country" scope="request" />
 ```
 
@@ -189,8 +189,8 @@ scope="변수의 유효 범위 page|request|session|application" />
 > - var="변수명"  
 > - default="기본값"
 > - escapeXML="true|false"
-```
 
+```html
 <!-- Syntax -->
 <c:out var="변수명" default="기본값" escapeXML="true|false" />
 
@@ -204,7 +204,7 @@ scope="변수의 유효 범위 page|request|session|application" />
 > Body에서 실행되는 코드의 예외 처리
 > - var="에러메시지가 포함될 변수명"
 
-```
+```html
 <c:catch var="ex">
     <%= 1/0 %>
 </c:catch> <br/>
@@ -231,7 +231,7 @@ Error Msg: ${ex} <br/>
 > - $(변수.end} : forEach문의 끝 값
 > - $(변수.step} : forEach문의 증가 값
 
-```
+```html
 <c:forEach var="vo" items="${list}">
 	<li><input type="checkbox" name="noList" value='${vo.no}' class="chk" /></li>
 	<li>${vo.no}</li>
@@ -293,7 +293,7 @@ Error Msg: ${ex} <br/>
 > - step="증가 값"
 > - varStatus="반복 상태 값을 지닌 변수"
 
-```
+```html
 <!-- Syntax -->
 <c:forTokens var="name" items="expression"
              delims="expression" varStatus="name"
@@ -322,7 +322,7 @@ Error Msg: ${ex} <br/>
 > - scope="조건식 결과를 저장할 변수의 저장 scope 지정"
 > - <c:if>조건식이 참일 경우 반복할 내용</c:if>
 
-```
+```html
 <c:if test="${logStatus !='Y'}">
 	<a href ="${url}/member/loginForm">로그인</a>
 	<a href ="${url}/member/memberForm">회원가입</a>
@@ -343,7 +343,7 @@ Error Msg: ${ex} <br/>
 
 > - test="조건식"
 
-```
+```html
 <c:choose>
     <c:when test="조건식1"> 조건식1이 참일 경우 실행할 내용 </c:when>
     <c:when test="조건식2"> 조건식2이 참일 경우 실행할 내용 </c:when>
@@ -369,7 +369,7 @@ Error Msg: ${ex} <br/>
 > - value="생성할 URL" 
 > - scope="변수 공유 범위" 
 
-```
+```html
 <a href="<c:url value='/TEST.jsp' />">
    View Test
 </a>
@@ -381,7 +381,7 @@ Error Msg: ${ex} <br/>
 > - name="파라미터 명"
 > - value="값"
 
-```
+```html
 <c:url value="TEST.jsp" var="paramTest">
    <c:param name="data1" value="1000" />
    <c:param name="data2" value="2000" />
@@ -398,7 +398,7 @@ Error Msg: ${ex} <br/>
 > import 태그 내에서 param 태그도 사용할 수 있다.
 > - url="첨부할 URL"
 
-```
+```html
 <c:import url="/TEST1.jsp" />
 <c:import url="/TEST2.jsp">
    <c:param name="data1" value="1000" />
@@ -411,7 +411,7 @@ Error Msg: ${ex} <br/>
 > sendRedirect()와 비슷
 > - url="이동할 URL"
 
-```
+```html
 <c:redirect url="http://localhost:8080" />
 ```
 
