@@ -1,7 +1,5 @@
 # Spring
 
-## Maven, Java로 Spring 프로젝트 생성
-
 ## Spring Bean 및 설정
 
 ## 블로그 글 옮기던거
