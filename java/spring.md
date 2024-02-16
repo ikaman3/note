@@ -2,6 +2,8 @@
 
 ## Maven, Java로 Spring 프로젝트 생성
 
+## Spring Bean 및 설정
+
 ## 블로그 글 옮기던거
 
 Spring의 폼 태그는 커맨드 객체(데이터 모델)를 사용하여 HTML 폼 입력 필드와 데이터를 바인딩한다.  
