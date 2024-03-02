@@ -167,6 +167,45 @@ This way, handleCount will only be redefined if its dependencies change, prevent
 
 `import PropTypes from 'prop-types'`
 
-### Error: propType "children" is not required, but has no corresponding defaultProps declaration. react/require-default-props
+### Error: propType "name" is not required, but has no corresponding defaultProps declaration. react/require-default-props
 
 [rule: require-default-props](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/require-default-props.md)
+
+[이 rule을 꺼야하는 이유](https://stackoverflow.com/questions/64012257/proptype-name-is-not-required-but-has-no-corresponding-defaultprops-declarati)
+
+```json
+"rules": {
+  "react/require-default-props": "off"
+}
+```
+
+#### Warning: Controller: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.
+
+이 경고 메시지는 Next.js의 future major release에서 function 컴포넌트에서의 defaultProps 지원이 제거될 것임을 알려주고 있습니다. 이것은 현재 사용하고 있는 컴포넌트에서 defaultProps를 사용하고 있다는 의미입니다.
+
+경고를 해결하기 위한 방법은 해당 컴포넌트에서 defaultProps 대신에 JavaScript의 default parameters를 사용하는 것입니다. defaultProps는 class 컴포넌트에서 사용되는 패턴이며, function 컴포넌트에서는 default parameters가 권장됩니다.
+
+예를 들어, 기존 코드가 다음과 같이 defaultProps를 사용하고 있다면:
+
+```javascript
+function Controller(props) {
+    // ...
+}
+
+Controller.defaultProps = {
+    buttonNumbers: [],
+    onCountChange: () => {},
+};
+```
+
+다음과 같이 default parameters를 사용하도록 변경할 수 있습니다:
+
+```javascript
+function Controller({ buttonNumbers = [], onCountChange = () => {} }) {
+    // ...
+}
+```
+
+### Error: Prop type "array" is forbidden react/forbid-prop-types
+
+[rule: forbid-prop-types](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/forbid-prop-types.md)
