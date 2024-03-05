@@ -237,6 +237,19 @@ $ print -z echo ABC
 $ echo Alice
 ```
 
+## ls
+
+### ls -d
+
+디렉토리만 출력
+
+### ls --color=\<option\>
+
+출력할 문자열에 색상 값의 유무를 결정
+
+- never : 없음  
+
+
 ## Conditional(조건문)
 
 > 주어진 조건에 따라 분기를 다르게 하는 제어문
