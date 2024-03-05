@@ -2,6 +2,21 @@
 
 vim 명령어 및 단축키를 정리하는 마크다운 문서
 
+## .vimrc
+
+vim이 실행될 때 적용할 설정 파일
+
+### Tap
+
+#### tab을 space 4개로 대체
+
+```vim
+set smartindent
+set tabstop=4
+set expandtab
+set shiftwidth=4 " >> 또는 << 키로 들여 쓰기 할때 스페이스의 갯수. 기본값 8
+```
+
 ## 파일 열기 및 작성
 
 `vi` 명령어로 파일을 열었을 때
