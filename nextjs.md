@@ -133,6 +133,7 @@ ESLint를 사용하며 발생한 Error와 그 해결법을 모아두는 곳
 ### Error: JSX props should not use functions react/jsx-no-bind
 
 [rule: jsx-no-bind](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-no-bind.md)
+[solution](https://stackoverflow.com/questions/36677733/why-shouldnt-jsx-props-use-arrow-functions-or-bind)
 
 In React, it's common to pass functions as props to handle events or side effects. However, if you're seeing a warning about this, it might be due to the way you're defining or using the function.
 
