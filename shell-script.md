@@ -26,17 +26,17 @@ Linux, MacOS 환경에서 사용할 수 있는 셸 스크립트에 대한 내용
 
 ### echo
 
-> 문자열 출력 명령어
->
-> - -n : 마지막에 붙는 개행 문자(newline) 문자를 출력하지 않음
-> - -e : 문자열에서 백슬래시(\)와 이스케이프 문자를 인용 부호(")로 묶어 인식
-> - -E : 문자열에서 백슬래시와 이스케이프 문자를 비활성화(default)
-> - '>' : 리다이렉션, 해당 경로에 파일이 존재하지 않으면 echo의 출력 내용으로 새 파일 생성  
->   존재한다면 출력 내용으로 파일을 '덮어쓰기'로 저장
-> - '>>' : 리다이렉션, 해당 경로에 파일이 존재하지 않으면 echo의 출력 내용으로 새 파일 생성  
->   존재한다면 출력 내용으로 파일을 '이어쓰기'로 저장
-> - :r : 환경변수의 이름만 추출하는 명령어
-> - :e : 환경변수의 확장자만 추출하는 명령어
+문자열 출력 명령어
+
+- -n : 마지막에 붙는 개행 문자(newline) 문자를 출력하지 않음
+- -e : 문자열에서 백슬래시(\)와 이스케이프 문자를 인용 부호(")로 묶어 인식
+- -E : 문자열에서 백슬래시와 이스케이프 문자를 비활성화(default)
+- '>' : 리다이렉션, 해당 경로에 파일이 존재하지 않으면 echo의 출력 내용으로 새 파일 생성  
+  존재한다면 출력 내용으로 파일을 '덮어쓰기'로 저장
+- '>>' : 리다이렉션, 해당 경로에 파일이 존재하지 않으면 echo의 출력 내용으로 새 파일 생성  
+  존재한다면 출력 내용으로 파일을 '이어쓰기'로 저장
+- :r : 환경변수의 이름만 추출하는 명령어
+- :e : 환경변수의 확장자만 추출하는 명령어
 
 ```bash
 echo "<text>"
@@ -48,6 +48,441 @@ echo ${variable:e}
 ```
 
 ### printf
+
+`printf [-v var] format [arguments]`
+
+`printf`는 builtin 명령으로 C 언어의 `printf` 함수와 같은 기능을 제공한다.  
+`echo` 명령의 경우 `sh` 과 `bash` 가 escape 문자를 처리하는 방식이 다른데 `printf`는 그런 차이가 없다.  
+`printf`에서는 기본적으로 `" "`, `' '` 모두에서 escape 문자가 처리된다(`gawk` 에서와 같이 escape 문자 테이블에 따라서 처리된다)  
+quotes의 고유 기능은 그대로 유지 되므로 `" "` 에서는 변수확장, 명령치환이 된다.  
+
+```bash
+printf '%s\n%s\n' foo bar      # (single quotes)
+foo                              # printf 에 \n로 전달되고 escape 처리되어 newline 출력
+bar
+
+printf "%s\n%s\n" foo bar      # (double quotes)
+foo                              # printf 에 \n로 전달되고 escape 처리되어 newline 출력
+bar
+
+printf '%s\\n%s\\n' foo bar    # printf 에 \\n로 전달되고 \\는 \로
+foo\nbar\n                       # escape 처리되므로 \n로 출력
+
+printf "%s\\n%s\\n" foo bar    # double quotes 에서는 \\ 가 \로 escape 되므로
+foo                              # printf 에 \n로 전달되고 escape 처리되어 newline 출력
+bar
+##############################
+
+printf %s 'foo\nbar\n'         # %s는 인수값의 escape 문자가 처리되지 않고
+foo\nbar\n
+
+printf %b 'foo\nbar\n'         # %b는 escape 문자가 처리된다.
+foo
+bar
+##############################
+
+AA=bar
+
+printf 'foo $AA\n'             # single quotes 에서는 변수 확장이 안되고
+foo $AA
+
+printf "foo $AA\n"             # double quotes 에서는 된다.
+foo bar
+```
+
+문자를 출력할 때는 `printf '%c' ...` 형식 외에 16진수, 8진수 escape sequence를 사용할 수 있다.  
+
+```bash
+printf "%c %c %c\n" ABC DEF GHI
+A D G
+
+printf '\x41 \x42 \x43\n'      # 16진수
+A B C
+
+printf '\101 \102 \103\n'      # 8진수
+A B C
+```
+
+#### -v <var> (bash only)
+
+출력값을 변수에 저장
+
+```bash
+printf -v IFS " \t\n"          # escape sequence 가 처리되어 저장된다.
+
+echo -n "$IFS" | od -tax1
+0000000  sp  ht  nl
+         20  09  0a
+
+foo=bar                        # indirection 도 가능
+printf -v "$foo" "%s: %d" "Content-Length" 123
+
+echo "$bar"
+Content-Length: 123
+```
+
+#### Arguments
+
+`printf`는 format tags와 그에 상응하는 인수를 이용하여 여러가지 형태로 출력할 수 있다.  
+이때 인수에 사용되는 숫자는 다음과 같은 형식을 사용할 수 있다.  
+
+- `N` : 10진수 (decimal) 숫자
+- `0N` : 8진수 (octal) 숫자
+- `0xN` : 16진수 (hexadecimal) 소문자 숫자
+- `0XN` : 16진수 (hexadecimal) 대문자 숫자
+- `'X` or `"X` : X는 character
+
+```bash
+# %d는 인수 값을 10 진수로 표시
+
+printf "%d\n" 10        # decimal
+10
+printf "%d\n" 010       # octal
+8
+printf "%d\n" 0x10      # hexadecimal
+16
+printf "%d %d\n" "'A" '"A'   # character
+65 65
+```
+
+format tags 개수보다 인수의 개수가 많을 경우는 명령이 반복된다.  
+
+```bash
+printf "< %d >" 11
+< 11 >
+
+printf "< %d >" 11 22 33    # %d는 하나인데 인수는 3개 이므로 3번 반복
+< 11 >< 22 >< 33 >
+
+printf "< %d >\n" 11
+< 11 >
+
+printf "< %d >\n" 11 22 33
+< 11 >
+< 22 >
+< 33 >
+
+printf '%s\n' /bin/*
+/bin/bash
+/bin/brltty
+/bin/btrfs
+...
+
+arr=( /usr/bin/z* )
+printf '%s\0' "${arr[@]}" | sort -z | tr '\0' '\n'
+/usr/bin/zcat
+/usr/bin/zcmp
+/usr/bin/zdiff
+...
+```
+
+#### Format tags
+
+format 스트링에서 다음과 같이 format tag를 구성하여 인수 값의 출력 형태를 변경할 수 있다.  
+
+```bash
+%[flags][width][.precision]specifier
+```
+
+##### Specifier
+
+- `%d`, `%i` : signed decimal number로 표시한다.
+- `%u` : unsigned decimal number로 표시한다.
+- `%o` : unsigned octal number로 표시한다.
+- `%x` : unsigned hexadecimal number (소문자)로 표시한다.
+- `%X` : `%x`와 같으나 대문자로 표시한다.
+- `%f` : floating point number로 표시한다.
+- `%e` : scientific notation 으로 표시한다.
+- `%E` : `%e`와 같으나 대문자 E를 사용한다.
+- `%g` : 값에 따라 floating point number 또는 scientific notation을 사용한다.
+- `%G` : `%g`와 같으나 scientific notation 에서 대문자 E를 사용한다.
+- `%a` : C99 형식의 hexadecimal floating point number로 표시한다. (bash only)
+- `%A` : `%a`와 같으나 대문자로 표시한다. (bash only)
+- `%s` : 인수 값을 escape 문자 처리 없이 그대로 출력한다.
+- `%b` : 인수 값을 escape 문자 처리하여 출력한다.
+- `%q` : shell 의 input 으로 사용할수 있게 escape 하여 출력한다.
+- `%%` : % 문자를 일반 문자로 프린트할 때 사용한다.
+- `%c` : 인수의 첫번째 문자를 프린트한다.
+- `%(FORMAT)T` : FORMAT 에따라 date-time을 프린트한다.
+- `%n` : 앞에서 출력된 문자수를 인수로 주어진 변수에 대입한다. (bash only)
+
+```bash
+printf "%d, %d\n" 10 -10    # signed decimal
+10, -10
+
+printf "%u, %u\n" 10 -10    # unsigned decimal
+10, 18446744073709551606
+
+printf "%o, %o\n" 10 -10    # unsigned octal
+12, 1777777777777777777766
+
+printf "%x, %x\n" 10 -10    # unsigned hexadecimal
+a, fffffffffffffff6
+
+printf '%e\n' 123            # scientific notation
+1.230000e+02
+
+printf '%f\n' 123            # floating point number
+123.000000
+
+printf '%g\n' 123
+123
+
+printf '%f\n' 123.4567
+123.456700
+
+printf '%g\n' 123.4567       # floating point number 
+123.457
+
+printf '%f\n' 12345678.123
+12345678.123000
+
+printf '%g\n' 12345678.123   # scientific notation
+1.23457e+07
+
+printf '%f\n' 0.0000123
+0.000012
+
+printf '%g\n' 0.0000123      # scientific notation
+1.23e-05
+
+printf '%a\n' 123.4567       # hexadecimal floating point number
+0xf.6e9d495182a9931p+3
+
+printf '%s\n' 'hello\tworld'     
+hello\tworld                      # escape 문자 처리 없이 그대로 출력
+
+printf '%b\n' 'hello\tworld'    
+hello    world                     # escape 문자를 처리하여 출력
+
+# 'bash -c CMD' 에서 실행하고자 하는 명령이 제대로 전달되지 않는다.
+echo 'echo -e "first\nsecond"' | xargs -I CMD bash -c CMD
+firstnsecond   # \n 처리가 되지 않는다.
+
+printf '%q\n' 'echo -e "first\nsecond"' 
+# 실행결과: echo\ -e\ \"first\\nsecond\"
+
+printf '%q\n' 'echo -e "first\nsecond"' | xargs -I CMD bash -c CMD
+first
+second
+-----------------------------------------------------------------
+
+cat commands.txt
+echo -e "first\nsecond"
+echo -e "third\nfourth"
+echo -e "fifth\nsixth"
+
+cat commands.txt |
+while read -r line; do printf "%q\n" "$line"; done |
+xargs --max-procs=4 -I CMD bash -c CMD
+----------------------------------------------------------------
+
+# ssh을 통해 공백이 있는 파일이름을 touch 명령의 인수로 올바르게 전달하기 위해 
+printf '%q ' touch "a test file" "another file"
+touch a\ test\ file another\ file
+
+sshc() {
+        remote=$1; shift
+        ssh "$remote" "$(printf '%q ' "$@")"
+}
+
+sshc user@server touch "a test file" "another file"
+
+printf 'foo %%%s%%\n' bar
+foo %bar%
+
+printf '%c %c\n' abc def
+a d
+
+printf 'today is %(%Y-%m-%d)T\n'
+today is 2015-08-31
+
+printf '12345%n6789%n\n' num1 num2
+123456789
+
+echo $num1 $num2
+5 9
+```
+
+#### Width
+
+- `N` : field width를 설정한다.
+- `*` : field width 값을 인수로 받을 수 있다.
+
+```bash
+printf '%d %d %d\n' 100 200 300
+100 200 300
+printf '%10d %10d %10d\n' 100 200 300         # field width를 10 으로 설정
+       100        200        300
+printf '%*d %*d %*d\n' 10 100 15 200 20 300   # 10, 15, 20은 각각 * 에 대응하는 값
+       100             200                  300
+
+printf 'DE:AD:BE:EF:%02X:%02X\n' $((RANDOM % 256)) $((RANDOM % 256))
+DE:AD:BE:EF:DA:FA
+
+# 구분선 만들기
+printf -v sep '%*s' 50 ; echo "${sep// /-}"
+--------------------------------------------------
+```
+
+#### Flags
+
+- `-` : field width 내에서 값을 left 정렬한다. (default는 right 정렬)
+- `0` : field width 에 맞게 zero padding 한다.
+- `+` : 숫자에 + , - sign 기호를 붙여서 표시한다.
+- `space` : +를 사용하지 않을경우 sign 자리에 space를 두어 정렬한다.
+- `'` : 1000 의 자리마다 콤마를 넣어 표시한다. (bash only)
+- `#` : alternative format을 사용할 수 있다.
+
+```bash
+printf '%10d %10d %10d\n' 100 200 300
+       100        200        300
+printf '%-10d %-10d %-10d\n' 100 200 300  
+100        200        300
+
+printf '%06d\n' 12 345 6789
+000012
+000345
+006789
+
+printf '%+10d %+10d %+10d\n' 100 -200 +300
+      +100       -200       +300
+
+printf '%d\n' 100 -200 +300
+100
+-200
+300
+printf '% d\n' 100 -200 +300  
+ 100
+-200
+ 300
+
+LC_ALL=en_US.UTF-8 printf "%'d\n"  123456789
+123,456,789
+............................
+
+bc <<< 2^64
+18446744073709551616
+
+LC_ALL=en_US.UTF-8 printf "%'.d\n" $( bc <<< 2^64 )      # %'.d
+bash: printf: warning: 18446744073709551616: Numerical result out of range
+9,223,372,036,854,775,807
+
+LC_ALL=ko_KR.UTF-8 printf "%'.f\n" $( bc <<< 2^64 )      # %'.f
+18,446,744,073,709,551,616
+```
+
+`%#o`은 값을 octal number로 표시할때 앞에 0을 붙인다.
+
+```bash
+printf '%#o\n' 10
+012
+```
+
+`%#x`, `%#X`은 값을 hexadecimal number로 표시할때 앞에 0x , 0X를 붙인다.
+
+```bash
+printf '%#x %#X\n' 10 30
+0xa 0X1E
+```
+
+`%#g`, `%#G`은 precision 내에서 trailing zero를 붙인다.
+
+```bash
+printf '%g\n' 12.34
+12.34
+printf '%#g\n' 12.34
+12.3400
+```
+
+#### Precision
+
+`.`을 이용하면 왼쪽에는 field width를 오른쪽에는 precision을 설정할 수 있다.
+field width 크기는 precision을 포함한다.
+
+- `.N` : precision 값을 설정한다.
+- `.*` : precision 값을 인수로 받을 수 있다.
+
+```bash
+printf '%f\n' 123.987654321
+123.987654
+printf '%.3f\n' 123.987654321    # precision을 3 으로 설정
+123.988                            # 소수 넷째 자리에서 반올림이 된다
+printf '%.*f\n' 3 123.987654321  # '*'을 이용하여 precision 값을 인수로 받음
+123.988
+```
+
+`%f`와 `%g`는 precision 값을 처리하는 방식이 다르다.  
+`%f`는 소수점 이후의 개수를 나타내고 `%g`는 전체 유효숫자 개수를 나타낸다.  
+
+```bash
+printf '%.5f\n' 123.12345678  # 소수점 이후 5개
+123.12346
+
+printf '%.5g\n' 123.12345678  # 전체 유효숫자 5개
+123.12
+
+printf '%.5f\n' 0.0012345678
+0.00123
+
+printf '%.5g\n' 0.0012345678
+0.0012346
+```
+
+`%s`에서의 사용은 출력 문자수를 제한한다.  
+
+```bash
+printf '%s\n' foobarzoo
+foobarzoo
+
+printf '%.5s\n' foobarzoo
+fooba
+
+printf '%.*s\n' 5 foobarzoo
+fooba
+
+# %.s 또는 %.0s는 해당 인수를 출력에서 제외하는 효과가 있습니다.
+printf '%d%d%.s%.0s%d\n' 11 22 33 44 55
+112255
+```
+
+#### Examples
+
+0 ~ 127 까지 숫자를 decimal, octal, hexadecimal로 출력하기
+
+```bash
+for ((x=0; x <= 127; x++)); do
+>  printf '%3d | %04o | 0x%02x\n' $x $x $x
+> done
+  0 | 0000 | 0x00
+  1 | 0001 | 0x01
+  2 | 0002 | 0x02
+...
+...
+125 | 0175 | 0x7d
+126 | 0176 | 0x7e
+127 | 0177 | 0x7f
+```
+
+1 ~ 2 자리로 되어있는 hexadecimal number를 2 자리로 맞추기
+
+```bash
+mac_addr="0:13:ce:7:7a:ad"
+
+printf '%02x:%02x:%02x:%02x:%02x:%02x\n' 0x${mac_addr//:/ 0x}
+00:13:ce:07:7a:ad
+```
+
+현재 라인 우측 끝에 메시지 출력하기
+`tput cols`은 현재 터미널 columns 수를 출력. `echo $COLUMNS`과 동일
+
+```bash
+# bash
+printf '%*s\n' $COLUMNS "hello world"
+
+# sh
+printf '%*s\n' $(tput cols) "hello world"
+```
 
 ### print
 
@@ -61,10 +496,10 @@ zsh에서만 사용할 수 있는 내장 명령어
 
 > -a
 >
-> 컬럼 증가를 먼저 표시하는 인자를 출력한다. -c 및 -C 옵션과 함께 사용하는 것이 유용
+> 컬럼 증가를 먼저 표시하는 인자를 출력한다. `-c` 및 `-C` 옵션과 함께 사용하는 것이 유용
 
 ```bash
-$ print -a -c "Alice" "Bob" "Carol" "\nDavid" "Eric" "Fred"
+print -a -c "Alice" "Bob" "Carol" "\nDavid" "Eric" "Fred"
 Alice  Bob    Carol
 David  Eric   Fred
 ```
@@ -76,7 +511,7 @@ David  Eric   Fred
 > 인자를 cols 열에 맞춰 출력한다. -a 옵션이 주어지지 않는 한, 행을 먼저 증가시켜 인자를 출력
 
 ```bash
-$ print -C 2 Alice Bob Carol David Eric
+print -C 2 Alice Bob Carol David Eric
 Alice  David
 Bob    Eric
 Carol
@@ -89,7 +524,7 @@ Carol
 > 인자를 경로로 처리하며, 디렉토리 접두어를 해당하는 디렉토리 이름에 대응되는 ~ 표현식으로 대체
 
 ```bash
-$ print -D /Users/yuma/tmp ~/tmp
+print -D /Users/yuma/tmp ~/tmp
 ~/tmp ~/tmp
 ```
 
@@ -104,14 +539,14 @@ Sorting
 ASC
 
 ```bash
-$ print -i -o Bob Carol Alice
+print -i -o Bob Carol Alice
 Alice Bob Carol
 ```
 
 DESC
 
 ```bash
-$ print -i -O Bob Carol Alice
+print -i -O Bob Carol Alice
 Carol Bob Alice
 ```
 
@@ -127,7 +562,7 @@ Carol
 #### print -m
 
 ```bash
-$ print -m "Bob" "Alice" "Bob" "Carol"
+print -m "Bob" "Alice" "Bob" "Carol"
 Bob
 ```
 
@@ -192,8 +627,8 @@ AliceBobCarol%
 > 이 효과는 `HIST_LEX_WORDS` 옵션이 활성화된 상태에서 히스토리 파일에서 라인을 읽는 것과 유사함
 
 ```bash
-$ print -S "Alice"
-$ history | tail -n 1
+print -S "Alice"
+history | tail -n 1
 28580  Alice
 ```
 
@@ -233,8 +668,8 @@ $ history | tail -n 1
 > `echo Alice`는 명령 결과의 표준 출력(stdout)이 아닌 콘솔 입력 버퍼로 입력됨
 
 ```bash
-$ print -z echo ABC
-$ echo Alice
+print -z echo ABC
+echo Alice
 ```
 
 ## ls
