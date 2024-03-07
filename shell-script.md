@@ -835,6 +835,14 @@ while [ $count -le 5 ]; do
 done
 ```
 
+## 파일 출력
+
+### cat
+
+### head
+
+### tail
+
 ## 파일 찾기
 
 ### find
