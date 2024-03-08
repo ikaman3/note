@@ -25,6 +25,21 @@ VAR="foo"
 export NEW_VAR="bar"
 ```
 
+## Array(배열)
+
+```bash
+array=("git" "gh")
+echo ${array[@]}
+```
+
+### 문자열과의 차이점
+
+`var="git" "gh"`과 `arr=("git" "gh")`은 차이가 있다.
+변수 `var`은 하나의 문자열로 변수를 전달한다. 따라서 변수 안의 공백은 모두 문자열의 일부로 취급된다.
+
+- `echo $var` : "git gh"
+- `echo $arr` : "git" "gh"
+
 ## Parameter(매개변수)
 
 추가예정
