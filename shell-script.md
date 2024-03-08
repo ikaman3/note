@@ -12,15 +12,22 @@ Linux, MacOS 환경에서 사용할 수 있는 셸 스크립트에 대한 내용
 #!/bin/zsh
 ```
 
-## Environment Variable(환경변수)
+## Variable(변수)
 
-> 셸에서 사용하는 환경변수를 선언
->
-> - 변수의이름과 '=' 그리고 값 사이에 공백이 존재하면 안 된다.
+셸에서 사용하는 변수를 선언
 
+- 변수의이름과 '=' 그리고 값 사이에 공백이 존재하면 안 된다.
+- `export` : 변수 앞에 붙이면 외부 변수로 만들 수 있다. 해당 변수는 다른 스크립트, 프로그램에서도 사용 가능
+
+```bash
+VAR="foo"
+
+export NEW_VAR="bar"
 ```
-<variable_name>=<value>
-```
+
+## Parameter(매개변수)
+
+추가예정
 
 ## 문자열 입출력
 
@@ -31,9 +38,9 @@ Linux, MacOS 환경에서 사용할 수 있는 셸 스크립트에 대한 내용
 - -n : 마지막에 붙는 개행 문자(newline) 문자를 출력하지 않음
 - -e : 문자열에서 백슬래시(\)와 이스케이프 문자를 인용 부호(")로 묶어 인식
 - -E : 문자열에서 백슬래시와 이스케이프 문자를 비활성화(default)
-- '>' : 리다이렉션, 해당 경로에 파일이 존재하지 않으면 echo의 출력 내용으로 새 파일 생성  
+- '>' : 리다이렉션, 해당 경로에 파일이 존재하지 않으면 echo의 출력 내용으로 새 파일 생성
   존재한다면 출력 내용으로 파일을 '덮어쓰기'로 저장
-- '>>' : 리다이렉션, 해당 경로에 파일이 존재하지 않으면 echo의 출력 내용으로 새 파일 생성  
+- '>>' : 리다이렉션, 해당 경로에 파일이 존재하지 않으면 echo의 출력 내용으로 새 파일 생성
   존재한다면 출력 내용으로 파일을 '이어쓰기'로 저장
 - :r : 환경변수의 이름만 추출하는 명령어
 - :e : 환경변수의 확장자만 추출하는 명령어
@@ -54,7 +61,7 @@ echo ${variable:e}
 `printf`는 builtin 명령으로 C 언어의 `printf` 함수와 같은 기능을 제공한다.  
 `echo` 명령의 경우 `sh` 과 `bash` 가 escape 문자를 처리하는 방식이 다른데 `printf`는 그런 차이가 없다.  
 `printf`에서는 기본적으로 `" "`, `' '` 모두에서 escape 문자가 처리된다(`gawk` 에서와 같이 escape 문자 테이블에 따라서 처리된다)  
-quotes의 고유 기능은 그대로 유지 되므로 `" "` 에서는 변수확장, 명령치환이 된다.  
+quotes의 고유 기능은 그대로 유지 되므로 `" "` 에서는 변수확장, 명령치환이 된다.
 
 ```bash
 printf '%s\n%s\n' foo bar      # (single quotes)
@@ -90,7 +97,7 @@ printf "foo $AA\n"             # double quotes 에서는 된다.
 foo bar
 ```
 
-문자를 출력할 때는 `printf '%c' ...` 형식 외에 16진수, 8진수 escape sequence를 사용할 수 있다.  
+문자를 출력할 때는 `printf '%c' ...` 형식 외에 16진수, 8진수 escape sequence를 사용할 수 있다.
 
 ```bash
 printf "%c %c %c\n" ABC DEF GHI
@@ -124,7 +131,7 @@ Content-Length: 123
 #### Arguments
 
 `printf`는 format tags와 그에 상응하는 인수를 이용하여 여러가지 형태로 출력할 수 있다.  
-이때 인수에 사용되는 숫자는 다음과 같은 형식을 사용할 수 있다.  
+이때 인수에 사용되는 숫자는 다음과 같은 형식을 사용할 수 있다.
 
 - `N` : 10진수 (decimal) 숫자
 - `0N` : 8진수 (octal) 숫자
@@ -145,7 +152,7 @@ printf "%d %d\n" "'A" '"A'   # character
 65 65
 ```
 
-format tags 개수보다 인수의 개수가 많을 경우는 명령이 반복된다.  
+format tags 개수보다 인수의 개수가 많을 경우는 명령이 반복된다.
 
 ```bash
 printf "< %d >" 11
@@ -178,7 +185,7 @@ printf '%s\0' "${arr[@]}" | sort -z | tr '\0' '\n'
 
 #### Format tags
 
-format 스트링에서 다음과 같이 format tag를 구성하여 인수 값의 출력 형태를 변경할 수 있다.  
+format 스트링에서 다음과 같이 format tag를 구성하여 인수 값의 출력 형태를 변경할 수 있다.
 
 ```bash
 %[flags][width][.precision]specifier
@@ -231,7 +238,7 @@ printf '%g\n' 123
 printf '%f\n' 123.4567
 123.456700
 
-printf '%g\n' 123.4567       # floating point number 
+printf '%g\n' 123.4567       # floating point number
 123.457
 
 printf '%f\n' 12345678.123
@@ -249,17 +256,17 @@ printf '%g\n' 0.0000123      # scientific notation
 printf '%a\n' 123.4567       # hexadecimal floating point number
 0xf.6e9d495182a9931p+3
 
-printf '%s\n' 'hello\tworld'     
+printf '%s\n' 'hello\tworld'
 hello\tworld                      # escape 문자 처리 없이 그대로 출력
 
-printf '%b\n' 'hello\tworld'    
+printf '%b\n' 'hello\tworld'
 hello    world                     # escape 문자를 처리하여 출력
 
 # 'bash -c CMD' 에서 실행하고자 하는 명령이 제대로 전달되지 않는다.
 echo 'echo -e "first\nsecond"' | xargs -I CMD bash -c CMD
 firstnsecond   # \n 처리가 되지 않는다.
 
-printf '%q\n' 'echo -e "first\nsecond"' 
+printf '%q\n' 'echo -e "first\nsecond"'
 # 실행결과: echo\ -e\ \"first\\nsecond\"
 
 printf '%q\n' 'echo -e "first\nsecond"' | xargs -I CMD bash -c CMD
@@ -277,7 +284,7 @@ while read -r line; do printf "%q\n" "$line"; done |
 xargs --max-procs=4 -I CMD bash -c CMD
 ----------------------------------------------------------------
 
-# ssh을 통해 공백이 있는 파일이름을 touch 명령의 인수로 올바르게 전달하기 위해 
+# ssh을 통해 공백이 있는 파일이름을 touch 명령의 인수로 올바르게 전달하기 위해
 printf '%q ' touch "a test file" "another file"
 touch a\ test\ file another\ file
 
@@ -337,7 +344,7 @@ printf -v sep '%*s' 50 ; echo "${sep// /-}"
 ```bash
 printf '%10d %10d %10d\n' 100 200 300
        100        200        300
-printf '%-10d %-10d %-10d\n' 100 200 300  
+printf '%-10d %-10d %-10d\n' 100 200 300
 100        200        300
 
 printf '%06d\n' 12 345 6789
@@ -352,7 +359,7 @@ printf '%d\n' 100 -200 +300
 100
 -200
 300
-printf '% d\n' 100 -200 +300  
+printf '% d\n' 100 -200 +300
  100
 -200
  300
@@ -413,7 +420,7 @@ printf '%.*f\n' 3 123.987654321  # '*'을 이용하여 precision 값을 인수�
 ```
 
 `%f`와 `%g`는 precision 값을 처리하는 방식이 다르다.  
-`%f`는 소수점 이후의 개수를 나타내고 `%g`는 전체 유효숫자 개수를 나타낸다.  
+`%f`는 소수점 이후의 개수를 나타내고 `%g`는 전체 유효숫자 개수를 나타낸다.
 
 ```bash
 printf '%.5f\n' 123.12345678  # 소수점 이후 5개
@@ -429,7 +436,7 @@ printf '%.5g\n' 0.0012345678
 0.0012346
 ```
 
-`%s`에서의 사용은 출력 문자수를 제한한다.  
+`%s`에서의 사용은 출력 문자수를 제한한다.
 
 ```bash
 printf '%s\n' foobarzoo
@@ -672,6 +679,74 @@ print -z echo ABC
 echo Alice
 ```
 
+### 문자열 덧붙이기
+
+변수에 `+=`를 사용하여 문자열을 덧붙일 수 있다.
+
+```bash
+STRING="Hell, "
+STRING+="World!"
+```
+
+`printf`를 사용하는 방법
+
+```bash
+STRING="Hell, "
+STRING=$(printf "%sWorld!" "$STRING")
+```
+
+## grep
+
+입력으로 전달된 내용에서 특정 문자열을 찾는 명령어
+
+### grep -v
+
+입력에서 일치하는 패턴을 제외하고 출력하는 명령어 "반전(invert)" 또는 "부정(negate)"을 의미한다.
+
+```bash
+# 입력에서 "hell"을 제외하고 출력
+grep -v "hell"
+# 입력에서 "hell"로 시작하는 내용을 제외하고 출력
+grep -v "^hell"
+```
+
+## tr
+
+`tr` 명령어는 UNIX 및 Linux 시스템에서 사용되는 텍스트 변환 유틸리티이다.  
+"translate"의 줄임말로, 텍스트 스트림에서 하나의 문자 집합을 다른 문자 집합으로 변환하는 데 사용된다.  
+주로 텍스트의 형식을 변경하거나 문자열을 변환하는 데 사용된다.
+
+```bash
+# 기본 구문
+tr [options] SET1 [SET2]
+```
+
+- SET1 : 변환할 문자 집합
+- SET2 : 변환 후 문자 집합, 명령어에 따라 선택적으로 사용
+- `-d` : SET1에 있는 문자 제거
+- `-c` : SET1의 보충(complement)을 사용하여 매치되지 않는 문자를 변환
+- `-s` : 연속된 중복 문자를 하나로 압축
+
+### Examples
+
+줄바꿈 문자를 공백 문자로 변경
+
+```bash
+echo "$string" | tr '\n' ' '
+```
+
+입력에서 모든 대문자를 소문자로 변환
+
+```bash
+echo "HELLO WORLD" | tr '[:upper:]' '[:lower:]'
+```
+
+입력에서 모든 공백을 제거
+
+```bash
+echo "Hello    World" | tr -d ' '
+```
+
 ## ls
 
 ### ls -d
@@ -682,12 +757,11 @@ echo Alice
 
 출력할 문자열에 색상 값의 유무를 결정
 
-- never : 없음  
-
+- never : 없음
 
 ## Conditional(조건문)
 
-> 주어진 조건에 따라 분기를 다르게 하는 제어문
+주어진 조건에 따라 분기를 다르게 하는 제어문
 
 ### Format
 
@@ -700,6 +774,12 @@ else
     # 모든 조건이 거짓일 때 실행되는 명령들
 fi
 ```
+
+### -n
+
+`-n` : 조건 테스트(test)를 수행, 주어진 문자열이 비어 있지 않은 경우에 참(true)을 반환.
+
+- `[` 뒤에 써야 한다.
 
 ### Examples
 
@@ -882,7 +962,7 @@ scp -i "keypair.pem" <source> <user>@<IP Address or Domain>:<target>
 rsync를 이용한 원격 파일 동기화  
 rsync는 SSH를 통한 파일 동기화 명령어다.  
 실시간 동기화 기능을 제공하는 lsyncd보다는 강력하지 않으며, 한 대의 컴퓨터에서 여러 대의 대상을 백업하는 rsnapshot만큼 유연하지 않다.  
-그러나 정의한 일정에 따라 두 대의 컴퓨터를 최신 상태로 유지할 수 있는 기능을 제공한다.  
+그러나 정의한 일정에 따라 두 대의 컴퓨터를 최신 상태로 유지할 수 있는 기능을 제공한다.
 
 > - -a : [archive] rsync를 사용하는 가장 일반적인 옵션으로, 아래의 여러 옵션을 포함하고 있다.
 >   > - -r : 디렉터리 재귀

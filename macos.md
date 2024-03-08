@@ -4,9 +4,16 @@
 
 ## Scripts
 
-### 원격 로그인 상태 확인
+### 원격 로그인
 
-`sudo systemsetup -getremotelogin`
+```bash
+# SSH 서비스 실행 여부 확인
+sudo systemsetup -getremotelogin
+# SSH 서비스 실행
+sudo systemsetup -setremotelogin on
+# SSH 서비스 실행 중지
+sudo systemsetup -setremotelogin off
+```
 
 ### Log
 
