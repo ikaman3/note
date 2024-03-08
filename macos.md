@@ -1,8 +1,12 @@
 # MacOS
 
-> 내 MacOS에서 사용할 스크립트, 패키지와 그 사용법 그리고 에러에 대해 정리해가는 문서
+> 내가 MacOS에서 사용할 스크립트, 패키지와 그 사용법 그리고 에러에 대해 정리해가는 문서
 
 ## Scripts
+
+### 원격 로그인 상태 확인
+
+`sudo systemsetup -getremotelogin`
 
 ### Log
 
