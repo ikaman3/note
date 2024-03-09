@@ -938,6 +938,29 @@ done
 
 ### tail
 
+입력의 마지막 행을 기준으로 지정한 행까지의 입력 내용 일부를 출력하는 명령어
+기본값으로 마지막 10줄을 출력한다.
+
+- `-f` : `tail`을 종료하지 않고 업데이트 내용을 계속 출력한다.
+- `-n (line number)` : 마지막 줄부터 지정한 line number까지 출력
+- `-c (byte number)` : 마지막 줄부터 지정한 바이트만큼의 내용 출력
+- `-q` : 입력의 헤더와 상단의 파일 이름을 출력하지 않고 내용만 출력
+- `-v` : 출력하기 전에 헤더와 파일 이름 먼저 출력하고 내용을 출력
+
+```bash
+# 기본 구문
+tail [option][filename]
+
+# 기본
+tail filename.txt
+# 실시간 출력
+tail -f filename
+# 실시간 로그 보기
+tail -f mylog.log | grep 192.168.15.86
+# 여러 파일 동시 출력
+tail mylog1.log mylog2.log
+```
+
 ## 파일 찾기
 
 ### find
