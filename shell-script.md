@@ -699,15 +699,15 @@ echo Alice
 변수에 `+=`를 사용하여 문자열을 덧붙일 수 있다.
 
 ```bash
-STRING="Hell, "
-STRING+="World!"
+string="Hell, "
+string+="World!"
 ```
 
 `printf`를 사용하는 방법
 
 ```bash
-STRING="Hell, "
-STRING=$(printf "%sWorld!" "$STRING")
+string="Hell, "
+string=$(printf "%sWorld!" "$string")
 ```
 
 ## grep

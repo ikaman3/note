@@ -4,6 +4,14 @@ IDE 관련 단축키 등을 기록할 마크다운 문서
 
 ## Visual Studio Code
 
+### 대소문자 변환
+
+`COMMAND + SHIFT + P --> Transform to Lowercase/Uppercase/Title Case`
+
+- Lowercase : 모두 소문자로 변환
+- Uppercase : 모두 대문자로 변환
+- Titlecase : 단어의 첫 글자는 대문자, 나머지는 소문자로 변환
+
 ### Extension
 
 #### Linter
