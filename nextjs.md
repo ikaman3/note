@@ -128,7 +128,7 @@ VSCode에서 extension을 설정할 수 있는 `settings.json`을 수정한다.
 
 ## Linting
 
-ESLint를 사용하며 발생한 Error와 그 해결법을 모아두는 곳
+ESLint를 사용하며 발생한 Error와 그 해결법 기록
 
 ### Error: JSX props should not use functions react/jsx-no-bind
 

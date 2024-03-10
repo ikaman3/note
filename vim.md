@@ -6,9 +6,7 @@ vim 명령어 및 단축키를 정리하는 마크다운 문서
 
 vim이 실행될 때 적용되는 설정 파일
 
-### Tap
-
-#### tab을 space 4개로 대체
+### tab을 space 4개로 대체
 
 ```vim
 set smartindent
