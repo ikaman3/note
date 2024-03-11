@@ -226,6 +226,15 @@ ReactDOM.render(<Parent />, document.getElementById("root"));
 `prop-types` 패키지는 배포될 production에서 필요하다.  
 개발 버전이 아니라 배포 버전에 의존성을 설치한다.
 
+- `dependencies`에서 필요한 이유 : [Runtime에 타입을 검증](https://github.com/facebook/prop-types)하기 때문이다.
+- 리액트 공식문서에서는 런타임에 props 타입을 검증하는 것보다 [TypeScript를 사용하는 것을 권장](https://react.dev/reference/react/Component#static-proptypes)하고 있다.
+
+```bash
+npm install --save prop-types
+# npm 5 버전부터 --save 옵션은 기본값이므로 생략 가능
+npm install prop-types
+```
+
 ```json
 {
   "name": "your-website",
@@ -248,15 +257,37 @@ ReactDOM.render(<Parent />, document.getElementById("root"));
 
 [rule: prop-types rule](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/prop-types.md)
 
-[npm prop-types](https://www.npmjs.com/package/prop-types)
+[prop-types npm](https://www.npmjs.com/package/prop-types)
+
+[prop-types github](https://github.com/facebook/prop-types)
+
+`prop-types` 패키지를 import하고, 컴포넌트의 props의 타입을 검증해야 한다.
+
+- prop-types에 대한 자세한 설명은 [react/props.md]() 참조
 
 `import PropTypes from 'prop-types'`
+
+```javascript
+export default function Controller({
+  buttonNumbers = [-1, -10, -100, 100, 10, 1],
+  onCountChange,
+}) {
+  return (
+    ...
+  )
+}
+
+Controller.propTypes = {
+  buttonNumbers: PropTypes.arrayOf(PropTypes.number).isRequired,
+  onCountChange: PropTypes.func,
+}
+```
 
 ### Error: propType "name" is not required, but has no corresponding defaultProps declaration. react/require-default-props
 
 [rule: require-default-props](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/require-default-props.md)
 
-[이 rule을 꺼야하는 이유](https://stackoverflow.com/questions/64012257/proptype-name-is-not-required-but-has-no-corresponding-defaultprops-declarati)
+[이 규칙을 꺼야하는 이유](https://stackoverflow.com/questions/64012257/proptype-name-is-not-required-but-has-no-corresponding-defaultprops-declarati)
 
 ```json
 "rules": {
@@ -266,9 +297,9 @@ ReactDOM.render(<Parent />, document.getElementById("root"));
 
 #### Warning: Controller: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.
 
-이 경고 메시지는 Next.js의 future major release에서 function 컴포넌트에서의 defaultProps 지원이 제거될 것임을 알려주고 있습니다. 이것은 현재 사용하고 있는 컴포넌트에서 defaultProps를 사용하고 있다는 의미입니다.
+이 경고 메시지는 Next.js의 future major release에서 function 컴포넌트에서의 defaultProps 지원이 제거될 것임을 알려주고 있다. 이것은 현재 사용하고 있는 컴포넌트에서 defaultProps를 사용하고 있다는 의미다.
 
-경고를 해결하기 위한 방법은 해당 컴포넌트에서 defaultProps 대신에 JavaScript의 default parameters를 사용하는 것입니다. defaultProps는 class 컴포넌트에서 사용되는 패턴이며, function 컴포넌트에서는 default parameters가 권장됩니다.
+경고를 해결하기 위한 방법은 해당 컴포넌트에서 defaultProps 대신에 JavaScript의 default parameters를 사용하는 것이다. defaultProps는 class 컴포넌트에서 사용되는 패턴이며, function 컴포넌트에서는 default parameters가 권장된다.
 
 예를 들어, 기존 코드가 다음과 같이 defaultProps를 사용하고 있다면:
 
@@ -283,7 +314,7 @@ Controller.defaultProps = {
 };
 ```
 
-다음과 같이 default parameters를 사용하도록 변경할 수 있습니다:
+다음과 같이 default parameters를 사용하도록 변경할 수 있다:
 
 ```javascript
 function Controller({ buttonNumbers = [], onCountChange = () => {} }) {
