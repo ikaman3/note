@@ -128,38 +128,121 @@ VSCode에서 extension을 설정할 수 있는 `settings.json`을 수정한다.
 
 ## Linting
 
-ESLint를 사용하며 발생한 Error와 그 해결법 기록
+ESLint를 사용하며 발생한 error와 그 해결법 기록
+
+### Failed to load config "next" to extend from.
+
+`npm rum lint`를 실행했을 때 발생한 error  
+Next.js 프로젝트의 기반이 되는 기본 설정인 `eslint-config-next` 패키지를 설치해야 한다.  
+설치 후 `.exlintrc.json` 파일의 `extends`에 `"next"`를 넣는다.
+
+```bash
+npm install --save-dev eslint-config-next
+```
 
 ### Error: JSX props should not use functions react/jsx-no-bind
 
 [rule: jsx-no-bind](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-no-bind.md)
 [solution](https://stackoverflow.com/questions/36677733/why-shouldnt-jsx-props-use-arrow-functions-or-bind)
 
-In React, it's common to pass functions as props to handle events or side effects. However, if you're seeing a warning about this, it might be due to the way you're defining or using the function.
+인라인 화살표 함수를 JSX props에서 사용하지 말아야 하는 이유:  
+JSX에서 화살표 함수나 binding을 사용하는 것은 성능을 저하시키는 나쁜 습관이다. 왜냐하면 함수가 각 렌더링마다 다시 생성되기 때문이다.
 
-In your code snippet:
+1. 함수가 생성될 때마다 이전 함수는 가비지 컬렉션이 된다. 많은 요소를 다시 렌더링하는 것은 애니메이션에서 끊김을 유발할 수 있다.
+2. 인라인 화살표 함수를 사용하면 `PureComponents` 및 `shouldComponentUpdate` 메서드에서 `shallowCompare`를 사용하는 컴포넌트가 어쨌든 다시 렌더링된다.
 
-`onCountChange={handleCount}`
+#### 클래스 컴포넌트의 경우
 
-handleCount is a function that's being passed as a prop to a component. This is a common pattern in React and is generally fine.
+화살표 함수 prop이 매번 재생성되기 때문에 `shallow compare`가 prop의 변경으로 인식하고 컴포넌트가 다시 렌더링된다.  
+다음 두 예제에서 확인할 수 있듯이, 인라인 화살표 함수를 사용할 때마다 `<Button>` 컴포넌트가 다시 렌더링된다(콘솔에 'render button' 텍스트가 표시됨).
 
-However, if handleCount is defined inside a component that re-renders frequently, a new function will be created each time that component re-renders. This can lead to unnecessary re-renders of child components and performance issues.
+#### 함수 컴포넌트의 경우
 
-To avoid this, you can define handleCount using the useCallback hook, which will return a memoized version of the function that only changes if one of the dependencies has changed.
+함수 컴포넌트 안에서 내부 함수(예: 이벤트 핸들러)를 만들 때, 컴포넌트가 렌더링될 때마다 함수가 다시 생성된다. 함수가 props로 전달되거나(또는 컨텍스트를 통해 전달되는 경우) 자식 컴포넌트(밑의 예제에서 `Button`인 경우)로 전달되면 해당 자식도 다시 렌더링됩니다.
 
-Here's an example:
+Example 1 - Function Component with an inner callback: 잘못된 방법
 
 ```javascript
-const handleCount = useCallback((newCount) => {
-  // handle the count change here
-}, []); // add any dependencies here
+const { memo, useState } = React;
+
+const Button = memo(
+  ({ onClick }) =>
+    console.log("render button") || <button onClick={onClick}>Click</button>
+);
+
+const Parent = () => {
+  const [counter, setCounter] = useState(0);
+
+  const increment = () => setCounter((counter) => counter + 1); // the function is recreated all the time
+
+  return (
+    <div>
+      <Button onClick={increment} />
+
+      <div>{counter}</div>
+    </div>
+  );
+};
+
+ReactDOM.render(<Parent />, document.getElementById("root"));
 ```
 
-Then, you can pass handleCount to onCountChange as before:
+이 문제를 해결하기 위해 `useCallback()` 훅으로 callback을 감싸고 의존성을 빈 배열로 설정할 수 있다.  
+이 hook은 의존성 중 하나가 변경될 때만 변경되는 함수의 메모라이즈된 버전을 반환한다.
 
-`onCountChange={handleCount}`
+- 참고: `useState`에서 생성된 함수는 현재 상태를 제공하는 업데이터 함수를 받는다. 이렇게 함으로써, `useCallback`의 현재 상태를 의존성으로 설정할 필요가 없다.
 
-This way, handleCount will only be redefined if its dependencies change, preventing unnecessary re-renders.
+Example 2 - Function Component with an inner callback wrapped **with `useCallback`**: 올바른 방법
+
+```javascript
+const { memo, useState, useCallback } = React;
+
+const Button = memo(
+  ({ onClick }) =>
+    console.log("render button") || <button onClick={onClick}>Click</button>
+);
+
+const Parent = () => {
+  const [counter, setCounter] = useState(0);
+
+  const increment = useCallback(() => setCounter((counter) => counter + 1), []);
+
+  return (
+    <div>
+      <Button onClick={increment} />
+
+      <div>{counter}</div>
+    </div>
+  );
+};
+
+ReactDOM.render(<Parent />, document.getElementById("root"));
+```
+
+이렇게하면 `increment`가 의존성이 변경될 때만 다시 정의되므로 불필요한 다시 렌더링이 방지된다.
+
+### 'prop-types' should be listed in the project's dependencies, not devDependencies import/no-extraneous-dependencies
+
+`prop-types` 패키지는 배포될 production에서 필요하다.  
+개발 버전이 아니라 배포 버전에 의존성을 설치한다.
+
+```json
+{
+  "name": "your-website",
+  ...
+  "dependencies": {
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2",
+    "webpack": "^4.44.1",
+    "prop-types": "^15.7.2",
+    ...
+  },
+  "devDependencies": {
+    "@types/node": "^14.0.18",
+    ...
+  },
+}
+```
 
 ### Error: 'foo' is missing in props validation react/prop-types
 
