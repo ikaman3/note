@@ -329,3 +329,27 @@ function Controller({ buttonNumbers = [], onCountChange = () => {} }) {
 ### Error: Prop type "array" is forbidden react/forbid-prop-types
 
 [rule: forbid-prop-types](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/forbid-prop-types.md)
+
+array, object, any 타입은 이 규칙에 의해 사용이 금지된다.  
+해당 타입을 사용하면 모든 종류의 배열, 객체, 모든 타입을 받아들일 수 있기 때문에, 보다 구체적인 타입을 명시하는 것이 권장된다.  
+이는 컴포넌트의 props가 어떤 종류의 배열을 기대하는지 더 명확하게 설명하고, 오류를 미연에 방지한다.
+
+위의 타입 대신에 `PropTypes.arrayOf()`나 `PropTypes.shape()`를 사용할 수 있다.
+
+```javascript
+SmartTable.propTypes = {
+  name: PropTypes.string.isRequired,
+  cols: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      width: PropTypes.number.isRequired,
+    })
+  ).isRequired,
+  rows: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      data: PropTypes.arrayOf(PropTypes.string).isRequired,
+    })
+  ).isRequired,
+};
+```
