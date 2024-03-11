@@ -182,8 +182,6 @@ MyComponent.propTypes = {
   optionalBool: PropTypes.bool,
   optionalFunc: PropTypes.func,
   optionalNumber: PropTypes.number,
-  // 다른 많은 프로그래밍 언어와는 다르게, JavaScript는 정수와 실수를 별도의 타입으로 다루지 않는다.
-  // 다만 어떤 수가 정수인지, 혹은 실수인지를 판별할 수는 있고, 이를 위해 `Number.isInteger` 메소드를 사용한다.
   optionalObject: PropTypes.object,
   optionalString: PropTypes.string,
   optionalSymbol: PropTypes.symbol,
@@ -281,6 +279,7 @@ MyComponent.propTypes = {
 ```
 
 - `isRequired` : 맨 끝에 붙여서 해당 prop이 필수임을 명시
+- `optionalNumber: PropTypes.number` : 다른 많은 프로그래밍 언어와는 다르게, JavaScript는 정수와 실수를 별도의 타입으로 다루지 않는다. 다만 어떤 수가 정수인지, 혹은 실수인지를 판별할 수는 있고, 이를 위해 `Number.isInteger` 메소드를 사용한다.
 - `optionalNode: PropTypes.node` : React 노드(Node) - React의 모든 요소(Elements)와 컴포넌트(Component)는 노드이다. 화면에 렌더링될 수 있는 숫자나 문자열과 같은 모든 **렌더링 가능한 값**
 - `arrayOf(PropTypes.number)` : 배열 prop의 경우 배열 안에 어떤 타입의 원소가 들어올 수 있는지도 함께 명시한다.
 - `any` : 렌더링 불가능한 값을 포함한 **모든 값**

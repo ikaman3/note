@@ -263,7 +263,7 @@ npm install prop-types
 
 `prop-types` 패키지를 import하고, 컴포넌트의 props의 타입을 검증해야 한다.
 
-- prop-types에 대한 자세한 설명은 [react/props.md]() 참조
+- prop-types에 대한 자세한 설명은 [react/props.md](https://github.com/ikaman3/note/blob/main/react/props.md#prop-types) 참조
 
 `import PropTypes from 'prop-types'`
 
@@ -288,6 +288,10 @@ Controller.propTypes = {
 [rule: require-default-props](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/require-default-props.md)
 
 [이 규칙을 꺼야하는 이유](https://stackoverflow.com/questions/64012257/proptype-name-is-not-required-but-has-no-corresponding-defaultprops-declarati)
+
+이 규칙은 `defaultProps`를 사용하여 에러를 해결할 수 있다.  
+그러나 함수 컴포넌트에 `defaultProps`를 사용하는 것은 추후 릴리즈에서 중지될 것이므로 사용하지 않는 것이 좋다.  
+대신 JavaScript default parameter를 사용하자.
 
 ```json
 "rules": {
