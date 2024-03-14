@@ -28,8 +28,7 @@ return (
 }
 ```
 
-- 위의 코드는 브라우저에서 다음과 같이 표시된다.  
-
+- 위의 코드는 브라우저에서 다음과 같이 표시된다.
 
 ```
 <section>
@@ -46,8 +45,7 @@ return (
 
 컴포넌트는 다른 컴포넌트를 렌더링할 수 있지만, 그 정의를 중첩해서는 안 된다.
 
-- 잘못된 컴포넌트 정의  
-
+- 잘못된 컴포넌트 정의
 
 ```
 export default function Gallery() {
@@ -59,8 +57,7 @@ function Profile() {
 }
 ```
 
-- 대신 최상위 레벨에서 컴포넌트를 정의해야 한다.  
-
+- 대신 최상위 레벨에서 컴포넌트를 정의해야 한다.
 
 ```
 export default function Gallery() {
@@ -262,3 +259,7 @@ export default function TeaGathering() {
 
 - 동일한 렌더링중에 생성된 변수를 변경하는 것은 괜찮다.
 - 지역 변형: 다른 컴포넌트에서 이 현상이 벌어진 것을 모르는 것
+
+## react-router-dom
+
+### `<Link />`
