@@ -119,3 +119,25 @@ span tag를 사용하면 컬러도 표시할 수 있다.
 | 테스트1 | _강조1_                              | 테스트3 |
 | 테스트1 | **강조2**                            | 테스트3 |
 | 테스트1 | <span style="color:red">강조3</span> | 테스트3 |
+
+## 접기/펼치기(details)
+
+마크다운이 해당 기능을 지원하지 않아서 HTML5의 태그를 직접 적용한다.
+
+- `<summary>` : details의 제목을 명시
+- `markdown="1"` : 내부 택스트에서 `<br>` 등의 태그가 필요한 경우 속성에 추가한다. 일반적인 markdown preview에서는 없어도 인식 가능하다.
+
+<details markdown="1">
+  <summary>접기/펼치기</summary>
+
+접은 내용
+
+</details>
+
+```html
+<details markdown="1">
+  <summary>접기/펼치기</summary>
+
+  접은 내용
+</details>
+```

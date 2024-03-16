@@ -58,7 +58,7 @@ Server-side Rendering
 
 `page.js` 파일에서 리액트 컴포넌트 함수를 `default`로 export 한다.
 
-- NextJS에서 페이지는 단순한 리액트 함수다.
+- Next.js에서 페이지는 단순한 리액트 함수다.
 - 이때 컴포넌트 이름은 상관없다.
 
 `localhost:3000/awesome`으로 방문하면 새로운 페이지 내용이 보인다.
@@ -78,9 +78,128 @@ npm run start
 
 - 소스코드를 수정했는데 오류가 있거나 반영이 되지 않는다면 해당 폴더를 지우고 다시 빌드할 것
 
-## 폴더 구조
+## App router
 
-### App router의 routing
+기존 NextJS는 `/pages` 폴더에 웹 사이트의 모든 페이지를 나타내는 File based routing을 사용했다.  
+Next.js 13 버전부터 앱 라우터가 도입되었다.
+
+app 폴더에서 페이지를 설정한다. 이 페이트는 전반적인 웹사이트에 넣고 싶은 페이지를 의미한다.  
+`page.js`, `layout.js`라는 보호된 파일이 존재하는데,  
+`page.js` 파일은 NextJS에게 해당 페이지를 렌더링해야 한다고 전한다.
+
+'localhost:3000/about' 이라는 페이지를 만들고 싶다면,  
+`app` 디렉터리 하위에 라우트로 취급되길 원하는 폴더(`about`)를 생성한다.  
+그리고 해당 폴더에 `page.js` 파일이 존재한다면 페이지를 렌더링할 수 있다.  
+이때, export할 함수 컴포넌트의 이름은 중요하지 않다.
+
+```javascript
+// app/about/page.js
+
+export default function AboutPage() {
+  return <h1>About us</h1>;
+}
+```
+
+## Server Component
+
+Next.js에서 리액트 컴포넌트는 기본적으로 서버 컴포넌트다.  
+Next.js는 이 컴포넌트가 서버에 렌더링되고 서버에서 실행되는 것을 보장한다.  
+예를 들어, 서버 컴포넌트에서 `console.log()`를 실행하면 클라이언트(브라우저 등)에서 보이지 않는다.  
+대신 서버가 동작중인 터미널에 로그가 출력되며 이것이 해당 컴포넌트가 서버에서 실행된다는 것을 입증한다.
+
+서버 컴포넌트는 서버에서 HTML로 렌더링되어 클라이언트에 응답으로 전달된다.
+
+### Server Component & Client Component
+
+`<a></a>` 태그로 만든 버튼을 눌러 페이지를 이동하면 새로고침 아이콘이 일시적으로 X 모양으로 바뀐다.  
+백엔드로부터 새로운 페이지를 다운로드했다는 의미이다.  
+일반적인 리액트와는 다르게 단일 페이지 애플리케이션(Single page application)이 아니라는 뜻이다.
+
+Next.js의 장점은 둘 다 가능하다는 것이다.  
+특정 페이지를 처음 방문하거나 URL을 입력하여 접속한다면 서버에서 렌더링되고 완성된 페이지에 접속한다.  
+이미 페이지에 있고 링크를 누르며 둘러본다면 SPA에 머무를 수 있게  
+Client-side 자바스크립트 코드로 UI를 업데이트한다.
+
+SPA에서 벗어나는 이유는 일반 앵커 태그(`<a></a>`)를 사용했기 때문이다.  
+SPA에 머물기 위해서 `Link`라는 컴포넌트를 사용해야 한다.
+
+```javascript
+<Link href="/about">About Us</Link>
+```
+
+## layout
+
+`layout.js`(.jsx, .ts) 파일은 page.js와 마찬가지로 특별한 종류의 파일이다.  
+page.js 파일이 페이지의 내용을 정의한다면,  
+`layout.js` 파일은 하나 또는 그 이상의 페이지를 감싸는 껍데기를 정의한다.  
+이름이 의미하는 것처럼 페이지가 렌더링되는 레이아웃을 의미하며,  
+모든 Next 프로젝트에는 최소 하나의 root `layout.js` 파일이 필요하다.  
+즉, app 폴더를 위한 `layout.js` 파일이 있어야 한다.
+
+`layout.js` 파일은 중첩이 가능하다.  
+`about` 폴더 안에 정의한 `layout.js` 파일은 `about` 폴더의 페이지와 중첩된 폴더에만 적용된다.
+
+`page.js`와 동일하게 리액트 컴포넌트를 export하는데,  
+리액트에서 모든 컴포넌트가 사용할 수 있는 표준 `children` prop을 이 컴포넌트가 사용해서 태그 사이에 내용을 추가한다.
+
+루트 레이아웃은 웹사이트의 일반적인 HTML 뼈대(skeleton)를 잡기 위해 필수이다.
+루트 레이아웃은 실제로 HTML과 `body` 태그를 렌더링한다.
+
+Next.js에서 `head` 태그 대신 `metadata`라는 특별한 변수를 선언하여 객체를 export해서 메타데이터 및 제목을 설정한다.  
+상수 또는 변수일 수 있고 미리 정해진 이름이다.
+
+```javascript
+export const metadata = {
+  title: "My Next.js App",
+  description: "My first Next.js app!",
+};
+```
+
+따라서 `head` 태그가 없는 이유는 해당 태그에 들어가는 모든 내용이 `metadata`에 의해 설정되거나  
+Next.js의 백그라운드에서 자동으로 설정되기 때문이다.
+
+`children`은 현재 활성화된 페이지(`page.js`)의 내용이다.  
+레이아웃은 하나 또는 그 이상의 페이지를 감싸는 포장지(wrapper)와 같다.
+
+## Built-in Components
+
+Next.js에 내장된 컴포넌트들을 모아두는 섹션
+
+### Link
+
+앵커 태그와는 다르게 사이트를 SPA로 유지하며 이동할 수 있게 한다.
+
+```javascript
+import Link from "next/link";
+
+<Link href="/about">About Us</Link>;
+```
+
+> <details markdown="1">
+> <summary>Deep Dive : Link 컴포넌트 (React VS Next.js)</summary>
+>
+> 1. 라이브러리
+>
+> - React : `react-router-dom`
+> - Next.js : `next/link`
+>
+> 2. 경로 설정
+>
+> - React : `<Link to="/about" />`
+> - Next.js : `<Link href="/about">About Us</Link>`
+>
+> 3. 페이지 로드 방식
+>
+> - React : 페이지 전체를 로드하지 않고 내부적으로 필요한 컴포넌트 리렌더
+> - Next.js : 페이지 전환 시 자동으로 해당 페이지를 미리 로드하는 Prefetch 기능으로 빠른 로딩 > 가능
+>
+> [Web: Next.js Link와 Prefetch 과정 파헤쳐보기](https://medium.com/hcleedev/web-next-js-link와-prefetch-과정-파헤쳐보기-44e22ace13e7)
+>
+> </details>
+
+## Next.js의 폴더 구조
+
+### App router의 routing의 단점
 
 Next.js 13에서 추가된 App router는 폴더내에 `page.js` 또는 `page.jsx` 파일을 작성했을 때 해당 폴더의 이름으로 route 된다.
 
