@@ -374,7 +374,7 @@ npm install prop-types
 
 ### Error: 'foo' is missing in props validation react/prop-types
 
-[rule: prop-types rule](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/prop-types.md)
+[rule: prop-types` rule](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/prop-types.md)
 
 [prop-types npm](https://www.npmjs.com/package/prop-types)
 
