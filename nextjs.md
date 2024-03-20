@@ -1,6 +1,6 @@
 # Next.js
 
-Udemy 강의 및 공식문서, 구글링하며 정리하는 문서
+Next.js의 정보를 기록해두는 문서
 
 ## NextJS는 무엇이고 왜 사용하는가
 
@@ -144,7 +144,7 @@ page.js 파일이 페이지의 내용을 정의한다면,
 
 루트 레이아웃은 웹사이트의 일반적인 HTML 뼈대(skeleton)를 잡기 위해 필수이다.
 루트 레이아웃은 실제로 HTML과 `body` 태그를 렌더링한다.
-`html`, `body` 태그는 루트 레이아웃에서만 렌더링 가능하다.  
+`html`, `body` 태그는 루트 레이아웃에서만 렌더링 가능하다.
 
 Next.js에서 `head` 태그 대신 `metadata`라는 특별한 변수를 선언하여 객체를 export해서 메타데이터 및 제목을 설정한다.  
 상수 또는 변수일 수 있고 미리 정해진 이름이다.
@@ -163,13 +163,14 @@ Next.js의 백그라운드에서 자동으로 설정되기 때문이다.
 레이아웃은 하나 또는 그 이상의 페이지를 감싸는 포장지(wrapper)와 같다.
 
 > Good to know:
-> - `.js`, `.jsx`, `.tsx` 파일 확장자를 `layout`에 사용할 수 있다.  
-> - `<html>`, `<body>` 태그는 루트 레이아웃에만 사용할 수 있다.  
-> - `layout`과 `page`가 같은 폴더에 정의되면, 레이아웃이 페이지를 랩핑한다.  
-> - 레이아웃은 기본적으로 서버 컴포넌트다. 그러나 원한다면 클라이언트 컴포넌트로 설정할 수 있다.  
+>
+> - `.js`, `.jsx`, `.tsx` 파일 확장자를 `layout`에 사용할 수 있다.
+> - `<html>`, `<body>` 태그는 루트 레이아웃에만 사용할 수 있다.
+> - `layout`과 `page`가 같은 폴더에 정의되면, 레이아웃이 페이지를 랩핑한다.
+> - 레이아웃은 기본적으로 서버 컴포넌트다. 그러나 원한다면 클라이언트 컴포넌트로 설정할 수 있다.
 > - 레이아웃은 데이터 가져오기(fetch)를 할 수 있다. 자세한 내용은 [Data Fetching](https://nextjs.org/docs/app/building-your-application/data-fetching) section
 > - 부모 레이아웃과 해당 자식 레이아웃 간에 데이터를 전달하는 건 불가능하다. 그러나 route에서 동일한 데이터를 두 번 이상 가져올 수 있으며, 리액트는 성능에 영향을 주지 않고 자동으로 요청을 중복 제거한다([automatically dedupe the requests](https://nextjs.org/docs/app/building-your-application/caching#request-memoization)).
-> - 레이아웃은 자체 아래 route의 세그먼트에 접근할 수 없다. 모든 route 세그먼트에 접근하려면, 클라이언트 컴포넌트에서 [`useSelectedLayoutSegment`](https://nextjs.org/docs/app/api-reference/functions/use-selected-layout-segment) 또는 [`useSelectedLayoutSegments`](https://nextjs.org/docs/app/api-reference/functions/use-selected-layout-segments)를 사용할 수 있다.  
+> - 레이아웃은 자체 아래 route의 세그먼트에 접근할 수 없다. 모든 route 세그먼트에 접근하려면, 클라이언트 컴포넌트에서 [`useSelectedLayoutSegment`](https://nextjs.org/docs/app/api-reference/functions/use-selected-layout-segment) 또는 [`useSelectedLayoutSegments`](https://nextjs.org/docs/app/api-reference/functions/use-selected-layout-segments)를 사용할 수 있다.
 > - [Route Groups](https://nextjs.org/docs/app/building-your-application/routing/route-groups)을 사용하여 공유 레이아웃 안팎에서 특정 route 세그먼트를 선택할 수 있다.
 > - [Route Groups](https://nextjs.org/docs/app/building-your-application/routing/route-groups)을 사용하여 여러 루트 레이아웃을 생성할 수 있다. [보다 여기서 예제](https://nextjs.org/docs/app/building-your-application/routing/route-groups#creating-multiple-root-layouts)
 > - 페이지 디렉터리로부터 마이그레이션: 루트 레이아웃은 [`_app.js`](https://nextjs.org/docs/pages/building-your-application/routing/custom-app)과 [`_document.js`](https://nextjs.org/docs/pages/building-your-application/routing/custom-document) 파일을 대체한다. [힘세고 강한 마이그레이션 가이드](https://nextjs.org/docs/app/building-your-application/upgrading/app-router-migration#migrating-_documentjs-and-_appjs)
@@ -178,11 +179,11 @@ Next.js의 백그라운드에서 자동으로 설정되기 때문이다.
 
 템플릿은 각 하위 레이아웃이나 페이지를 래핑한다는 점에서 레이아웃과 유사하다.  
 route 전반에 걸쳐 지속되고 상태를 유지하는 레이아웃과 달리,  
-템플릿은 탐색 시 각 하위 항목에 대해 새 인스턴스를 만든다.  
+템플릿은 탐색 시 각 하위 항목에 대해 새 인스턴스를 만든다.
 
 이는 사용자가 템플릿을 공유하는 route 사이를 탐색할 때, 컴포넌트의 새 인스턴스가 마운트되고 DOM 요소가 다시 생성되며  
 상태가 유지되지 않고 effects가 다시 동기화됨을 의미한다.  
-이러한 특정 동작이 필요한 경우가 있을 수 있으며, 그 경우에 템플릿은 레이아웃보다 더 적합한 선택이다. 예를 들어:  
+이러한 특정 동작이 필요한 경우가 있을 수 있으며, 그 경우에 템플릿은 레이아웃보다 더 적합한 선택이다. 예를 들어:
 
 - `useEffect`(예: logging page views) 및 `useState`(예: per-page feedback form)에 의존하는 기능
 - 기본 프레임워크 동작을 변경하는 경우: 예를 들어 레이아웃 내부의 정지 경계(Suspense Boundaries)는 레이아웃이 처음 로드될 때만 대체(the fallback)를 표시하고 페이지를 전환할 때는 표시하지 않는다. 템플릿의 경우 각 탐색에 fallback이 표시된다.
@@ -194,11 +195,11 @@ route 전반에 걸쳐 지속되고 상태를 유지하는 레이아웃과 달�
 // app/template.js
 
 export default function Template({ children }) {
-  return <div>{children}</div>
+  return <div>{children}</div>;
 }
 ```
 
-중첩 측면(In terms of nesting)에서 `template.js`은 레이아웃과 해당 하위 항목 사이에 렌더링된다. 다음은 간단한 예시 출력이다:  
+중첩 측면(In terms of nesting)에서 `template.js`은 레이아웃과 해당 하위 항목 사이에 렌더링된다. 다음은 간단한 예시 출력이다:
 
 ```javascript
 <Layout>
@@ -211,15 +212,15 @@ export default function Template({ children }) {
 
 `App` 디렉터리에서 [Metadata APIs](https://nextjs.org/docs/app/building-your-application/optimizing/metadata)를 이용하여 `title`이나 `meta` 같은 `<head>` HTML elements를 수정할 수 있다.
 
-메타데이터는 `layout.js` 또는 `page.js` 파일 안에서 [metadata object](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#the-metadata-object)나 [`generateMetadata` function](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function)를 exporting하여 정의할 수 있다.  
+메타데이터는 `layout.js` 또는 `page.js` 파일 안에서 [metadata object](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#the-metadata-object)나 [`generateMetadata` function](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function)를 exporting하여 정의할 수 있다.
 
 ```javascript
 export const metadata = {
-  title: 'Next.js',
-}
- 
+  title: "Next.js",
+};
+
 export default function Page() {
-  return '...'
+  return "...";
 }
 ```
 
@@ -229,7 +230,7 @@ export default function Page() {
 
 ## Linking and Navigating
 
-Next.js에는 routes 사이를 탐색하는 4개의 방법이 존재한다.  
+Next.js에는 routes 사이를 탐색하는 4개의 방법이 존재한다.
 
 - Using the [`<Link>` Component](https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#link-component)
 - Using the [`useRouter`](https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#userouter-hook) hook ([Client Components](https://nextjs.org/docs/app/building-your-application/rendering/client-components))
@@ -243,13 +244,13 @@ Next.js에서 라우트 간 이동하는 주요하고 권장되는 방법이다.
 앵커 태그와는 다르게 사이트를 SPA로 유지하며 이동할 수 있게 한다.
 
 `next/link`에서 가져와서 컴포넌트에 `href` 속성을 전달하여 사용할 수 있다.
-그 밖에도 `<Link>` 컴포넌트에 전달할 수 있는 prop이 있다. [API reference](https://nextjs.org/docs/app/api-reference/components/link)에서 확인  
+그 밖에도 `<Link>` 컴포넌트에 전달할 수 있는 prop이 있다. [API reference](https://nextjs.org/docs/app/api-reference/components/link)에서 확인
 
 ```javascript
-import Link from 'next/link'
- 
+import Link from "next/link";
+
 export default function Page() {
-  return <Link href="/dashboard">Dashboard</Link>
+  return <Link href="/dashboard">Dashboard</Link>;
 }
 ```
 
@@ -292,25 +293,25 @@ import Link from "next/link";
 
 #### Props
 
-| Prop	| Example | Type | Required |
-| :--- | :--- | :--- | :--- |
-| href | `href="/dashboard"` | String or Object | Yes |
-| replace | `replace={false}` | Boolean | - |
-| scroll | `scroll={false}` | Boolean | - |
-| prefetch | `prefetch={false}` | Boolean or null | - |
+| Prop     | Example             | Type             | Required |
+| :------- | :------------------ | :--------------- | :------- |
+| href     | `href="/dashboard"` | String or Object | Yes      |
+| replace  | `replace={false}`   | Boolean          | -        |
+| scroll   | `scroll={false}`    | Boolean          | -        |
+| prefetch | `prefetch={false}`  | Boolean or null  | -        |
 
 ##### `href` (required)
 
 탐색할 path 또는 URL
 
-객체를 받을 수도 있다.  
+객체를 받을 수도 있다.
 
 ```javascript
 // Navigate to /about?name=test
 <Link
   href={{
-    pathname: '/about',
-    query: { name: 'test' },
+    pathname: "/about",
+    query: { name: "test" },
   }}
 >
   About
@@ -325,14 +326,14 @@ import Link from "next/link";
 ```javascript
 // app/page.js
 
-import Link from 'next/link'
- 
+import Link from "next/link";
+
 export default function Page() {
   return (
     <Link href="/dashboard" replace>
       Dashboard
     </Link>
-  )
+  );
 }
 ```
 
@@ -340,24 +341,68 @@ export default function Page() {
 
 기본값은 `true`
 `<Link>`의 기본 동작은 새 라우트의 맨 위로 스크롤하거나, 앞 뒤 탐색을 위해 스크롤 위치를 유지한다.  
-`false`일 때, 탐색 후에 `next/link`의 위치가 상단으로 스크롤되지 않는다.  
+`false`일 때, 탐색 후에 `next/link`의 위치가 상단으로 스크롤되지 않는다.
 
 ```javascript
-import Link from 'next/link'
- 
+import Link from "next/link";
+
 export default function Page() {
   return (
     <Link href="/dashboard" scroll={false}>
       Dashboard
     </Link>
-  )
+  );
 }
 ```
 
 > Good to know:
-> Next.js는 탐색(navigation)할 때 뷰포트(viewport)에 페이지가 표시되지 않으면(not visible) 페이지로 스크롤한다.  
+> Next.js는 탐색(navigation)할 때 뷰포트(viewport)에 페이지가 표시되지 않으면(not visible) 페이지로 스크롤한다.
 
 ##### `prefetch`
+
+Prefetching은 `<Link />` 컴포넌트가 사용자의 뷰포트에 들어갈 때(초기 또는 스크롤을 통해) 발생한다.  
+Next.js는 linked route(`href`로 표시됨) 및 해당 데이터를 백그라운드에서 prefetch하여 client-side navigations의 성능을 향상시킨다. Prefetching은 프로덕션 환경에서만 활성화된다.
+
+- null (default): Prefetch 동작은 라우트가 정적인지 동적인지에 따라 달라진다. 정적인 라우트의 경우 전체 경로가 prefetch된다(모든 데이터 포함). 동적인 라우트의 경우 `loading.js` 경계가 있는 가장 가까운 세그먼트까지의 부분 라우트(partial route)가 prefetch된다.
+- true: 정적 및 동적 라우트 모두에 대해 전체 라우트가 prefetch됨
+- false: 뷰포트에 진입하거나 hover할 때 prefetch가 전혀 발생하지 않음
+
+```javascript
+import Link from "next/link";
+
+export default function Page() {
+  return (
+    <Link href="/dashboard" prefetch={false}>
+      Dashboard
+    </Link>
+  );
+}
+```
+
+#### Examples
+
+##### Linking to Dynamic Routes
+
+동적 라우트의 경우, link's path를 만들기 위해 템플릿 리터럴(template literals)를 사용하는 것이 편리하다.  
+예를 들어, 동적 라우트 `app/blog/[slug]/page.js`에 대한 링크 목록을 생성할 수 있다.
+
+```javascript
+// app/blog/page.js
+
+import Link from "next/link";
+
+function Page({ posts }) {
+  return (
+    <ul>
+      {posts.map((post) => (
+        <li key={post.id}>
+          <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
 
 ## Next.js의 폴더 구조
 
