@@ -109,7 +109,7 @@ Next.js는 이 컴포넌트가 서버에 렌더링되고 서버에서 실행되�
 
 서버 컴포넌트는 서버에서 HTML로 렌더링되어 클라이언트에 응답으로 전달된다.
 
-### Server Component & Client Component
+### Fullstack Framework
 
 `<a></a>` 태그로 만든 버튼을 눌러 페이지를 이동하면 새로고침 아이콘이 일시적으로 X 모양으로 바뀐다.  
 백엔드로부터 새로운 페이지를 다운로드했다는 의미이다.  
@@ -164,7 +164,7 @@ Next.js의 백그라운드에서 자동으로 설정되기 때문이다.
 
 > Good to know:
 > - `.js`, `.jsx`, `.tsx` 파일 확장자를 `layout`에 사용할 수 있다.  
-> - `html`, `body` 태그는 루트 레이아웃에만 사용할 수 있다.  
+> - `<html>`, `<body>` 태그는 루트 레이아웃에만 사용할 수 있다.  
 > - `layout`과 `page`가 같은 폴더에 정의되면, 레이아웃이 페이지를 랩핑한다.  
 > - 레이아웃은 기본적으로 서버 컴포넌트다. 그러나 원한다면 클라이언트 컴포넌트로 설정할 수 있다.  
 > - 레이아웃은 데이터 가져오기(fetch)를 할 수 있다. 자세한 내용은 [Data Fetching](https://nextjs.org/docs/app/building-your-application/data-fetching) section
@@ -176,8 +176,10 @@ Next.js의 백그라운드에서 자동으로 설정되기 때문이다.
 
 ## Templates
 
-템플릿은 각 하위 레이아웃이나 페이지를 래핑한다는 점에서 레이아웃과 유사하다. route 전반에 걸쳐 지속되고 상태를 유지하는 레이아웃과 달리,  
+템플릿은 각 하위 레이아웃이나 페이지를 래핑한다는 점에서 레이아웃과 유사하다.  
+route 전반에 걸쳐 지속되고 상태를 유지하는 레이아웃과 달리,  
 템플릿은 탐색 시 각 하위 항목에 대해 새 인스턴스를 만든다.  
+
 이는 사용자가 템플릿을 공유하는 route 사이를 탐색할 때, 컴포넌트의 새 인스턴스가 마운트되고 DOM 요소가 다시 생성되며  
 상태가 유지되지 않고 effects가 다시 동기화됨을 의미한다.  
 이러한 특정 동작이 필요한 경우가 있을 수 있으며, 그 경우에 템플릿은 레이아웃보다 더 적합한 선택이다. 예를 들어:  
@@ -187,6 +189,43 @@ Next.js의 백그라운드에서 자동으로 설정되기 때문이다.
 
 `template.js` 파일에서 디폴트 리액트 컴포넌트를 내보내 템플릿을 정의할 수 있다.  
 컴포넌트는 `children` prop을 허용해야 한다.
+
+```javascript
+// app/template.js
+
+export default function Template({ children }) {
+  return <div>{children}</div>
+}
+```
+
+중첩 측면(In terms of nesting)에서 `template.js`은 레이아웃과 해당 하위 항목 사이에 렌더링된다. 다음은 간단한 예시 출력이다:  
+
+```javascript
+<Layout>
+  {/* Note that the template is given a unique key. */}
+  <Template key={routeParam}>{children}</Template>
+</Layout>
+```
+
+## Metadata
+
+`App` 디렉터리에서 [Metadata APIs](https://nextjs.org/docs/app/building-your-application/optimizing/metadata)를 이용하여 `title`이나 `meta` 같은 `<head>` HTML elements를 수정할 수 있다.
+
+메타데이터는 `layout.js` 또는 `page.js` 파일 안에서 [metadata object](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#the-metadata-object)나 [`generateMetadata` function](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function)를 exporting하여 정의할 수 있다.  
+
+```javascript
+export const metadata = {
+  title: 'Next.js',
+}
+ 
+export default function Page() {
+  return '...'
+}
+```
+
+> Good to know:  
+> 루트 레이아웃에는 수동으로 `<title>` 및 `<meta>`와 같은 `<head>` 태그를 추가해서는 안 된다.  
+> 대신 Metadata API를 사용해야 한다. Metadata API는 스트리밍(streaming) 및 `<head>` 요소의 중복을 처리(de-duplicating)하는 등 고급 요구 사항을 자동으로 처리한다.
 
 ## Built-in Components
 
@@ -218,7 +257,7 @@ import Link from "next/link";
 > 3. 페이지 로드 방식
 >
 > - React : 페이지 전체를 로드하지 않고 내부적으로 필요한 컴포넌트 리렌더
-> - Next.js : 페이지 전환 시 자동으로 해당 페이지를 미리 로드하는 Prefetch 기능으로 빠른 로딩 > 가능
+> - Next.js : 페이지 전환 시 자동으로 해당 페이지를 미리 로드하는 Prefetch 기능으로 빠른 로딩 가능
 >
 > [Web: Next.js Link와 Prefetch 과정 파헤쳐보기](https://medium.com/hcleedev/web-next-js-link와-prefetch-과정-파헤쳐보기-44e22ace13e7)
 >
