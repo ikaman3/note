@@ -187,7 +187,7 @@ route 전반에 걸쳐 지속되고 상태를 유지하는 레이아웃과 달�
 - `useEffect`(예: logging page views) 및 `useState`(예: per-page feedback form)에 의존하는 기능
 - 기본 프레임워크 동작을 변경하는 경우: 예를 들어 레이아웃 내부의 정지 경계(Suspense Boundaries)는 레이아웃이 처음 로드될 때만 대체(the fallback)를 표시하고 페이지를 전환할 때는 표시하지 않는다. 템플릿의 경우 각 탐색에 fallback이 표시된다.
 
-`template.js` 파일에서 디폴트 리액트 컴포넌트를 내보내 템플릿을 정의할 수 있다.  
+`template.js` 파일에서 디폴트 리액트 컴포넌트를 export해서 템플릿을 정의할 수 있다.  
 컴포넌트는 `children` prop을 허용해야 한다.
 
 ```javascript
@@ -227,19 +227,46 @@ export default function Page() {
 > 루트 레이아웃에는 수동으로 `<title>` 및 `<meta>`와 같은 `<head>` 태그를 추가해서는 안 된다.  
 > 대신 Metadata API를 사용해야 한다. Metadata API는 스트리밍(streaming) 및 `<head>` 요소의 중복을 처리(de-duplicating)하는 등 고급 요구 사항을 자동으로 처리한다.
 
-## Built-in Components
+## Linking and Navigating
 
-Next.js에 내장된 컴포넌트들을 모아두는 섹션
+Next.js에는 routes 사이를 탐색하는 4개의 방법이 존재한다.  
 
-### Link
+- Using the [`<Link>` Component](https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#link-component)
+- Using the [`useRouter`](https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#userouter-hook) hook ([Client Components](https://nextjs.org/docs/app/building-your-application/rendering/client-components))
+- Using the [`redirect` function](https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#redirect-function) ([Server Components](https://nextjs.org/docs/app/building-your-application/rendering/server-components))
+- Using the native [History API](https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#using-the-native-history-api)
 
+### `<Link>` Component
+
+`<Link>`는 HTML `<a>` 태그를 확장하여 라우트 간 prefetching 및 클라이언트 측(client-side) 내비게이션을 제공하는 build-in 컴포넌트다.  
+Next.js에서 라우트 간 이동하는 주요하고 권장되는 방법이다.  
 앵커 태그와는 다르게 사이트를 SPA로 유지하며 이동할 수 있게 한다.
+
+`next/link`에서 가져와서 컴포넌트에 `href` 속성을 전달하여 사용할 수 있다.
+그 밖에도 `<Link>` 컴포넌트에 전달할 수 있는 prop이 있다. [API reference](https://nextjs.org/docs/app/api-reference/components/link)에서 확인  
+
+```javascript
+import Link from 'next/link'
+ 
+export default function Page() {
+  return <Link href="/dashboard">Dashboard</Link>
+}
+```
+
+## Build-in Components
+
+Next.js의 빌트인 컴포넌트의 자세한 정보를 모아두는 섹션
+
+### `<Link>`
 
 ```javascript
 import Link from "next/link";
 
 <Link href="/about">About Us</Link>;
 ```
+
+> Good to know:
+> `className` 또는 `target="_blank"`와 같은 `<a>` 태그의 속성은 `<Link>`에 props로 추가할 수 있으며 내부 `<a>` 요소로 전달된다.
 
 > <details markdown="1">
 > <summary>Deep Dive : Link 컴포넌트 (React VS Next.js)</summary>
@@ -262,6 +289,33 @@ import Link from "next/link";
 > [Web: Next.js Link와 Prefetch 과정 파헤쳐보기](https://medium.com/hcleedev/web-next-js-link와-prefetch-과정-파헤쳐보기-44e22ace13e7)
 >
 > </details>
+
+#### Props
+
+| Prop	| Example | Type | Required |
+| :--- | :--- | :--- | :--- |
+| href | `href="/dashboard"` | String or Object | Yes |
+| replace | `replace={false}` | Boolean | - |
+| scroll | `scroll={false}` | Boolean | - |
+| prefetch | `prefetch={false}` | Boolean or null | - |
+
+##### `href` (required)
+
+탐색할 path 또는 URL
+
+객체를 받을 수도 있다.  
+
+```javascript
+// Navigate to /about?name=test
+<Link
+  href={{
+    pathname: '/about',
+    query: { name: 'test' },
+  }}
+>
+  About
+</Link>
+```
 
 ## Next.js의 폴더 구조
 
