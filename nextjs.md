@@ -317,9 +317,51 @@ import Link from "next/link";
 </Link>
 ```
 
+##### `replace`
+
+기본값은 `false`  
+`true`일 때, 브라우저 기록 스택([browser’s history](https://developer.mozilla.org/docs/Web/API/History_API))에 새 URL을 추가하는 대신 `next/link`가 현재 기록 상태를 대체한다.
+
+```javascript
+// app/page.js
+
+import Link from 'next/link'
+ 
+export default function Page() {
+  return (
+    <Link href="/dashboard" replace>
+      Dashboard
+    </Link>
+  )
+}
+```
+
+##### `scroll`
+
+기본값은 `true`
+`<Link>`의 기본 동작은 새 라우트의 맨 위로 스크롤하거나, 앞 뒤 탐색을 위해 스크롤 위치를 유지한다.  
+`false`일 때, 탐색 후에 `next/link`의 위치가 상단으로 스크롤되지 않는다.  
+
+```javascript
+import Link from 'next/link'
+ 
+export default function Page() {
+  return (
+    <Link href="/dashboard" scroll={false}>
+      Dashboard
+    </Link>
+  )
+}
+```
+
+> Good to know:
+> Next.js는 탐색(navigation)할 때 뷰포트(viewport)에 페이지가 표시되지 않으면(not visible) 페이지로 스크롤한다.  
+
+##### `prefetch`
+
 ## Next.js의 폴더 구조
 
-### App router의 routing의 단점
+### App router의 문제점
 
 Next.js 13에서 추가된 App router는 폴더내에 `page.js` 또는 `page.jsx` 파일을 작성했을 때 해당 폴더의 이름으로 route 된다.
 
