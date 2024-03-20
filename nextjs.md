@@ -144,6 +144,7 @@ page.js 파일이 페이지의 내용을 정의한다면,
 
 루트 레이아웃은 웹사이트의 일반적인 HTML 뼈대(skeleton)를 잡기 위해 필수이다.
 루트 레이아웃은 실제로 HTML과 `body` 태그를 렌더링한다.
+`html`, `body` 태그는 루트 레이아웃에서만 렌더링 가능하다.  
 
 Next.js에서 `head` 태그 대신 `metadata`라는 특별한 변수를 선언하여 객체를 export해서 메타데이터 및 제목을 설정한다.  
 상수 또는 변수일 수 있고 미리 정해진 이름이다.
@@ -160,6 +161,32 @@ Next.js의 백그라운드에서 자동으로 설정되기 때문이다.
 
 `children`은 현재 활성화된 페이지(`page.js`)의 내용이다.  
 레이아웃은 하나 또는 그 이상의 페이지를 감싸는 포장지(wrapper)와 같다.
+
+> Good to know:
+> - `.js`, `.jsx`, `.tsx` 파일 확장자를 `layout`에 사용할 수 있다.  
+> - `html`, `body` 태그는 루트 레이아웃에만 사용할 수 있다.  
+> - `layout`과 `page`가 같은 폴더에 정의되면, 레이아웃이 페이지를 랩핑한다.  
+> - 레이아웃은 기본적으로 서버 컴포넌트다. 그러나 원한다면 클라이언트 컴포넌트로 설정할 수 있다.  
+> - 레이아웃은 데이터 가져오기(fetch)를 할 수 있다. 자세한 내용은 [Data Fetching](https://nextjs.org/docs/app/building-your-application/data-fetching) section
+> - 부모 레이아웃과 해당 자식 레이아웃 간에 데이터를 전달하는 건 불가능하다. 그러나 route에서 동일한 데이터를 두 번 이상 가져올 수 있으며, 리액트는 성능에 영향을 주지 않고 자동으로 요청을 중복 제거한다([automatically dedupe the requests](https://nextjs.org/docs/app/building-your-application/caching#request-memoization)).
+> - 레이아웃은 자체 아래 route의 세그먼트에 접근할 수 없다. 모든 route 세그먼트에 접근하려면, 클라이언트 컴포넌트에서 [`useSelectedLayoutSegment`](https://nextjs.org/docs/app/api-reference/functions/use-selected-layout-segment) 또는 [`useSelectedLayoutSegments`](https://nextjs.org/docs/app/api-reference/functions/use-selected-layout-segments)를 사용할 수 있다.  
+> - [Route Groups](https://nextjs.org/docs/app/building-your-application/routing/route-groups)을 사용하여 공유 레이아웃 안팎에서 특정 route 세그먼트를 선택할 수 있다.
+> - [Route Groups](https://nextjs.org/docs/app/building-your-application/routing/route-groups)을 사용하여 여러 루트 레이아웃을 생성할 수 있다. [보다 여기서 예제](https://nextjs.org/docs/app/building-your-application/routing/route-groups#creating-multiple-root-layouts)
+> - 페이지 디렉터리로부터 마이그레이션: 루트 레이아웃은 [`_app.js`](https://nextjs.org/docs/pages/building-your-application/routing/custom-app)과 [`_document.js`](https://nextjs.org/docs/pages/building-your-application/routing/custom-document) 파일을 대체한다. [힘세고 강한 마이그레이션 가이드](https://nextjs.org/docs/app/building-your-application/upgrading/app-router-migration#migrating-_documentjs-and-_appjs)
+
+## Templates
+
+템플릿은 각 하위 레이아웃이나 페이지를 래핑한다는 점에서 레이아웃과 유사하다. route 전반에 걸쳐 지속되고 상태를 유지하는 레이아웃과 달리,  
+템플릿은 탐색 시 각 하위 항목에 대해 새 인스턴스를 만든다.  
+이는 사용자가 템플릿을 공유하는 route 사이를 탐색할 때, 컴포넌트의 새 인스턴스가 마운트되고 DOM 요소가 다시 생성되며  
+상태가 유지되지 않고 effects가 다시 동기화됨을 의미한다.  
+이러한 특정 동작이 필요한 경우가 있을 수 있으며, 그 경우에 템플릿은 레이아웃보다 더 적합한 선택이다. 예를 들어:  
+
+- `useEffect`(예: logging page views) 및 `useState`(예: per-page feedback form)에 의존하는 기능
+- 기본 프레임워크 동작을 변경하는 경우: 예를 들어 레이아웃 내부의 정지 경계(Suspense Boundaries)는 레이아웃이 처음 로드될 때만 대체(the fallback)를 표시하고 페이지를 전환할 때는 표시하지 않는다. 템플릿의 경우 각 탐색에 fallback이 표시된다.
+
+`template.js` 파일에서 디폴트 리액트 컴포넌트를 내보내 템플릿을 정의할 수 있다.  
+컴포넌트는 `children` prop을 허용해야 한다.
 
 ## Built-in Components
 
