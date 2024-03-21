@@ -404,6 +404,36 @@ function Page({ posts }) {
 }
 ```
 
+##### If the child is a custom component that wraps an `<a>` tag
+
+만약 Link의 자식이 `<a>` 태그를 감싸는 사용자정의 컴포넌트라면, Link에 `passHref`를 추가해야 한다.  
+이는 [styled-components](https://styled-components.com/)와 같은 라이브러리를 사용하는 경우에 필요하다.  
+이렇게 하지 않으면 `<a>` 태그에 `href` 속성이 없어 사이트의 접근성이 저하되고 SEO에 영향을 줄 수 있다.  
+`ESLint`를 사용하는 경우, `passHref`의 올바른 사용을 보장하기 위한 내장 규칙인 `next/link-passhref`가 있다.
+
+```javascript
+import Link from 'next/link'
+import styled from 'styled-components'
+ 
+// This creates a custom component that wraps an <a> tag
+const RedLink = styled.a`
+  color: red;
+`
+ 
+function NavLink({ href, name }) {
+  return (
+    <Link href={href} passHref legacyBehavior>
+      <RedLink>{name}</RedLink>
+    </Link>
+  )
+}
+ 
+export default NavLink
+```
+
+- 만약 [emotion](https://emotion.sh/)의 JSX pragma 기능(@jsx jsx)을 사용하는 경우, 직접 `<a>` 태그를 사용하더라도 `passHref`를 사용해야 한다.  
+- 컴포넌트는 올바른 네비게이션을 트리거하기 위해 `onClick` 속성을 지원해야 한다.
+
 ## Next.js의 폴더 구조
 
 Next.js 13에서 추가된 App router는 폴더내에 `page.js` 파일을 작성했을 때 해당 폴더의 이름으로 route 된다.
