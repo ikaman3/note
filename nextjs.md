@@ -24,7 +24,7 @@ File-based Routing
 
 - 파일 시스템을 사용하여 경로 설정 가능
 - 폴더와 파일을 설치하여 사용자가 방문할 수 있는 경로로 매핑
-- 코드 기반 환경설정 또는 패키지가 불필요, 대신 NextJS에 내장됨
+- 코드 기반 환경설정 또는 패키지가 불필요, NextJS에 내장됨
 
 Server-side Rendering
 
@@ -406,12 +406,10 @@ function Page({ posts }) {
 
 ## Next.js의 폴더 구조
 
-### App router의 문제점
-
-Next.js 13에서 추가된 App router는 폴더내에 `page.js` 또는 `page.jsx` 파일을 작성했을 때 해당 폴더의 이름으로 route 된다.
+Next.js 13에서 추가된 App router는 폴더내에 `page.js` 파일을 작성했을 때 해당 폴더의 이름으로 route 된다.
 
 - 페이지들이 다른 폴더(페이지가 아닌)와 같은 depth에 위치하여 어떤 폴더가 페이지인지 구별하기 어려울 수 있다.
-- 원치않는 폴더의 route가 생성될 수 있다.
+- 프로그래머의 실수로 인해 원치않는 폴더의 route가 생성될 수 있다.
 
 ### Route group
 
@@ -419,24 +417,29 @@ Next.js 13에서 추가된 App router는 폴더내에 `page.js` 또는 `page.jsx
 route가 될 수 있는 페이지들을 하나의 그룹으로 묶는다.
 route를 구분하기 위해 사용할 수도 있고 각각의 도메인에 맞게(admin, shop 등) 그룹을 나눌 수도 있다.
 
+라우트 그룹을 이용해 폴더 구조의 가독성을 향상시킨다.  
+
 ### Private folder
 
 `_folder`  
 해당 폴더는 route가 생성되지 않는다.
 
+프라이빗 폴더를 이용해 원치않는 라우트의 생성을 예방한다.  
+
 ### (Option) material icon theme custom
 
-VSCode의 Plugin인 `material icon theme`을 사용하는 중에  
+VSCode의 Plugin `material icon theme`을 사용하는 중에  
 폴더 이름에 `_`를 붙이면서 아이콘의 색이 모두 회색으로 되어버렸다.
-VSCode에서 extension을 설정할 수 있는 `settings.json`을 수정한다.
 
-`.vscode` 폴더를 생성하고 그 안에 `settings.json` 파일을 만들어서  
+VSCode에서 extension을 설정할 수 있는 `settings.json`을 수정하여 해결할 수 있다.  
+`.vscode` 폴더를 생성하고 그 안에 `settings.json` 파일을 만들면  
 해당 프로젝트의 모두가 동일한 설정을 적용할 수 있다.
 
-- 로컬의 파일을 수정하면 해당 PC에서만 설정이 적용된다.
+로컬의 `settings.json` 파일이나 VSCode의 설정을 직접 수정하면 해당 PC에서만 설정이 적용된다.
 
 ```json
 // setting.json
+
 {
   "material-icon-theme.folders.associations": {
     // "적용할 폴더 이름": "적용할 아이콘"
