@@ -412,26 +412,26 @@ function Page({ posts }) {
 `ESLint`를 사용하는 경우, `passHref`의 올바른 사용을 보장하기 위한 내장 규칙인 `next/link-passhref`가 있다.
 
 ```javascript
-import Link from 'next/link'
-import styled from 'styled-components'
- 
+import Link from "next/link";
+import styled from "styled-components";
+
 // This creates a custom component that wraps an <a> tag
 const RedLink = styled.a`
   color: red;
-`
- 
+`;
+
 function NavLink({ href, name }) {
   return (
     <Link href={href} passHref legacyBehavior>
       <RedLink>{name}</RedLink>
     </Link>
-  )
+  );
 }
- 
-export default NavLink
+
+export default NavLink;
 ```
 
-- 만약 [emotion](https://emotion.sh/)의 JSX pragma 기능(@jsx jsx)을 사용하는 경우, 직접 `<a>` 태그를 사용하더라도 `passHref`를 사용해야 한다.  
+- 만약 [emotion](https://emotion.sh/)의 JSX pragma 기능(@jsx jsx)을 사용하는 경우, 직접 `<a>` 태그를 사용하더라도 `passHref`를 사용해야 한다.
 - 컴포넌트는 올바른 네비게이션을 트리거하기 위해 `onClick` 속성을 지원해야 한다.
 
 ## Next.js의 폴더 구조
@@ -447,14 +447,14 @@ Next.js 13에서 추가된 App router는 폴더내에 `page.js` 파일을 작성
 route가 될 수 있는 페이지들을 하나의 그룹으로 묶는다.
 route를 구분하기 위해 사용할 수도 있고 각각의 도메인에 맞게(admin, shop 등) 그룹을 나눌 수도 있다.
 
-라우트 그룹을 이용해 폴더 구조의 가독성을 향상시킨다.  
+라우트 그룹을 이용해 폴더 구조의 가독성을 향상시킨다.
 
 ### Private folder
 
 `_folder`  
 해당 폴더는 route가 생성되지 않는다.
 
-프라이빗 폴더를 이용해 원치않는 라우트의 생성을 예방한다.  
+프라이빗 폴더를 이용해 원치않는 라우트의 생성을 예방한다.
 
 ### (Option) material icon theme custom
 
