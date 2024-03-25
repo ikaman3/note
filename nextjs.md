@@ -80,7 +80,7 @@ npm run start
 
 ## App router
 
-기존 NextJS는 `/pages` 폴더에 웹 사이트의 모든 페이지를 나타내는 File based routing을 사용했다.  
+기존 NextJS는 `/pages` 폴더에 웹 사이트의 모든 페이지를 나타내는 Page Router를 사용했다.  
 Next.js 13 버전부터 앱 라우터가 도입되었다.
 
 app 폴더에서 페이지를 설정한다. 이 페이트는 전반적인 웹사이트에 넣고 싶은 페이지를 의미한다.  
