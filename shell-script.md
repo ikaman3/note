@@ -9,7 +9,7 @@ Linux, MacOS 환경에서 사용할 수 있는 셸 스크립트에 대한 내용
 ### 커서 조작
 
 | command | <center>action</center> |
-| :-----: | ---------------------- |
+| :-----: | ----------------------- |
 |  ⌃ + A  | 라인 맨 앞으로 이동     |
 |  ⌃ + E  | 라인 맨 뒤로 이동       |
 | ESC + B | 앞 단어로 이동          |
@@ -20,9 +20,15 @@ Linux, MacOS 환경에서 사용할 수 있는 셸 스크립트에 대한 내용
 |  ⌃ + W  | 앞 단어 삭제            |
 | ESC + D | 뒷 단어 삭제            |
 
-### Config files
+### Shell Initialization Files
 
-추가 예정
+쉘 초기화 파일은 사용자 로그인 후 쉘 생성 시 쉘의 환경을 설정하는 파일을 말한다.
+적용 범위에 따라서 System Initialization Files(시스템 초기화 파일)와 User Initialization Files(사용자 초기화 파일)로 나뉜다.
+
+|     적용 범위      | <center>내용</center>                                               | <center>예시</center>                                        |
+| :----------------: | :------------------------------------------------------------------ | :----------------------------------------------------------- |
+|    System-wide     | 시스템 관리자가 관리하는 파일로써 쉘 사용자 전체에게 영향을 준다.   | `/etc/profile`, `/etc/bashrc`                                |
+| User Configuration | 시스템 사용자가 관리하는 파일로써 각 사용자에 한정되어 영향을 준다. | `$HOME/.bash_profile`, `$HOME/.bashrc`, `$HOME/.bash_logout` |
 
 #### .zshenv
 
