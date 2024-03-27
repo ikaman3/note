@@ -22,7 +22,7 @@ Linux, MacOS 환경에서 사용할 수 있는 셸 스크립트에 대한 내용
 
 ### Shell Initialization Files
 
-쉘 초기화 파일은 사용자 로그인 후 쉘 생성 시 쉘의 환경을 설정하는 파일을 말한다.
+셸 초기화 파일은 사용자 로그인 후 쉘 생성 시 쉘의 환경을 설정하는 파일을 말한다.
 적용 범위에 따라서 System Initialization Files(시스템 초기화 파일)와 User Initialization Files(사용자 초기화 파일)로 나뉜다.
 
 |     적용 범위      | <center>내용</center>                                               | <center>예시</center>                                        |
@@ -30,13 +30,35 @@ Linux, MacOS 환경에서 사용할 수 있는 셸 스크립트에 대한 내용
 |    System-wide     | 시스템 관리자가 관리하는 파일로써 쉘 사용자 전체에게 영향을 준다.   | `/etc/profile`, `/etc/bashrc`                                |
 | User Configuration | 시스템 사용자가 관리하는 파일로써 각 사용자에 한정되어 영향을 준다. | `$HOME/.bash_profile`, `$HOME/.bashrc`, `$HOME/.bash_logout` |
 
-#### .zshenv
+셸 초기화 파일들이 실행되는 순서는 아래와 같다.
 
-#### .zprofile
+1. `/etc/zshenv`
+2. `$ZDOTDIR/.zshenv`
+3. `/etc/zprofile`
+4. `$ZDOTDIR/.zprofile`
+5. `/etc/zshrc`
+6. `$ZDOTDIR/.zshrc`
+7. `/etc/zlogin`
+8. `$ZDOTDIR/.zlogin`
 
-#### .zshrc
+`/etc` 하위에 있는 숨겨지지 않은 파일은 모든 사용자에게 공통적으로 적용되는 환경 설정 파일이다.  
+`$ZDOTDIR` 환경 변수를 사용한 숨김 파일은 특정 사용자를 지정하여 적용하는 환경 설정 파일이다.
 
-#### .zlogin
+#### zshenv
+
+zsh 세션에서 실행됨
+
+#### zprofile
+
+로그인 셸에만 실행되는 프로파일 설정을 위한 파일
+
+#### zshrc
+
+대부분의 경우 모든 셸에 적용되는 설정 파일
+
+#### zlogin
+
+로그인 셸에만 적용되는 추가 설정 파일
 
 ## Shebang(셔뱅)
 
@@ -1275,6 +1297,7 @@ for folder in 僕の心のヤバイやつ*; do
    else
       echo "No cover_or_extra_1.png file found in $folder"
    fi
+
 
 done
 ```
