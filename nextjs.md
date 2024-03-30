@@ -228,6 +228,45 @@ export default function Page() {
 > 루트 레이아웃에는 수동으로 `<title>` 및 `<meta>`와 같은 `<head>` 태그를 추가해서는 안 된다.  
 > 대신 Metadata API를 사용해야 한다. Metadata API는 스트리밍(streaming) 및 `<head>` 요소의 중복을 처리(de-duplicating)하는 등 고급 요구 사항을 자동으로 처리한다.
 
+## CSS
+
+리액트와 마찬가지로 여러 개의 옵션을 갖는다.
+
+### globals.css
+
+여러 개의 css 파일을 추가할 수 있고, 이름은 자유다.  
+globals인 이유는 해당 파일이 root `layout.js` 파일에서 import되기 때문이다.  
+어느 css 파일이든 root `layout.js` 파일로 import되는 것은 모든 `page`에서 유효하다.
+
+```javascript
+import "./globals.css";
+```
+
+### Tailwind
+
+테일윈드는 최근 인기있는 선택으로, css 라이브러리이다.
+Element를 스타일링할 때 그 요소에 유틸리티 클래스를 추가하여 구현한다.
+
+### CSS Module
+
+Next.js에서 기본으로 지원하는 솔루션이다.  
+일반적인 css 코드이지만 css파일에 특정 이름을 지정하여 특정 컴포넌트로 스코핑된다.  
+`.module.css`로 끝나는 css 파일을 추가하면, 그 파일로부터 객체를 불러올 수 있고  
+기본 빌드 프로세스 및 개발 서버에 의해 자동으로 생성되며, 해당 파일에서 정의한 모든 css 클래스를 속성 이름으로 접근할 수 있다.
+
+이때 이름은 css를 적용할 `js`, `jsx`, `ts` 파일의 이름과 같아야하고 `.module.css`로 끝나야 한다.
+`globals.css`와는 약간 다른 방식으로 import하게 된다.
+
+```javascript
+import classes from "./page.module.css";
+
+<Link className={classes.logo} href="/">
+```
+
+- import할 변수의 이름은 자유다. 관습적으로 `classes` 또는 `styles`를 사용한다.
+- classes 변수는 객체이며, css 파일에 정의한 모든 클래스는 이 객체에서 속성으로 사용된다.
+- `className`에 문자열이 아닌 동적인 값으로 `classes` 객체에 접근할 수 있다. 해당 예시에서는 `logo` 클래스이다.
+
 ## Linking and Navigating
 
 Next.js에는 routes 사이를 탐색하는 4개의 방법이 존재한다.
@@ -254,7 +293,8 @@ export default function Page() {
 }
 ```
 
-### Example 
+### Example
+
 #### Linking to Dynamic Segments
 
 동적 세그먼트에 링크를 연결할 때, 템플릿 리터럴과 보간법을 사용하여 링크 목록을 생성할 수 있다. 예를 들어, 블로그 게시물 목록을 생성하려면:
@@ -262,8 +302,8 @@ export default function Page() {
 ```javascript
 // /app/blog/PostList.js
 
-import Link from 'next/link'
- 
+import Link from "next/link";
+
 export default function PostList({ posts }) {
   return (
     <ul>
@@ -273,7 +313,7 @@ export default function PostList({ posts }) {
         </li>
       ))}
     </ul>
-  )
+  );
 }
 ```
 
@@ -285,25 +325,25 @@ export default function PostList({ posts }) {
 ```javascript
 // app/components/links.js
 
-'use client'
- 
-import { usePathname } from 'next/navigation'
-import Link from 'next/link'
- 
+"use client";
+
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+
 export function Links() {
-  const pathname = usePathname()
- 
+  const pathname = usePathname();
+
   return (
     <nav>
       <ul>
         <li>
-          <Link className={`link ${pathname === '/' ? 'active' : ''}`} href="/">
+          <Link className={`link ${pathname === "/" ? "active" : ""}`} href="/">
             Home
           </Link>
         </li>
         <li>
           <Link
-            className={`link ${pathname === '/about' ? 'active' : ''}`}
+            className={`link ${pathname === "/about" ? "active" : ""}`}
             href="/about"
           >
             About
@@ -311,7 +351,7 @@ export function Links() {
         </li>
       </ul>
     </nav>
-  )
+  );
 }
 ```
 
@@ -323,7 +363,7 @@ Next.js App router의 기본 동작은 새 route로 스크롤을 맨 위로 이�
 
 ```javascript
 <Link href="/dashboard#settings">Settings</Link>
- 
+
 // Output
 <a href="/dashboard#settings">Settings</a>
 ```
