@@ -1,4 +1,4 @@
-# 컴포넌트
+# Components
 
 리액트를 사용하면 마크업, CSS, 자바스크립트를 **앱의 재사용 가능한 UI 요소**인 사용자 정의 "컴포넌트"로 결합할 수 있다.  
 내부적으로는 여전히 `<article>`, `<h1>` 등과 같은 동일한 HTML태그를 사용한다.
@@ -181,7 +181,7 @@ export default function Clock({ time }) {
 ```javascript
 let guest = 0;
 function Cup() {
-  // 나쁜 지점: 이미 존재했던 변수를 변경하고 있다!
+  // 나쁜 지점: 외부에 이미 존재하는 변수를 변경하고 있다!
   guest = guest + 1;
   return <h2>Tea cup for guest #{guest}</h2>;
 }
@@ -208,7 +208,7 @@ function Cup({ guest }) {
 }
 ```
 
-- 이러한 순수 함수는 연산만 하므로 두 번 호출해도 아무것도 변경되지 않는다.
+- 이러한 순수 함수는 연산만 하므로 여러번 호출해도 아무것도 변경되지 않는다.
 
 리액트에서 사이드 이펙트는 보통 이벤트 핸들러에 포함한다.
 
@@ -259,7 +259,3 @@ export default function TeaGathering() {
 
 - 동일한 렌더링중에 생성된 변수를 변경하는 것은 괜찮다.
 - 지역 변형: 다른 컴포넌트에서 이 현상이 벌어진 것을 모르는 것
-
-## react-router-dom
-
-### `<Link />`
