@@ -87,10 +87,9 @@ app 폴더에서 페이지를 설정한다. 이 페이트는 전반적인 웹사
 `page.js`, `layout.js`라는 보호된 파일이 존재하는데,  
 `page.js` 파일은 NextJS에게 해당 페이지를 렌더링해야 한다고 전한다.
 
-'localhost:3000/about' 이라는 페이지를 만들고 싶다면,  
+`'localhost:3000/about'` 이라는 페이지를 만들고 싶다면,  
 `app` 디렉터리 하위에 라우트로 취급되길 원하는 폴더(`about`)를 생성한다.  
-그리고 해당 폴더에 `page.js` 파일이 존재한다면 페이지를 렌더링할 수 있다.  
-이때, export할 함수 컴포넌트의 이름은 중요하지 않다.
+그리고 해당 폴더에 `page.js` 파일이 존재한다면 페이지를 렌더링할 수 있다. 이때, export할 함수 컴포넌트의 이름은 중요하지 않다.
 
 ```javascript
 // app/about/page.js
@@ -321,36 +320,31 @@ export default function PostList({ posts }) {
 
 `usePathname()` 함수를 사용하여 링크가 active 상태인지 확인할 수 있다.  
 예를 들어, active link에 클래스를 추가하려면 현재 `pathname`이 링크의 `href`와 일치하는지 확인할 수 있다.
+클라이언트 컴포넌트에서만 사용할 수 있으며, `next/navigation`에서 import한다.
+
+이 훅은 도메인 다음 부분인 path를 반환한다.
+`startsWith` 메서드를 사용하면 특정 경로 세그먼트로 시작하는지 검사할 수 있다. 이를 이용해 중첩된 라우트의 경로를 활용할 수 있다.
 
 ```javascript
-// app/components/links.js
-
 "use client";
 
-import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function Links() {
   const pathname = usePathname();
 
   return (
-    <nav>
-      <ul>
-        <li>
-          <Link className={`link ${pathname === "/" ? "active" : ""}`} href="/">
-            Home
-          </Link>
-        </li>
-        <li>
-          <Link
-            className={`link ${pathname === "/about" ? "active" : ""}`}
-            href="/about"
-          >
-            About
-          </Link>
-        </li>
-      </ul>
-    </nav>
+    <Link className={`link ${pathname === "/" ? "active" : ""}`} href="/">
+      Home
+    </Link>
+    <Link
+      className={`link ${pathname === "/about" ? "active" : ""}`}
+      href="/about"
+    >
+    <Link href="/meals" className={path.startsWith("/meals") ? `${classes.link} ${classes.active}` : classes.link}>
+      {children}
+    </Link>
   );
 }
 ```
@@ -398,7 +392,7 @@ interval 등을 서버에 설정하는 것이 아니라 브라우저에 페이�
 그곳에서 사용자 상호작용을 기다리고 있기에 클라이언트에서 실행되는 코드가 필요하므로 클라이언트 컴포넌트여야 한다.
 
 Next.js에서는 기본적으로 모두 서버 컴포넌트이므로 클라이언트 컴포넌트로 만들려면  
-파일 최상단에 특별한 지시어인 `'use client'`를 추가해야 한다.
+파일 최상단에 특별한 지시어 `'use client'`를 추가해야 한다.
 
 ## Build-in Components
 
@@ -603,13 +597,40 @@ import logoImg from '@/assets/logo.png'
 
 // img 태그와의 차이
 <img src={logoImg.src} alt="..." />
-<Image src={logoImg} alt="..." priority />
+<Image src={logoImg} alt="..." priority fill />
 ```
 
 `priority` 속성은 페이지가 로딩될 때 항상 보이는 이미지인 경우 추가한다.  
 이 경우에 지연 로딩은 효과가 없고, 불필요한 컨텐츠 변경이나 깜빡임이 없도록 하기 위해 가능한 빠르게 로딩해야 한다.  
 해당 속성을 추가한 `<Image>` 컴포넌트는 우선적으로 로딩된다.
 예를 들어 third party 웹사이트 등으로부터 이미지를 로딩한다면 해당 속성을 추가하는 것을 권장한다.
+
+`fill` 속성은 Next.js에 해당 컴포넌트의 공간을 부모 컴포넌트에 의해 정의된 이미지로 채워야 함을 알려준다.  
+`assets` 폴더처럼 로컬 파일 시스템에서 가져온 파일은 빌드 타임에 크기를 미리 알고 자동으로 처리하지만,  
+DB에서 로드한 이미지, 외부 API에서 가져온 이미지처럼 런타임에 가져오기 때문에 크기를 미리 알 수 없는 경우 최고의 대안이다.
+외부 API나 DB에서 가져오더라도, 크기를 알고 있다면 `width`, `height`를 명시하는 방법을 사용해도 된다.  
+그러나 사용자가 업로드하는 대부분의 이미지는 크기를 예상할 수 없으므로 `fill`을 사용하는 것을 권장한다.
+
+#### Props
+
+| Prop                | Example                                  | Type            | Required   |
+| :------------------ | :--------------------------------------- | :-------------- | :--------- |
+| `src`               | `src="/profile.png"`                     | String          | Required   |
+| `width`             | `width={500}`                            | Integer (px)    | Required   |
+| `height`            | `height={500}`                           | Integer (px)    | Required   |
+| `alt`               | `alt="Picture of the author"`            | String          | Required   |
+| `loader`            | `loader={imageLoader}`                   | Function        |            |
+| `fill`              | `fill={true}`                            | Boolean         |            |
+| `sizes`             | `sizes="(max-width: 768px) 100vw, 33vw"` | String          |            |
+| `quality`           | `quality={80}`                           | Integer (1-100) |            |
+| `priority`          | `priority={true}`                        | Boolean         |            |
+| `placeholder`       | `placeholder="blur"`                     | String          |            |
+| `style`             | `style={{objectFit: "contain"}}`         | Object          |            |
+| `onLoadingComplete` | `onLoadingComplete={img => done())}`     | Function        | Deprecated |
+| `onLoad`            | `onLoad={event => done())}`              | Function        |            |
+| `onError`           | `onError(event => fail()}`               | Function        |            |
+| `loading`           | `loading="lazy"`                         | String          |            |
+| `blurDateURL`       | `blurDataURL="data:image/jpeg..."`       | String          |            |
 
 ## Next.js의 폴더 구조
 
