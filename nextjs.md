@@ -367,21 +367,47 @@ Next.js App router의 기본 동작은 새 route로 스크롤을 맨 위로 이�
 
 ##### Disabling scroll restoration
 
-Next.js App router의 기본 동작은 new route로 스크롤을 맨 위로 이동하거나 뒤로/앞으로 탐색 시 스크롤 위치를 유지하는 것이다.  
+Next.js App router의 기본 동작은 새 route로 넘어갈 때 스크롤을 맨 위로 이동하거나 뒤로/앞으로 탐색 시 스크롤 위치를 유지하는 것이다.  
 이 동작을 비활성화하려면 `<Link>` 컴포넌트에 `scroll={false}`를 전달하거나 `router.push()` 또는 `router.replace()`에 `scroll: false`를 전달할 수 있다.
+
 ```javascript
 // next/link
 <Link href="/dashboard" scroll={false}>
   Dashboard
 </Link>
 ```
+
 ```javascript
 // useRouter
 import { useRouter } from 'next/navigation'
- 
 const router = useRouter()
 router.push('/dashboard', { scroll: false })
 ```
+
+### `useRouter()` hook
+
+`useRouter` 훅을 사용하면 클라이언트 컴포넌트에서 프로그래밍 방식으로 라우트를 변경할 수 있다.
+
+```javascript
+'use client'
+ 
+import { useRouter } from 'next/navigation'
+
+export default function Page() {
+  const router = useRouter()
+  return (
+    <button type="button" onClick={() => router.push('/dashboard')}>
+      Dashboard
+    </button>
+  )
+}
+```
+
+`useRouter` 훅의 자세한 내용은 링크 참고 [API Reference](https://nextjs.org/docs/app/api-reference/functions/use-router)
+
+> Recommendation: 
+> `useRouter`를 사용해야 하는 특정 요구사항이 없는 한 라우트 간의 이동에 `<Link>` 컴포넌트를 사용할 것
+
 ## Server vs Client Component in React - 적절한 선택 방법
 
 `create-react-app`이나 Vite의 도움으로 만드는 모든 바닐라 리액트 앱에서 기본적으로 클라이언트 컴포넌트를 사용한다.  
