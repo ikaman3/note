@@ -292,9 +292,9 @@ export default function Page() {
 }
 ```
 
-### Example
+#### Example
 
-#### Linking to Dynamic Segments
+##### Linking to Dynamic Segments
 
 동적 세그먼트에 링크를 연결할 때, 템플릿 리터럴과 보간법을 사용하여 링크 목록을 생성할 수 있다. 예를 들어, 블로그 게시물 목록을 생성하려면:
 
@@ -316,7 +316,7 @@ export default function PostList({ posts }) {
 }
 ```
 
-#### Checking Active Links
+##### Checking Active Links
 
 `usePathname()` 함수를 사용하여 링크가 active 상태인지 확인할 수 있다.  
 예를 들어, active link에 클래스를 추가하려면 현재 `pathname`이 링크의 `href`와 일치하는지 확인할 수 있다.
@@ -349,7 +349,7 @@ export function Links() {
 }
 ```
 
-#### Scrolling to an `id`
+##### Scrolling to an `id`
 
 Next.js App router의 기본 동작은 새 route로 스크롤을 맨 위로 이동하거나 뒤로/앞으로 탐색 시 스크롤 위치를 유지한다.  
 만약 특정 `id`로 스크롤하고 싶다면, URL에 `#` 해시 링크를 추가하거나  
@@ -365,11 +365,23 @@ Next.js App router의 기본 동작은 새 route로 스크롤을 맨 위로 이�
 > Good to know:
 > Next.js는 탐색 시 페이지가 viewpoert에 보이지 않을 때 해당 페이지로 스크롤된다.
 
-#### Disabling scroll restoration
+##### Disabling scroll restoration
 
 Next.js App router의 기본 동작은 new route로 스크롤을 맨 위로 이동하거나 뒤로/앞으로 탐색 시 스크롤 위치를 유지하는 것이다.  
 이 동작을 비활성화하려면 `<Link>` 컴포넌트에 `scroll={false}`를 전달하거나 `router.push()` 또는 `router.replace()`에 `scroll: false`를 전달할 수 있다.
-
+```javascript
+// next/link
+<Link href="/dashboard" scroll={false}>
+  Dashboard
+</Link>
+```
+```javascript
+// useRouter
+import { useRouter } from 'next/navigation'
+ 
+const router = useRouter()
+router.push('/dashboard', { scroll: false })
+```
 ## Server vs Client Component in React - 적절한 선택 방법
 
 `create-react-app`이나 Vite의 도움으로 만드는 모든 바닐라 리액트 앱에서 기본적으로 클라이언트 컴포넌트를 사용한다.  
