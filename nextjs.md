@@ -379,9 +379,9 @@ Next.js App router의 기본 동작은 새 route로 넘어갈 때 스크롤을 �
 
 ```javascript
 // useRouter
-import { useRouter } from 'next/navigation'
-const router = useRouter()
-router.push('/dashboard', { scroll: false })
+import { useRouter } from "next/navigation";
+const router = useRouter();
+router.push("/dashboard", { scroll: false });
 ```
 
 ### `useRouter()` hook
@@ -389,23 +389,23 @@ router.push('/dashboard', { scroll: false })
 `useRouter` 훅을 사용하면 클라이언트 컴포넌트에서 프로그래밍 방식으로 라우트를 변경할 수 있다.
 
 ```javascript
-'use client'
- 
-import { useRouter } from 'next/navigation'
+"use client";
+
+import { useRouter } from "next/navigation";
 
 export default function Page() {
-  const router = useRouter()
+  const router = useRouter();
   return (
-    <button type="button" onClick={() => router.push('/dashboard')}>
+    <button type="button" onClick={() => router.push("/dashboard")}>
       Dashboard
     </button>
-  )
+  );
 }
 ```
 
 `useRouter` 훅의 자세한 내용은 링크 참고 [API Reference](https://nextjs.org/docs/app/api-reference/functions/use-router)
 
-> Recommendation: 
+> Recommendation:
 > `useRouter`를 사용해야 하는 특정 요구사항이 없는 한 라우트 간의 이동에 `<Link>` 컴포넌트를 사용할 것
 
 ### `redirect` function
@@ -414,20 +414,20 @@ export default function Page() {
 
 ```javascript
 // app/team/[id]/page.js
-import { redirect } from 'next/navigation'
- 
+import { redirect } from "next/navigation";
+
 async function fetchTeam(id) {
-  const res = await fetch('https://...')
-  if (!res.ok) return undefined
-  return res.json()
+  const res = await fetch("https://...");
+  if (!res.ok) return undefined;
+  return res.json();
 }
- 
+
 export default async function Profile({ params }) {
-  const team = await fetchTeam(params.id)
+  const team = await fetchTeam(params.id);
   if (!team) {
-    redirect('/login')
+    redirect("/login");
   }
- 
+
   // ...
 }
 ```
@@ -437,14 +437,14 @@ export default async function Profile({ params }) {
 > `redirect`는 내부적으로 오류를 throw하기 때문에 `try/catch` 블록 외부에서 호출되어야 한다.  
 > `redirect`는 클라이언트 컴포넌트에서 렌더링 프로세스 중에 호출될 수 있지만 이벤트 핸들러에서는 호출할 수 없다. 대신 `useRouter` 훅을 사용할 수 있다.  
 > `redirect`는 절대(absolute) URL도 허용하며 외부 링크로 리디렉션하는 데 사용할 수 있다.  
-> 렌더링 프로세스 이전에 리디렉션을 하려면 [`next.config.js`](https://nextjs.org/docs/app/building-your-application/routing/redirecting#redirects-in-nextconfigjs) 또는 [Middleware](https://nextjs.org/docs/app/building-your-application/routing/redirecting#nextresponseredirect-in-middleware)를 사용  
+> 렌더링 프로세스 이전에 리디렉션을 하려면 [`next.config.js`](https://nextjs.org/docs/app/building-your-application/routing/redirecting#redirects-in-nextconfigjs) 또는 [Middleware](https://nextjs.org/docs/app/building-your-application/routing/redirecting#nextresponseredirect-in-middleware)를 사용
 
 [`redirect` API Reference](https://nextjs.org/docs/app/api-reference/functions/redirect)
 
 ### Using the native History API
 
 Next.js에서는 페이지 reloading 없이 브라우저의 history stack을 업데이트하기 위해 네이티브 `window.history.pushState` 및 `window.history.replaceState` 메서드를 사용할 수 있다.  
-`pushState` 및 `replaceState` 호출은 Next.js Router에 통합되어 `usePathname` 및 `useSearchParams`와 동기화할 수 있도록 한다.  
+`pushState` 및 `replaceState` 호출은 Next.js Router에 통합되어 `usePathname` 및 `useSearchParams`와 동기화할 수 있도록 한다.
 
 #### `window.history.pushState`
 
@@ -452,25 +452,25 @@ Next.js에서는 페이지 reloading 없이 브라우저의 history stack을 업
 예를 들어, 제품 목록을 정렬할 때 사용할 수 있다.
 
 ```javascript
-'use client'
- 
-import { useSearchParams } from 'next/navigation'
- 
+"use client";
+
+import { useSearchParams } from "next/navigation";
+
 export default function SortProducts() {
-  const searchParams = useSearchParams()
- 
+  const searchParams = useSearchParams();
+
   function updateSorting(sortOrder) {
-    const params = new URLSearchParams(searchParams.toString())
-    params.set('sort', sortOrder)
-    window.history.pushState(null, '', `?${params.toString()}`)
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("sort", sortOrder);
+    window.history.pushState(null, "", `?${params.toString()}`);
   }
- 
+
   return (
     <>
-      <button onClick={() => updateSorting('asc')}>Sort Ascending</button>
-      <button onClick={() => updateSorting('desc')}>Sort Descending</button>
+      <button onClick={() => updateSorting("asc")}>Sort Ascending</button>
+      <button onClick={() => updateSorting("desc")}>Sort Descending</button>
     </>
-  )
+  );
 }
 ```
 
@@ -480,25 +480,25 @@ export default function SortProducts() {
 예를 들어, 애플리케이션의 locale을 변경할 때 사용할 수 있다.
 
 ```javascript
-'use client'
- 
-import { usePathname } from 'next/navigation'
- 
+"use client";
+
+import { usePathname } from "next/navigation";
+
 export function LocaleSwitcher() {
-  const pathname = usePathname()
- 
+  const pathname = usePathname();
+
   function switchLocale(locale) {
     // e.g. '/en/about' or '/fr/contact'
-    const newPath = `/${locale}${pathname}`
-    window.history.replaceState(null, '', newPath)
+    const newPath = `/${locale}${pathname}`;
+    window.history.replaceState(null, "", newPath);
   }
- 
+
   return (
     <>
-      <button onClick={() => switchLocale('en')}>English</button>
-      <button onClick={() => switchLocale('fr')}>French</button>
+      <button onClick={() => switchLocale("en")}>English</button>
+      <button onClick={() => switchLocale("fr")}>French</button>
     </>
-  )
+  );
 }
 ```
 
@@ -507,7 +507,7 @@ export function LocaleSwitcher() {
 App Router는 라우팅 및 네비게이션에 대해 하이브리드 접근 방식을 사용한다.  
 서버에서는 애플리케이션 코드가 자동으로 라우트 세그먼트로 [code-split](https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#1-code-splitting)한다.  
 그리고 클라이언트에서는 Next.js가 라우트 세그먼트를 prefetches하고 caches합니다.  
-이것은 사용자가 새로운 route로 이동할 때 브라우저가 페이지를 reload하지 않고 변경된 라우트 세그먼트만 re-render되므로 네비게이션 경험과 성능이 향상된다.  
+이것은 사용자가 새로운 route로 이동할 때 브라우저가 페이지를 reload하지 않고 변경된 라우트 세그먼트만 re-render되므로 네비게이션 경험과 성능이 향상된다.
 
 #### 1. Code Splitting
 
@@ -525,6 +525,7 @@ Next.js에서 라우트를 사전로드하는 두 가지 방법이 있다:
 - `router.prefetch()` : `useRouter` 훅을 사용하여 프로그래밍 방식으로 라우트를 사전로드할 수 있다.
 
 `<Link>`의 사전로드 동작은 정적 및 동적 라우트에 따라 다르다:
+
 - [Static Routes](https://nextjs.org/docs/app/building-your-application/rendering/server-components#static-rendering-default) : `prefetch`는 기본적으로 `true`다. 전체 라우트가 사전로드되고 캐시된다.
 - [Dynamic Routes](https://nextjs.org/docs/app/building-your-application/rendering/server-components#dynamic-rendering) : `prefetch`는 기본적으로 automatic입니다. 공유 레이아웃만 사전로드되며 렌더링된 **"트리"**의 구성 요소가 로드될 때까지 첫 번째 `loading.js` 파일까지 사전로드되고 캐시된다. 이렇게 함으로써 전체 동적 라우트를 가져오는 비용이 감소하고 사용자에게 더 나은 시각적 피드백을 제공하기 위해 즉시 로딩 상태를 표시할 수 있다.
 
@@ -565,7 +566,7 @@ Next.js 앱 라우터는 페이지 간 "soft navigation"을 가능하게 하여 
 `page/`에서 앱으로 점진적으로 마이그레이션할 때 Next.js 라우터는 두 사이의 하드 네비게이션을 자동으로 처리합니다. `page/`에서 앱으로의 전환을 감지하기 위해 앱 라우트의 확률적 확인을 활용하는 클라이언트 라우터 필터가 있습니다. 이는 가끔 거짓 양성을 유발할 수 있습니다. 기본적으로 이러한 발생 빈도는 매우 드빕니다. 왜냐하면 거짓 양성 가능성을 0.01%로 구성하기 때문입니다. 이 가능성은 next.config.js의 experimental.clientRouterFilterAllowedRate 옵션을 통해 사용자 정의할 수 있습니다. 거짓 양성 확률을 낮추면 클라이언트 번들에서 생성된 필터의 크기가 커집니다.
 
 다른 방법으로, 이러한 처리를 완전히 비활성화하고 `page/`와 앱 사이의 라우팅을 수동으로 관리하려면 `next.config.js`에서 `experimental.clientRouterFilter`를 `false`로 설정할 수 있다.  
-이 기능이 비활성화되면 페이지의 동적 라우트가 앱 라우트와 겹치는 경우 기본적으로 올바르게 네비게이션되지 않는다.  
+이 기능이 비활성화되면 페이지의 동적 라우트가 앱 라우트와 겹치는 경우 기본적으로 올바르게 네비게이션되지 않는다.
 
 ## Server vs Client Component in React - 적절한 선택 방법
 
