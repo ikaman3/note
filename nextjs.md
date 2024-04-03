@@ -1,6 +1,6 @@
 # Next.js
 
-Next.js의 정보를 기록해두는 문서
+Next.js 강의와 공식 문서에서 얻은 정보를 기록해두는 문서
 
 ## NextJS는 무엇이고 왜 사용하는가
 
@@ -407,6 +407,157 @@ export default function Page() {
 
 > Recommendation: 
 > `useRouter`를 사용해야 하는 특정 요구사항이 없는 한 라우트 간의 이동에 `<Link>` 컴포넌트를 사용할 것
+
+### `redirect` function
+
+서버 컴포넌트라면 대신 `redirect` 함수를 사용할 수 있다.
+
+```javascript
+// app/team/[id]/page.js
+import { redirect } from 'next/navigation'
+ 
+async function fetchTeam(id) {
+  const res = await fetch('https://...')
+  if (!res.ok) return undefined
+  return res.json()
+}
+ 
+export default async function Profile({ params }) {
+  const team = await fetchTeam(params.id)
+  if (!team) {
+    redirect('/login')
+  }
+ 
+  // ...
+}
+```
+
+> Good to know:
+> `redirect`는 기본적으로 307(임시 리디렉션) 상태 코드를 반환한다. 서버 액션에서 사용할 경우, POST 요청의 결과로 성공 페이지로 리디렉션할 때 일반적으로 사용되는 303(다른 곳 보기)을 반환한다.  
+> `redirect`는 내부적으로 오류를 throw하기 때문에 `try/catch` 블록 외부에서 호출되어야 한다.  
+> `redirect`는 클라이언트 컴포넌트에서 렌더링 프로세스 중에 호출될 수 있지만 이벤트 핸들러에서는 호출할 수 없다. 대신 `useRouter` 훅을 사용할 수 있다.  
+> `redirect`는 절대(absolute) URL도 허용하며 외부 링크로 리디렉션하는 데 사용할 수 있다.  
+> 렌더링 프로세스 이전에 리디렉션을 하려면 [`next.config.js`](https://nextjs.org/docs/app/building-your-application/routing/redirecting#redirects-in-nextconfigjs) 또는 [Middleware](https://nextjs.org/docs/app/building-your-application/routing/redirecting#nextresponseredirect-in-middleware)를 사용  
+
+[`redirect` API Reference](https://nextjs.org/docs/app/api-reference/functions/redirect)
+
+### Using the native History API
+
+Next.js에서는 페이지 reloading 없이 브라우저의 history stack을 업데이트하기 위해 네이티브 `window.history.pushState` 및 `window.history.replaceState` 메서드를 사용할 수 있다.  
+`pushState` 및 `replaceState` 호출은 Next.js Router에 통합되어 `usePathname` 및 `useSearchParams`와 동기화할 수 있도록 한다.  
+
+#### `window.history.pushState`
+
+브라우저의 history stack에 새 항목을 추가하여 이전 상태로 돌아갈 수 있다.  
+예를 들어, 제품 목록을 정렬할 때 사용할 수 있다.
+
+```javascript
+'use client'
+ 
+import { useSearchParams } from 'next/navigation'
+ 
+export default function SortProducts() {
+  const searchParams = useSearchParams()
+ 
+  function updateSorting(sortOrder) {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('sort', sortOrder)
+    window.history.pushState(null, '', `?${params.toString()}`)
+  }
+ 
+  return (
+    <>
+      <button onClick={() => updateSorting('asc')}>Sort Ascending</button>
+      <button onClick={() => updateSorting('desc')}>Sort Descending</button>
+    </>
+  )
+}
+```
+
+#### `window.history.replaceState`
+
+브라우저의 history stack에서 현재 항목을 대체하여 이전 상태로 돌아갈 수 없도록 할 수 있다.  
+예를 들어, 애플리케이션의 locale을 변경할 때 사용할 수 있다.
+
+```javascript
+'use client'
+ 
+import { usePathname } from 'next/navigation'
+ 
+export function LocaleSwitcher() {
+  const pathname = usePathname()
+ 
+  function switchLocale(locale) {
+    // e.g. '/en/about' or '/fr/contact'
+    const newPath = `/${locale}${pathname}`
+    window.history.replaceState(null, '', newPath)
+  }
+ 
+  return (
+    <>
+      <button onClick={() => switchLocale('en')}>English</button>
+      <button onClick={() => switchLocale('fr')}>French</button>
+    </>
+  )
+}
+```
+
+### How Routing and Navigation Works
+
+App Router는 라우팅 및 네비게이션에 대해 하이브리드 접근 방식을 사용한다.  
+서버에서는 애플리케이션 코드가 자동으로 라우트 세그먼트로 [code-split](https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#1-code-splitting)한다.  
+그리고 클라이언트에서는 Next.js가 라우트 세그먼트를 prefetches하고 caches합니다.  
+이것은 사용자가 새로운 route로 이동할 때 브라우저가 페이지를 reload하지 않고 변경된 라우트 세그먼트만 re-render되므로 네비게이션 경험과 성능이 향상된다.  
+
+#### 1. Code Splitting
+
+코드 분할을 통해 애플리케이션 코드를 더 작은 번들로 분할하여 브라우저가 다운로드하고 실행할 수 있다.  
+이렇게 하면 전송되는 데이터 양과 각 요청의 실행 시간이 감소하여 성능이 향상된다.
+서버 컴포넌트를 사용하면 애플리케이션 코드가 자동으로 코드를 라우트 세그먼트로 분할한다.  
+이것은 네비게이션 시 현재 경로에 필요한 코드만 로드된다는 것을 의미한다.
+
+#### 2. Prefetching
+
+사전로드는 사용자가 방문하기 전에 백그라운드에서 라우트를 미리 로드하는 방법이다.
+Next.js에서 라우트를 사전로드하는 두 가지 방법이 있다:
+
+- `<Link>` component : 사용자 뷰포트에 표시되는 대로 라우트가 자동으로 사전로드됩니다. 사전로드는 페이지가 처음 로드될 때 또는 스크롤을 통해 뷰에 나타날 때 발생한다.
+- `router.prefetch()` : `useRouter` 훅을 사용하여 프로그래밍 방식으로 라우트를 사전로드할 수 있다.
+
+`<Link>`의 사전로드 동작은 정적 및 동적 라우트에 따라 다르다:
+- [Static Routes](https://nextjs.org/docs/app/building-your-application/rendering/server-components#static-rendering-default) : `prefetch`는 기본적으로 `true`다. 전체 라우트가 사전로드되고 캐시된다.
+- [Dynamic Routes](https://nextjs.org/docs/app/building-your-application/rendering/server-components#dynamic-rendering) : `prefetch`는 기본적으로 automatic입니다. 공유 레이아웃만 사전로드되며 렌더링된 **"트리"**의 구성 요소가 로드될 때까지 첫 번째 `loading.js` 파일까지 사전로드되고 캐시된다. 이렇게 함으로써 전체 동적 라우트를 가져오는 비용이 감소하고 사용자에게 더 나은 시각적 피드백을 제공하기 위해 즉시 로딩 상태를 표시할 수 있다.
+
+`prefetch` prop을 `false`로 설정하여 사전로드를 비활성화할 수 있다.
+
+> Good to know:
+> 사전로드는 개발 환경에서는 활성화되지 않으며, 오직 프로덕션 환경에서만 활성화된다.
+
+#### 3. Caching
+
+Next.js에는 Router Cache라는 in-memory 클라이언트 측 캐시가 있다.  
+사용자가 앱을 탐색하는 동안 사전로드된 라우트 세그먼트와 방문한 라우트의 React 서버 컴포넌트 페이로드가 캐시에 저장된다.  
+이는 네비게이션 시 서버로의 새 요청을 만드는 대신에 가능한 한 많이 캐시를 재사용함으로써 성능을 향상시킨다.(요청 수와 데이터 전송량을 줄임으로써 성능을 향상시킨다.)
+
+[Router Cache](https://nextjs.org/docs/app/building-your-application/caching#router-cache)
+
+#### 4. Partial Rendering
+
+네비게이션 시 변경된 라우트 세그먼트만 클라이언트에서 re-render되고 공유 세그먼트는 보존된다.  
+예를 들어, 두 개의 형제 경로(sibling route)(`/dashboard/settings`와 `/dashboard/analytics`) 사이를 이동할 때,  
+`settings` 및 `analytics` 페이지가 렌더링되고 공유되는 `dashboard` 레이아웃이 보존된다.
+
+#### 5. Soft Navigation
+
+브라우저는 페이지 간 탐색 시 "hard navigation"을 수행한다.  
+Next.js 앱 라우터는 페이지 간 "soft navigation"을 가능하게 하여 변경된 라우트 세그먼트만 다시 렌더링되도록 한다(partial rendering).  
+이로써 클라이언트 React 상태가 탐색 중에 보존된다.
+
+#### 6. Back and Forward Navigation
+
+기본적으로 Next.js는 뒤로 및 앞으로 탐색에 대해 스크롤 위치를 유지하고 Router Cache에서 라우트 세그먼트를 재사용한다.
+
+#### 7. Routing between `pages/` and `app/`
 
 ## Server vs Client Component in React - 적절한 선택 방법
 
