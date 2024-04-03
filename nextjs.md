@@ -547,6 +547,9 @@ Next.js에는 Router Cache라는 in-memory 클라이언트 측 캐시가 있다.
 예를 들어, 두 개의 형제 경로(sibling route)(`/dashboard/settings`와 `/dashboard/analytics`) 사이를 이동할 때,  
 `settings` 및 `analytics` 페이지가 렌더링되고 공유되는 `dashboard` 레이아웃이 보존된다.
 
+부분 렌더링이 없으면 각 네비게이션마다 클라이언트에서 전체 페이지를 다시 렌더링해야 한다.  
+변경된 세그먼트만 렌더링하면 전송되는 데이터 양과 실행 시간이 줄어들어 성능이 향상된다.
+
 #### 5. Soft Navigation
 
 브라우저는 페이지 간 탐색 시 "hard navigation"을 수행한다.  
@@ -558,6 +561,11 @@ Next.js 앱 라우터는 페이지 간 "soft navigation"을 가능하게 하여 
 기본적으로 Next.js는 뒤로 및 앞으로 탐색에 대해 스크롤 위치를 유지하고 Router Cache에서 라우트 세그먼트를 재사용한다.
 
 #### 7. Routing between `pages/` and `app/`
+
+`page/`에서 앱으로 점진적으로 마이그레이션할 때 Next.js 라우터는 두 사이의 하드 네비게이션을 자동으로 처리합니다. `page/`에서 앱으로의 전환을 감지하기 위해 앱 라우트의 확률적 확인을 활용하는 클라이언트 라우터 필터가 있습니다. 이는 가끔 거짓 양성을 유발할 수 있습니다. 기본적으로 이러한 발생 빈도는 매우 드빕니다. 왜냐하면 거짓 양성 가능성을 0.01%로 구성하기 때문입니다. 이 가능성은 next.config.js의 experimental.clientRouterFilterAllowedRate 옵션을 통해 사용자 정의할 수 있습니다. 거짓 양성 확률을 낮추면 클라이언트 번들에서 생성된 필터의 크기가 커집니다.
+
+다른 방법으로, 이러한 처리를 완전히 비활성화하고 `page/`와 앱 사이의 라우팅을 수동으로 관리하려면 `next.config.js`에서 `experimental.clientRouterFilter`를 `false`로 설정할 수 있다.  
+이 기능이 비활성화되면 페이지의 동적 라우트가 앱 라우트와 겹치는 경우 기본적으로 올바르게 네비게이션되지 않는다.  
 
 ## Server vs Client Component in React - 적절한 선택 방법
 
