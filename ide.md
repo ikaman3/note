@@ -23,6 +23,12 @@ Keybinding을 등록해서 사용할 수 있음
 
 ### Extension
 
+#### code-server
+
+homebrew로 설치했을 때 로그 위치
+
+`/opt/homebrew/var/log/code-server.log`
+
 #### Linter
 
 > ESLint  

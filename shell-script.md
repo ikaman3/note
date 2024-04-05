@@ -1197,6 +1197,10 @@ find <source_dir> -name "*.jpg" -printf %P\\0\\n | rsync -a --files-from=- <sour
 ln -s <source> <target>
 ```
 
+## Public IP 확인
+
+`curl ifconfig.me`
+
 ## SSH
 
 > Secure Shell
