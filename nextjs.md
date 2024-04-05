@@ -66,8 +66,13 @@ Server-side Rendering
 
 ## 배포
 
-프로젝트 폴더로 이동하여 `npm run dev`를 실행하면 개발 서버가 시작되고, `localhost:3000`에서 확인할 수 있다.
+프로젝트 폴더에서 `npm run dev`를 실행하면 개발 서버가 시작되고, 기본적으로 `localhost:3000`에서 확인할 수 있다.
+
 ```bash
+# 개발 서버 실행
+npm run dev
+# 포트 번호 지정 개발 서버 실행
+PORT=22223 npm run dev
 # 배포할 소스 빌드
 npm run build
 # 빌드한 소스를 실행
