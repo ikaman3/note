@@ -46,7 +46,6 @@ Server-side Rendering
 - App Router 사용 여부: Yes
 - import alias: No
 
-프로젝트 폴더로 이동하여 `npm run dev`를 실행하면 개발 서버가 시작되고, `localhost:3000`에서 확인할 수 있다.
 
 ## 시작하기 전에
 
@@ -67,6 +66,7 @@ Server-side Rendering
 
 ## 배포
 
+프로젝트 폴더로 이동하여 `npm run dev`를 실행하면 개발 서버가 시작되고, `localhost:3000`에서 확인할 수 있다.
 ```bash
 # 배포할 소스 빌드
 npm run build
