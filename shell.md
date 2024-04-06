@@ -8,17 +8,17 @@ Linux, MacOS 환경에서 사용할 수 있는 셸과 셸 스크립트를 정리
 
 ### 커서 조작
 
-| command | <center>action</center> |
-| :-----: | ----------------------- |
-|  ⌃ + A  | 라인 맨 앞으로 이동     |
-|  ⌃ + E  | 라인 맨 뒤로 이동       |
-| ESC + B | 앞 단어로 이동          |
-| ESC + F | 뒷 단어로 이동          |
-|  ⌃ + B  | 앞 글자로 이동          |
-|  ⌃ + F  | 뒷 글자로 이동          |
-|  ⌃ + U  | 한 줄 삭제              |
-|  ⌃ + W  | 앞 단어 삭제            |
-| ESC + D | 뒷 단어 삭제            |
+| command | action              |
+| :-----: | ------------------- |
+|  ⌃ + A  | 라인 맨 앞으로 이동 |
+|  ⌃ + E  | 라인 맨 뒤로 이동   |
+| ESC + B | 앞 단어로 이동      |
+| ESC + F | 뒷 단어로 이동      |
+|  ⌃ + B  | 앞 글자로 이동      |
+|  ⌃ + F  | 뒷 글자로 이동      |
+|  ⌃ + U  | 한 줄 삭제          |
+|  ⌃ + W  | 앞 단어 삭제        |
+| ESC + D | 뒷 단어 삭제        |
 
 ### Shell Initialization Files
 
@@ -40,6 +40,8 @@ Linux, MacOS 환경에서 사용할 수 있는 셸과 셸 스크립트를 정리
 6. `$ZDOTDIR/.zshrc`
 7. `/etc/zlogin`
 8. `$ZDOTDIR/.zlogin`
+9. `/etc/zlogout`
+10. `$ZDOTDIR/.zlogout`
 
 `/etc` 하위에 있는 숨겨지지 않은 파일은 모든 사용자에게 공통적으로 적용되는 환경 설정 파일이다.  
 `$ZDOTDIR` 환경 변수를 사용한 숨김 파일은 특정 사용자를 지정하여 적용하는 환경 설정 파일이다.
@@ -59,6 +61,10 @@ zsh 세션에서 실행됨
 #### zlogin
 
 로그인 셸에만 적용되는 추가 설정 파일
+
+#### zlogout
+
+로그아웃 시 정리를 위한 설정 파일
 
 ## Shebang(셔뱅)
 
@@ -1305,3 +1311,36 @@ for folder in 僕の心のヤバイやつ*; do
 
 done
 ```
+
+## Packages
+
+#### code-server
+
+homebrew로 설치했을 때 로그 경로
+
+`/opt/homebrew/var/log/code-server.log`
+
+homebrew를 이용한 서버 실행 및 중지
+
+```bash
+# 실행 중인 서비스 목록 출력
+brew services
+
+# 서버 실행
+brew services start code-server
+# 서버 중지
+brew services stop code-server
+```
+
+### certbot
+
+로그 경로
+
+```bash
+/var/log/letsencrypt/letsencrypt.log
+```
+
+인증서 경로
+
+- Certificate is saved at: `/etc/letsencrypt/live/<domain>/fullchain.pem`
+- Key is saved at: `/etc/letsencrypt/live/<domain>/privkey.pem`

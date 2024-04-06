@@ -21,13 +21,7 @@ Keybinding을 등록해서 사용할 수 있음
   - Uppercase : 모두 대문자로 변환
   - Titlecase : 단어의 첫 글자는 대문자, 나머지는 소문자로 변환
 
-### Extension
-
-#### code-server
-
-homebrew로 설치했을 때 로그 위치
-
-`/opt/homebrew/var/log/code-server.log`
+### Extensions
 
 #### Linter
 
