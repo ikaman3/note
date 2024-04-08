@@ -1314,11 +1314,34 @@ done
 
 ## Packages
 
-#### code-server
+### code-server
 
 homebrew로 설치했을 때 로그 경로
 
 `/opt/homebrew/var/log/code-server.log`
+
+설정 파일
+
+```bash
+# $HOME/.config/code-server/config.yaml
+bind-addr: 0.0.0.0:<port>
+auth: password
+password: <password>
+cert: /path/to/pem/fullchain.pem
+cert-key: /path/to/pem/privkey.pem
+user-data-dir: /Users/main/coding
+```
+
+- `bind-addr` : 서비스할 주소. 기본값은 `127.0.0.1`
+    - 외부 허용: `0.0.0.0`
+- `auth` : 패스워드 사용 여부. 기본값은 `password`
+    - `none` : 패스워드 없이 접속
+- `password` : 사용할 패스워드
+- `cert` : https를 사용할지 여부. 기본값은 `false`
+    - `true` : https를 사용한다.
+    - TSL 인증서의 경로를 입력하면 해당 인증서를 사용한다.
+- `cert-key` : TSL 인증서의 private key 경로
+- `user-data-dir` : 접속했을 때 workspace를 설정하는 옵션(인 것 같음)
 
 homebrew를 이용한 서버 실행 및 중지
 
@@ -1333,6 +1356,38 @@ brew services stop code-server
 ```
 
 ### certbot
+
+인증서 발급
+
+```bash
+certbot --certonly standalone -d mydomain.com
+```
+
+인증서 갱신 스크립트
+
+```bash
+# 인증서 갱신
+certbot renew
+
+# certbot-auto-renew.sh
+/opt/homebrew/bin/certbot renew
+# 인증서 복사 후 소유자 변경
+cp /etc/letsencrypt/live/<domain>/fullchain.pem /path/to/pem
+cp /etc/letsencrypt/live/<domain>/privkey.pem /path/to/pem
+chown <user> /path/to/pem/fullchain.pem
+chown <user> /path/to/pem/privkey.pem
+```
+
+- 소유자를 바꾸는 이유: 인증서가 root 계정의 소유로 발급되어, 다른 사용자에서 `privkey.pem` 파일에 접근할 수 없었다.
+- 읽기 권한을 모든 사용자에게 주면 의도에 맞지 않을(보안 문제) 것으로 생각하여 소유자를 변경했다.
+
+crontab
+
+```bash
+# root 계정에 cron 스케쥴 등록
+sudo crontab -e
+0 0 5 7,10,1,4 *
+```
 
 로그 경로
 
