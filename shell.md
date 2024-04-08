@@ -1333,13 +1333,13 @@ user-data-dir: /Users/main/coding
 ```
 
 - `bind-addr` : 서비스할 주소. 기본값은 `127.0.0.1`
-    - 외부 허용: `0.0.0.0`
+  - 외부 허용: `0.0.0.0`
 - `auth` : 패스워드 사용 여부. 기본값은 `password`
-    - `none` : 패스워드 없이 접속
+  - `none` : 패스워드 없이 접속
 - `password` : 사용할 패스워드
 - `cert` : https를 사용할지 여부. 기본값은 `false`
-    - `true` : https를 사용한다.
-    - TSL 인증서의 경로를 입력하면 해당 인증서를 사용한다.
+  - `true` : https를 사용한다.
+  - TSL 인증서의 경로를 입력하면 해당 인증서를 사용한다.
 - `cert-key` : TSL 인증서의 private key 경로
 - `user-data-dir` : 접속했을 때 workspace를 설정하는 옵션(인 것 같음)
 
@@ -1359,8 +1359,10 @@ brew services stop code-server
 
 인증서 발급
 
+- 80 포트의 포트포워딩이 필요함
+
 ```bash
-certbot --certonly standalone -d mydomain.com
+sudo certbot --standalone -d <domain>
 ```
 
 인증서 갱신 스크립트
@@ -1386,7 +1388,7 @@ crontab
 ```bash
 # root 계정에 cron 스케쥴 등록
 sudo crontab -e
-0 0 5 7,10,1,4 *
+0 0 5 7,10,1,4 * /Users/<user>/certbot-auto-renew.sh >/dev/null 2>&1
 ```
 
 로그 경로
@@ -1399,3 +1401,30 @@ sudo crontab -e
 
 - Certificate is saved at: `/etc/letsencrypt/live/<domain>/fullchain.pem`
 - Key is saved at: `/etc/letsencrypt/live/<domain>/privkey.pem`
+
+### duckdns
+
+```bash
+# homebrew core repository 이외의 repo 추가
+brew tap jzelinskie/duckdns
+brew install duckdns
+```
+
+### Nginx
+
+Docroot is: `/opt/homebrew/var/www`
+기본 포트는 `/opt/homebrew/etc/nginx/nginx.conf`에 `8080`으로 설정되어 있으므로 `sudo` 없이 nginx를 실행할 수 있다.
+
+nginx는 `/opt/homebrew/etc/nginx/servers/.`의 모든 파일을 로드한다.
+
+nginx 시작 및 로그인 시 재시작하려면:
+
+```bash
+brew services start nginx
+```
+
+또는 백그라운드 서비스가 필요하지 않은 경우 다음과 같이 실행:
+
+```bash
+/opt/homebrew/opt/nginx/bin/nginx -g daemon\ off\;
+```
