@@ -22,12 +22,12 @@ Linux, MacOS 환경에서 사용할 수 있는 셸과 셸 스크립트를 정리
 
 ### Shell Initialization Files
 
-셸 초기화 파일은 사용자 로그인 후 쉘 생성 시 쉘의 환경을 설정하는 파일을 말한다.
+셸 초기화 파일은 사용자 로그인 후 셸 생성 시 셸의 환경을 설정하는 파일을 말한다.
 적용 범위에 따라서 System Initialization Files(시스템 초기화 파일)와 User Initialization Files(사용자 초기화 파일)로 나뉜다.
 
 |     적용 범위      | <center>내용</center>                                               | <center>예시</center>                                        |
 | :----------------: | :------------------------------------------------------------------ | :----------------------------------------------------------- |
-|    System-wide     | 시스템 관리자가 관리하는 파일로써 쉘 사용자 전체에게 영향을 준다.   | `/etc/profile`, `/etc/bashrc`                                |
+|    System-wide     | 시스템 관리자가 관리하는 파일로써 셸 사용자 전체에게 영향을 준다.   | `/etc/profile`, `/etc/bashrc`                                |
 | User Configuration | 시스템 사용자가 관리하는 파일로써 각 사용자에 한정되어 영향을 준다. | `$HOME/.bash_profile`, `$HOME/.bashrc`, `$HOME/.bash_logout` |
 
 셸 초기화 파일들이 실행되는 순서는 아래와 같다.
@@ -98,7 +98,7 @@ echo ${array[@]}
 
 ### 문자열과의 차이점
 
-`var="git" "gh"`과 `arr=("git" "gh")`은 차이가 있다.
+`var="git gh"`과 `arr=("git" "gh")`은 차이가 있다.
 변수 `var`은 하나의 문자열로 변수를 전달한다. 따라서 변수 안의 공백은 모두 문자열의 일부로 취급된다.
 
 - `echo $var` : "git gh"
