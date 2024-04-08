@@ -1428,3 +1428,61 @@ brew services start nginx
 ```bash
 /opt/homebrew/opt/nginx/bin/nginx -g daemon\ off\;
 ```
+
+설정 파일
+
+```bash
+# /opt/homebrew/etc/nginx/nginx.conf
+
+worker_processes  1;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    server {
+        listen 80;
+        listen [::]:80;
+        server_name <domain>;
+
+        location / {
+            proxy_pass http://localhost:3000;
+        }
+    }
+
+    server {
+        listen 443 ssl;
+        listen [::]:443;
+        server_name <domain>;
+
+        ssl_certificate      /path/to/ssl.pem;
+        ssl_certificate_key  /path/to/ssl.key;
+
+        location / {
+            proxy_pass http://localhost:3000;
+        }
+    }
+}
+```
+
+### Openssl
+
+key의 format 확인
+
+```bash
+# RSA 알고리즘
+openssl rsa -in privkey.pem -text -noout
+```
+
+`.pem` 파일을 `.key` 파일로 출력
+
+```bash
+# RSA 알고리즘
+openssl rsa -in privkey.pem -out private.key
+# ECDSA 형식
+openssl ec -in privkey.pem -out private.key
+```
