@@ -80,7 +80,7 @@ shebang은 스크립트가 어떤 인터프리터로 실행되어야 하는지�
 
 셸에서 사용하는 변수를 선언
 
-- 변수의이름과 '=' 그리고 값 사이에 공백이 존재하면 안 된다.
+- 변수의 이름과 `=` 그리고 값 사이에 공백이 존재하면 안 된다.
 - `export` : 변수 앞에 붙이면 외부 변수로 만들 수 있다. 해당 변수는 다른 스크립트, 프로그램에서도 사용 가능
 
 ```bash
@@ -91,9 +91,54 @@ export NEW_VAR="bar"
 
 ## Array
 
+인덱스는 1부터 시작한다.
+
+### 초기화와 출력
+
 ```bash
-array=("git" "gh")
+# 값 초기화
+array=(111 "foo" 222 "bar" 333 "foobar")
+
+# 인덱스를 명시하지 않으면 첫 번째 값 출력
+echo $array # 111
+echo $array[1] # 1
+# 배열 원소 전체 출력 : array[@]
 echo ${array[@]}
+
+# 변수의 값이나 명령 실행 결과로 초기화할 수 있다.
+array=($var)
+array=($array[@])
+array=(`date`) # 2024년 4월 10일 수요일 00시 33분 00초 KST
+echo $array[4] # 금요일
+grep_result_list=($(grep -oh 'nuri' ./testFile.txt))
+```
+
+### 원소 추가
+
+```bash
+array+=("end")
+array+=("end" 123 444)
+array+=($var)
+array+=($array[@])
+```
+
+### 배열의 크기
+
+```bash
+echo ${#array[@]}
+
+if [ ${#array[@]} -eq 0 ]; then
+	echo "array 비었다"
+fi
+```
+
+### 반복분과 응용
+
+```bash
+lastIndex=$(expr ${#array[@]} - 1)
+for i in {0..$lastIndex}; do
+	echo "i : $i"
+done
 ```
 
 ### 문자열과의 차이점
@@ -102,7 +147,45 @@ echo ${array[@]}
 변수 `var`은 하나의 문자열로 변수를 전달한다. 따라서 변수 안의 공백은 모두 문자열의 일부로 취급된다.
 
 - `echo $var` : "git gh"
-- `echo $arr` : "git" "gh"
+- `echo $arr[@]` : "git" "gh"
+
+## Map
+
+기본 사용법
+
+```bash
+# 선언
+declare -A map
+# key-value mapping
+map[key1]=value1
+map[key2]=value2
+echo $map # value1 value2
+```
+
+### Map 크기
+
+```bash
+mapSize=${#map[@]}
+```
+
+### 특정 key 존재하는지 체크
+
+```bash
+if [ -z ${map[key3]} ]; then
+    echo "key3 not exist"
+else
+    echo "key3 exist"
+fi
+```
+
+### 반복문과 응용
+
+```bash
+for key in ${!map[@]}; do
+    value=${key}
+    echo "key:$key, value:$value"
+done
+```
 
 ## Parameter
 
@@ -114,15 +197,15 @@ echo ${array[@]}
 
 문자열 출력 명령어
 
-- -n : 마지막에 붙는 개행 문자(newline) 문자를 출력하지 않음
-- -e : 문자열에서 백슬래시(\)와 이스케이프 문자를 인용 부호(")로 묶어 인식
-- -E : 문자열에서 백슬래시와 이스케이프 문자를 비활성화(default)
-- '>' : 리다이렉션, 해당 경로에 파일이 존재하지 않으면 echo의 출력 내용으로 새 파일 생성
+- `-n` : 마지막에 붙는 개행 문자(newline) 문자를 출력하지 않음
+- `-e` : 문자열에서 백슬래시(`\`)와 이스케이프 문자를 인용 부호(`"`)로 묶어 인식
+- `-E` : 문자열에서 백슬래시와 이스케이프 문자를 비활성화(default)
+- `>` : 리다이렉션, 해당 경로에 파일이 존재하지 않으면 echo의 출력 내용으로 새 파일 생성
   존재한다면 출력 내용으로 파일을 '덮어쓰기'로 저장
-- '>>' : 리다이렉션, 해당 경로에 파일이 존재하지 않으면 echo의 출력 내용으로 새 파일 생성
+- `>>` : 리다이렉션, 해당 경로에 파일이 존재하지 않으면 echo의 출력 내용으로 새 파일 생성
   존재한다면 출력 내용으로 파일을 '이어쓰기'로 저장
-- :r : 환경변수의 이름만 추출하는 명령어
-- :e : 환경변수의 확장자만 추출하는 명령어
+- `:r` : 환경변수의 이름만 추출하는 명령어
+- `:e` : 환경변수의 확장자만 추출하는 명령어
 
 ```bash
 echo "<text>"
@@ -1010,7 +1093,7 @@ done
 
 > 조건이 참인 동안 반복
 >
-> - [ ] : 조건을 명시하는 명령어. 명령어이기 때문에 반드시 각각 공백 문자로 띄어줘야 한다.
+> - `[ ]` : 조건을 명시하는 명령어. 명령어이기 때문에 반드시 각각 공백 문자로 띄어줘야 한다.
 
 #### Format
 
@@ -1119,11 +1202,11 @@ tail mylog1.log mylog2.log
 
 > 파일 시스템을 검색하여 특정 조건에 맞는 파일을 찾는 데 사용
 
-> - ./ : 여러 폴더들이 들어 있는 상위 디렉터리 경로
-> - -name : 찾고자 하는 파일의 이름을 지정
-> - -execdir : find 명령어로 찾은 파일들에 대해 실행할 명령어를 지정
->   > - {} : find로 찾은 각 파일을 가리키며, 'mv {} \<filename\>'은 해당 파일의 이름을 \<filename\>로 변경
->   > - '\\;' : 명령어의 끝을 의미
+> - `./` : 여러 폴더들이 들어 있는 상위 디렉터리 경로
+> - `-name` : 찾고자 하는 파일의 이름을 지정
+> - `-execdir` : find 명령어로 찾은 파일들에 대해 실행할 명령어를 지정
+>   > - `{}` : find로 찾은 각 파일을 가리키며, `mv {} <filename>`은 해당 파일의 이름을 `<filename>`로 변경
+>   > - `\;` : 명령어의 끝을 의미
 
 ```bash
 find ./ -name <search_name> -execdir mv {} <filename> \;
@@ -1212,7 +1295,7 @@ ln -s <source> <target>
 > Secure Shell
 > 원격의 컴퓨터와 암호화된 통신을 주고받음
 >
-> - -i : ssh 공개키 인증을 위한 파일 선택
+> - `-i` : ssh 공개키 인증을 위한 파일 선택
 
 ```bash
 ssh -i "~/coding/aws/.aws/NewKeyPair.pem" ikaman@ec2-3-34-107-69.ap-northeast-2.compute.amazonaws.com
@@ -1423,7 +1506,7 @@ nginx 시작 및 로그인 시 재시작하려면:
 brew services start nginx
 ```
 
-또는 백그라운드 서비스가 필요하지 않은 경우 다음과 같이 실행:  
+또는 백그라운드 서비스가 필요하지 않은 경우 다음과 같이 실행:
 
 ```bash
 /opt/homebrew/opt/nginx/bin/nginx -g daemon\ off\;
