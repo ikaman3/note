@@ -1412,7 +1412,7 @@ brew install duckdns
 
 ### Nginx
 
-Docroot is: `/opt/homebrew/var/www`
+Docroot is: `/opt/homebrew/var/www`  
 기본 포트는 `/opt/homebrew/etc/nginx/nginx.conf`에 `8080`으로 설정되어 있으므로 `sudo` 없이 nginx를 실행할 수 있다.
 
 nginx는 `/opt/homebrew/etc/nginx/servers/.`의 모든 파일을 로드한다.
@@ -1423,7 +1423,7 @@ nginx 시작 및 로그인 시 재시작하려면:
 brew services start nginx
 ```
 
-또는 백그라운드 서비스가 필요하지 않은 경우 다음과 같이 실행:
+또는 백그라운드 서비스가 필요하지 않은 경우 다음과 같이 실행:  
 
 ```bash
 /opt/homebrew/opt/nginx/bin/nginx -g daemon\ off\;
