@@ -46,7 +46,6 @@ Server-side Rendering
 - App Router 사용 여부: Yes
 - import alias: No
 
-
 ## 시작하기 전에
 
 `app` 폴더안에 `awesome` 폴더와 그 폴더 안에 `page.js` 파일을 추가한다.
