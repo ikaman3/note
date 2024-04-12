@@ -6,9 +6,10 @@
 
 ## 목차
 
-- [TOC/목차 생성](#toc-table-of-content)
+1. [TOC/목차 생성](#toctable-of-content)
+2. [줄바꿈](#줄바꿈)
 
-## TOC (Table Of Content)
+## TOC(Table Of Content)
 
 마크다운에서 목차를 생성하는 방법  
 헤딩 태그(#)을 기준으로 생성되므로 각 섹션의 제목은 헤딩 태그를 사용하는 것을 권장한다.
