@@ -1500,10 +1500,14 @@ Docroot is: `/opt/homebrew/var/www`
 
 nginx는 `/opt/homebrew/etc/nginx/servers/.`의 모든 파일을 로드한다.
 
-nginx 시작 및 로그인 시 재시작하려면:
+nginx 시작, 종료, 재시작
+
+- homebrew services는 started 상태인 경우 로그아웃 후 로그인해도 자동 재시작되어 있음
 
 ```bash
 brew services start nginx
+brew services stop nginx
+brew services restart nginx
 ```
 
 또는 백그라운드 서비스가 필요하지 않은 경우 다음과 같이 실행:
@@ -1527,14 +1531,17 @@ http {
     include       mime.types;
     default_type  application/octet-stream;
 
+    # $http_host
+    map $http_host $ssl_cert {
+        default /path/to/ssl.pem;
+    }
+
     server {
         listen 80;
         listen [::]:80;
-        server_name <domain>;
+        server_name _; # _: 와일드카드
 
-        location / {
-            proxy_pass http://localhost:3000;
-        }
+        return 301 https://$host$request_uri; # https로 요청을 리다이렉션
     }
 
     server {
@@ -1542,15 +1549,46 @@ http {
         listen [::]:443;
         server_name <domain>;
 
-        ssl_certificate      /path/to/ssl.pem;
+        ssl_certificate      $ssl_cert;;
         ssl_certificate_key  /path/to/ssl.key;
 
         location / {
             proxy_pass http://localhost:3000;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
+
+        server {
+        listen 443 ssl;
+        listen [::]:443 ssl;
+        server_name localhost;
+
+        ssl_certificate $ssl_cert;
+        ssl_certificate_key  /path/to/ssl.key;
+
+        location / {
+             proxy_pass http://localhost:3000;
+             proxy_set_header Host $host;
+             proxy_set_header X-Real-IP $remote_addr;
+             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+             proxy_set_header X-Forwarded-Proto $scheme;
         }
     }
 }
 ```
+
+일반적으로 웹 서버는 HTTP 요청을 기본 포트인 80번 포트로 받는다.  
+그리고 보안을 위해 HTTPS를 사용하는 경우, 클라이언트가 80번 포트로 HTTP 요청을 보내면  
+서버는 이를 자동으로 HTTPS로 리디렉션하여 보안 연결을 설정한다.  
+이를 **HTTP to HTTPS 리디렉션**이라고 한다.
+
+이렇게 하면 사용자들이 브라우저에 `https://example.com`과 같이 URL을 입력하지 않고,  
+`http://example.com`과 같이 HTTP로 입력하더라도 서버가 자동으로 HTTPS로 리디렉션하여 보안 연결을 설정한다.  
+이는 사용자 경험과 보안 측면에서 중요한 요소다.
+따라서 대부분의 경우, HTTPS를 사용하는 웹 사이트는 80번 포트로 들어오는 모든 요청을 443번 포트로 리디렉션하도록 구성한다.
 
 ### Openssl
 
