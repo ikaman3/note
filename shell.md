@@ -1531,7 +1531,7 @@ http {
     include       mime.types;
     default_type  application/octet-stream;
 
-    # $http_host
+    # $http_host 변수를 사용하여 클라이언트가 요청한 호스트 이름을 가져옴
     map $http_host $ssl_cert {
         default /path/to/ssl.pem;
     }
