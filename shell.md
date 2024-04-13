@@ -1541,6 +1541,7 @@ http {
         listen [::]:80;
         server_name _; # _: 와일드카드
 
+        # 301은 리다이렉트를 의미: 사용자가 http(80번 포트)로 들어오면 https(443)로 리다이렉트
         return 301 https://$host$request_uri; # https로 요청을 리다이렉션
     }
 
