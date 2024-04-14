@@ -1407,7 +1407,7 @@ homebrew로 설치했을 때 로그 경로
 
 ```bash
 # $HOME/.config/code-server/config.yaml
-bind-addr: 0.0.0.0:<port>
+bind-addr: 127.0.0.1:<port>
 auth: password
 password: <password>
 cert: /path/to/pem/fullchain.pem
@@ -1424,7 +1424,7 @@ user-data-dir: /Users/main/coding
   - `true` : https를 사용한다.
   - TSL 인증서의 경로를 입력하면 해당 인증서를 사용한다.
 - `cert-key` : TSL 인증서의 private key 경로
-- `user-data-dir` : 접속했을 때 workspace를 설정하는 옵션(인 것 같음)
+- `user-data-dir` : 접속했을 때 workspace를 설정하는 옵션?(확인 필요, 작동 안 하는 듯)
 
 homebrew를 이용한 서버 실행 및 중지
 
@@ -1521,7 +1521,7 @@ brew services restart nginx
 ```bash
 # /opt/homebrew/etc/nginx/nginx.conf
 
-worker_processes  1;
+worker_processes auto;
 
 events {
     worker_connections  1024;
@@ -1531,6 +1531,22 @@ http {
     include       mime.types;
     default_type  application/octet-stream;
 
+    # 정적 파일 제공 최적화
+    sendfile on;
+    # 클라이언트로 패킷 전송전에 버퍼가 다 찼는지 확인하고, 다 찼을 때 패킷을 전송하도록하여 네트워크 오버헤드 줄임
+    tcp_nopush on;
+    # 소켓이 패킷 크기에 상관없이 버퍼에 데이터를 보냄
+    tcp_nodelay on;
+    # 클라이언트가 커넥션을 유지하는 시간
+    keepalive_timeout 65;
+    gzip on;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_buffers 16 8k;
+    gzip_http_version 1.1;
+    gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/javascript;
+
     # $http_host 변수를 사용하여 클라이언트가 요청한 호스트 이름을 가져옴
     map $http_host $ssl_cert {
         default /path/to/ssl.pem;
@@ -1539,43 +1555,46 @@ http {
     server {
         listen 80;
         listen [::]:80;
-        server_name _; # _: 와일드카드
+        server_name <domain> www.<domain>;
 
-        # 301은 리다이렉트를 의미: 사용자가 http(80번 포트)로 들어오면 https(443)로 리다이렉트
-        return 301 https://$host$request_uri; # https로 요청을 리다이렉션
+        if ($http_x_forwarded_proto != 'https') {
+            # 301은 리다이렉트를 의미: 사용자가 http(80번 포트)로 들어오면 https(443)로 리다이렉트
+            return 301 https://$host$request_uri;
+        }
     }
 
     server {
         listen 443 ssl;
-        listen [::]:443;
-        server_name <domain>;
+        listen [::]:443 ssl;
+        server_name <domain> www.<domain>;
 
         ssl_certificate      $ssl_cert;;
         ssl_certificate_key  /path/to/ssl.key;
 
-        location / {
-            proxy_pass http://localhost:3000;
+        location /nextjs-app/ {
+            proxy_pass http://localhost:3000/;
+            proxy_redirect off;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection upgrade;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Host $server_name;
             proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header Accept-Encoding gzip;
         }
-    }
 
-        server {
-        listen 443 ssl;
-        listen [::]:443 ssl;
-        server_name localhost;
-
-        ssl_certificate $ssl_cert;
-        ssl_certificate_key  /path/to/ssl.key;
-
-        location / {
-             proxy_pass http://localhost:3000;
-             proxy_set_header Host $host;
-             proxy_set_header X-Real-IP $remote_addr;
-             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-             proxy_set_header X-Forwarded-Proto $scheme;
+        location /code-server/ {
+            proxy_pass http://localhost:22223/;
+            proxy_redirect off;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection upgrade;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Host $server_name;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header Accept-Encoding gzip;
         }
     }
 }
