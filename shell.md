@@ -1301,6 +1301,14 @@ ln -s <source> <target>
 ssh -i "~/coding/aws/.aws/NewKeyPair.pem" ikaman@ec2-3-34-107-69.ap-northeast-2.compute.amazonaws.com
 ```
 
+## 한글이 ???로 보이는 경우
+
+```bash
+# .zshenv
+
+export LANG=ko_KR.UTF-8
+```
+
 ## Make use of script
 
 ### sshd_update
