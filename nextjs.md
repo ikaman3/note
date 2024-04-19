@@ -2,6 +2,20 @@
 
 Next.js 강의와 공식 문서에서 얻은 정보를 기록해두는 문서
 
+> [Next.js는 무엇이고 왜 사용하는가](#nextjs는-무엇이고-왜-사용하는가)  
+> [Next.js의 기능과 장점](#nextjs의-기능과-장점) > []()  
+> [Next.js 프로젝트 생성](#nextjs-프로젝트-생성)  
+> [배포](#배포)  
+> [App Router](#app-router)  
+> [Server Component](#server-component)  
+> [Fullstack Framework](#fullstack-framework)  
+> [layout](#layout)  
+> [Templates](#templates)  
+> []()  
+> []()  
+> []()  
+> []()
+
 ## NextJS는 무엇이고 왜 사용하는가
 
 NextJS: 리액트 프레임워크 = 리액트에 빌드됨
@@ -31,7 +45,7 @@ Server-side Rendering
 - 페이지에 보이는 모든 내용을 렌더링
 - 검색 엔진 크롤러도 완성된 콘텐츠(HTML Markup)를 볼 수 있음(SEO 유리)
 
-## 프로젝트 생성
+## Next.js 프로젝트 생성
 
 `npx create-next-app@latest`  
  간단하게 새 프로젝트를 생성할 수 있다.  
@@ -45,23 +59,6 @@ Server-side Rendering
 - 다른 폴더 구성(`src/`): Yes
 - App Router 사용 여부: Yes
 - import alias: No
-
-## 시작하기 전에
-
-`app` 폴더안에 `awesome` 폴더와 그 폴더 안에 `page.js` 파일을 추가한다.
-
-- NextJS는 이 `app` 폴더를 검사하여 설치가 필요한 경로를 탐지한다.
-- 파일의 이름은 꼭 `page.js`이어야 함
-  - 폴더명과 파일 이름이 합쳐져 신규 경로가 생성된다.(awesome - page)
-
-`page.js` 파일에서 리액트 컴포넌트 함수를 `default`로 export 한다.
-
-- Next.js에서 페이지는 단순한 리액트 함수다.
-- 이때 컴포넌트 이름은 상관없다.
-
-`localhost:3000/awesome`으로 방문하면 새로운 페이지 내용이 보인다.
-
-- 소스코드를 검사해보면 리액트(CSR)와는 다르게 모든 내용이 존재한다.
 
 ## 배포
 
@@ -83,6 +80,21 @@ npm run start
 - 소스코드를 수정했는데 오류가 있거나 반영이 되지 않는다면 해당 폴더를 지우고 다시 빌드할 것
 
 ## App router
+
+`app` 폴더안에 `awesome` 폴더와 그 폴더 안에 `page.js` 파일을 추가한다.
+
+- NextJS는 이 `app` 폴더를 검사하여 설치가 필요한 경로를 탐지한다.
+- 파일의 이름은 꼭 `page.js`이어야 함
+  - 폴더명과 파일 이름이 합쳐져 신규 경로가 생성된다.(awesome - page)
+
+`page.js` 파일에서 리액트 컴포넌트 함수를 `default`로 export 한다.
+
+- Next.js에서 페이지는 단순한 리액트 함수다.
+- 이때 컴포넌트 이름은 상관없다.
+
+`localhost:3000/awesome`으로 방문하면 새로운 페이지 내용이 보인다.
+
+- 소스코드를 검사해보면 리액트(CSR)와는 다르게 모든 내용이 존재한다.
 
 기존 NextJS는 `/pages` 폴더에 웹 사이트의 모든 페이지를 나타내는 Page Router를 사용했다.  
 Next.js 13 버전부터 앱 라우터가 도입되었다.
@@ -112,7 +124,7 @@ Next.js는 이 컴포넌트가 서버에 렌더링되고 서버에서 실행되�
 
 서버 컴포넌트는 서버에서 HTML로 렌더링되어 클라이언트에 응답으로 전달된다.
 
-### Fullstack Framework
+## Fullstack Framework
 
 `<a></a>` 태그로 만든 버튼을 눌러 페이지를 이동하면 새로고침 아이콘이 일시적으로 X 모양으로 바뀐다.  
 백엔드로부터 새로운 페이지를 다운로드했다는 의미이다.  
