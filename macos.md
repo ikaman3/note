@@ -145,6 +145,41 @@ else
 fi
 ```
 
+### blackhole-2ch
+
+#### Error
+
+`0.5.0` 버전에서 `0.6.0`으로 업그레이드하는 과정에서 에러가 발생했다.
+
+> Could not kickstart service `"com.apple.audio.coreaudiod"`: 1: Operation not permitted  
+> Error: Failure while executing; `/usr/bin/sudo -E -- /bin/launchctl kickstart -kp system/com.apple.audio.coreaudiod` exited with 1. Here's the output:  
+> Could not kickstart service `"com.apple.audio.coreaudiod"`: 1: Operation not permitted
+
+[원인](https://developer.apple.com/documentation/macos-release-notes/macos-14_4-release-notes#Known-Issues):
+
+> 보안과 안정성을 향상시키기 위해, 중요한 시스템 프로세스에 대해 `launchctl kickstart -k`를 사용하는 것은 더 이상 허용되지 않습니다.  
+> 프로세스를 강제로 종료해야 하는 경우, `kill`을 사용하는 것이 권장됩니다.
+
+[해결법](https://github.com/Homebrew/homebrew-cask/issues/171570#issuecomment-2062898826): 기존의 설치 스크립트를 직접 수정한다.
+
+스크립트 위치: `/opt/homebrew/Caskroom/blackhole-2ch/.metadata/<version>/<date>/Casks/blackhole-2ch.rb`
+
+```bash
+system_command "/usr/bin/killall",
+	args:         ["coreaudiod"],
+	sudo:         true,
+	must_succeed: true
+```
+
+to
+
+```bash
+system_command "/usr/bin/killall",
+	args:         ["coreaudiod"],
+	sudo:         true,
+	must_succeed: true
+```
+
 ## Error
 
 ### MacOS - Windows 간 한글 자소분리 문제
