@@ -901,6 +901,43 @@ node initdb.js
 # root 폴더에 meals.db 이름의 파일이 생성되면 완료
 ```
 
+## Loading
+
+`loading` 페이지를 추가하여 로딩 페이지를 추가할 수 있다.  
+`layout`처럼 지정된 이름이다.
+
+같은 위치 혹은 중첩된 `page`가 데이터를 불러올 때 활성화되며 데이터를 다 가져올 때까지  
+해당 페이지를 대체한다.
+
+`loading` 페이지에 데이터와 상관없이 보여줄 헤더 혹은 그 이외의 컨텐츠를 직접 추가해도 문제는 없다.  
+다만, 로딩 페이지가 적용되는 중첩된 다른 페이지에서 해당 컨텐츠를 표시하고 싶지 않다면 유지보수가 복잡해지므로 좋은 방법이 아니다.  
+대신 Next.js에서 state를 로딩하는 세분화된 방법이 있다.  
+로딩을 원하는 페이지에 컴포넌트를 추가하고 그 컴포넌트가 데이터를 불러오게 한다.  
+데이터 가져오기를 분리된 컴포넌트로 분리해서 리액트 내장 컴포넌트(`<Suspense>`)로 래핑할 수 있다.
+
+`<Suspense>`는 react 내장 컴포넌트로 일부 데이터 또는 리소스가 불러와질 때까지 로딩 상태를 처리하고 대체 컨텐츠를 표시한다. Next.js는 이러한 리액트의 컨셉을 포용한다.
+`fallback` 속성으로 로딩 컨텐츠를 명시하여 수작업으로 할 수 있다.  
+이렇게하면 `<Meals />`부분만 로딩 컨텐츠를 표시한다고 리액트에 알리는 것이다.
+
+```javascript
+import { Suspense } from 'react'
+
+async function Meals() {
+  const meals = await getMeals();
+  return <MealsGrid meals={meals} />;
+}
+...
+<Suspense fallback={<p className={classes.loading}>Fetching meals...</p>}>
+  <Meals />
+</Suspense>
+```
+
+## Caching
+
+Next.js는 백그라운드에서 공격적인 캐싱을 한다.  
+사용자가 접속한 모든 페이지의 데이터까지 캐싱한다.  
+그래서 처음 데이터를 불러올 때 오래걸렸던 작업도 2번째 부터는 금방 보여줄 수 있다.
+
 ## Build-in Components
 
 Next.js의 빌트인 컴포넌트의 자세한 정보를 모아두는 섹션
