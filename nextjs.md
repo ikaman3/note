@@ -2,19 +2,24 @@
 
 Next.js 강의와 공식 문서에서 얻은 정보를 기록해두는 문서
 
+## Index
+
 > [Next.js는 무엇이고 왜 사용하는가](#nextjs는-무엇이고-왜-사용하는가)  
-> [Next.js의 기능과 장점](#nextjs의-기능과-장점) > []()  
+> [Next.js의 기능과 장점](#nextjs의-기능과-장점)  
 > [Next.js 프로젝트 생성](#nextjs-프로젝트-생성)  
+> [Next.js의 폴더 구조](#nextjs의-폴더-구조)  
 > [배포](#배포)  
 > [App Router](#app-router)  
 > [Server Component](#server-component)  
 > [Fullstack Framework](#fullstack-framework)  
 > [layout](#layout)  
 > [Templates](#templates)  
-> []()  
-> []()  
-> []()  
-> []()
+> [Metadata](#metadata)  
+> [CSS](#css)  
+> [Linking and Navigating](#linking-and-navigating)  
+> [Server vs Client Component in React - 적절한 선택 방법](#server-vs-client-component-in-react---적절한-선택-방법)  
+> [Build-in Components](#build-in-components)  
+> [Linting](#linting)
 
 ## NextJS는 무엇이고 왜 사용하는가
 
@@ -59,6 +64,57 @@ Server-side Rendering
 - 다른 폴더 구성(`src/`): Yes
 - App Router 사용 여부: Yes
 - import alias: No
+
+## Next.js의 폴더 구조
+
+Next.js 13에서 추가된 App router는 폴더내에 `page.js` 파일을 작성했을 때 해당 폴더의 이름으로 route 된다.
+
+- 페이지들이 다른 폴더(페이지가 아닌)와 같은 depth에 위치하여 어떤 폴더가 페이지인지 구별하기 어려울 수 있다.
+- 프로그래머의 실수로 인해 원치않는 폴더의 route가 생성될 수 있다.
+
+### Route group
+
+`(name)`  
+route가 될 수 있는 페이지들을 하나의 그룹으로 묶는다.
+route를 구분하기 위해 사용할 수도 있고 각각의 도메인에 맞게(admin, shop 등) 그룹을 나눌 수도 있다.
+
+라우트 그룹을 이용해 폴더 구조의 가독성을 향상시킨다.
+
+### Private folder
+
+`_folder`  
+해당 폴더는 route가 생성되지 않는다.
+
+프라이빗 폴더를 이용해 원치않는 라우트의 생성을 예방한다.
+
+### (Option) material icon theme custom
+
+VSCode의 Plugin `material icon theme`을 사용하는 중에  
+폴더 이름에 `_`를 붙이면서 아이콘의 색이 모두 회색으로 되어버렸다.
+
+VSCode에서 extension을 설정할 수 있는 `settings.json`을 수정하여 해결할 수 있다.  
+`.vscode` 폴더를 생성하고 그 안에 `settings.json` 파일을 만들면  
+해당 프로젝트의 모두가 동일한 설정을 적용할 수 있다.
+
+로컬의 `settings.json` 파일이나 VSCode의 설정을 직접 수정하면 해당 PC에서만 설정이 적용된다.
+
+```json
+// setting.json
+
+{
+  "material-icon-theme.folders.associations": {
+    // "적용할 폴더 이름": "적용할 아이콘"
+    "_components": "Components",
+    "_constants": "Constant",
+    "_hooks": "Hook",
+    "_service": "Api",
+    "_store": "Container",
+    "_types": "Typescript",
+    "_utils": "Utils",
+    "(route)": "Routes"
+  }
+}
+```
 
 ## 배포
 
@@ -854,57 +910,6 @@ DB에서 로드한 이미지, 외부 API에서 가져온 이미지처럼 런타�
 | `onError`           | `onError(event => fail()}`               | Function        |            |
 | `loading`           | `loading="lazy"`                         | String          |            |
 | `blurDateURL`       | `blurDataURL="data:image/jpeg..."`       | String          |            |
-
-## Next.js의 폴더 구조
-
-Next.js 13에서 추가된 App router는 폴더내에 `page.js` 파일을 작성했을 때 해당 폴더의 이름으로 route 된다.
-
-- 페이지들이 다른 폴더(페이지가 아닌)와 같은 depth에 위치하여 어떤 폴더가 페이지인지 구별하기 어려울 수 있다.
-- 프로그래머의 실수로 인해 원치않는 폴더의 route가 생성될 수 있다.
-
-### Route group
-
-`(name)`  
-route가 될 수 있는 페이지들을 하나의 그룹으로 묶는다.
-route를 구분하기 위해 사용할 수도 있고 각각의 도메인에 맞게(admin, shop 등) 그룹을 나눌 수도 있다.
-
-라우트 그룹을 이용해 폴더 구조의 가독성을 향상시킨다.
-
-### Private folder
-
-`_folder`  
-해당 폴더는 route가 생성되지 않는다.
-
-프라이빗 폴더를 이용해 원치않는 라우트의 생성을 예방한다.
-
-### (Option) material icon theme custom
-
-VSCode의 Plugin `material icon theme`을 사용하는 중에  
-폴더 이름에 `_`를 붙이면서 아이콘의 색이 모두 회색으로 되어버렸다.
-
-VSCode에서 extension을 설정할 수 있는 `settings.json`을 수정하여 해결할 수 있다.  
-`.vscode` 폴더를 생성하고 그 안에 `settings.json` 파일을 만들면  
-해당 프로젝트의 모두가 동일한 설정을 적용할 수 있다.
-
-로컬의 `settings.json` 파일이나 VSCode의 설정을 직접 수정하면 해당 PC에서만 설정이 적용된다.
-
-```json
-// setting.json
-
-{
-  "material-icon-theme.folders.associations": {
-    // "적용할 폴더 이름": "적용할 아이콘"
-    "_components": "Components",
-    "_constants": "Constant",
-    "_hooks": "Hook",
-    "_service": "Api",
-    "_store": "Container",
-    "_types": "Typescript",
-    "_utils": "Utils",
-    "(route)": "Routes"
-  }
-}
-```
 
 ## Linting
 
