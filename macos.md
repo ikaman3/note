@@ -165,10 +165,12 @@ fi
 스크립트 위치: `/opt/homebrew/Caskroom/blackhole-2ch/.metadata/<version>/<date>/Casks/blackhole-2ch.rb`
 
 ```bash
-system_command "/usr/bin/killall",
-	args:         ["coreaudiod"],
-	sudo:         true,
-	must_succeed: true
+system_command "/bin/launchctl",
+	args:         [
+		"kickstart",
+		"-kp",
+		"system/com.apple.audio.coreaudiod",
+	],
 ```
 
 to

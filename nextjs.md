@@ -12,13 +12,19 @@ Next.js 강의와 공식 문서에서 얻은 정보를 기록해두는 문서
 > [App Router](#app-router)  
 > [Server Component](#server-component)  
 > [Fullstack Framework](#fullstack-framework)  
-> [layout](#layout)  
+> [Layout](#layout)  
 > [Templates](#templates)  
 > [Metadata](#metadata)  
 > [CSS](#css)  
 > [Linking and Navigating](#linking-and-navigating)  
 > [Server vs Client Component in React - 적절한 선택 방법](#server-vs-client-component-in-react---적절한-선택-방법)  
 > [DB](#db)  
+> [Loading](#loading)  
+> [Caching](#caching)  
+> [Error Handling](#error-handling)  
+> [Not Found](#not-found)  
+> [Dynamic routing](#dynamic-routing)  
+> [HTML Output](#html-output)  
 > [Build-in Components](#build-in-components)  
 > [Linting](#linting)
 
@@ -199,7 +205,7 @@ SPA에 머물기 위해서 `Link`라는 컴포넌트를 사용해야 한다.
 <Link href="/about">About Us</Link>
 ```
 
-## layout
+## Layout
 
 `layout.js`(.jsx, .ts) 파일은 page.js와 마찬가지로 특별한 종류의 파일이다.  
 page.js 파일이 페이지의 내용을 정의한다면,  
@@ -901,6 +907,46 @@ node initdb.js
 # root 폴더에 meals.db 이름의 파일이 생성되면 완료
 ```
 
+쿼리 작성:
+
+`better-sqlite3`는 `Promise`를 사용하지 않지만 함수 자체를 `async`로 만들어 `Promise`로 래핑할 수 있다.
+
+- `sql("<DB name>")`: 해당 이름의 DB에 접근
+- `run()`: insert, update할 때 사용
+- `all()`: 모든 데이터를 fetching할 때 사용
+- `get()`: 한 개의 데이터를 fetching할 때 사용
+
+> **주의사항**  
+> 사용자의 입력값을 사용할 때 SQL Injection 공격을 주의해야 한다.  
+> 아래의 예에서 `db.prepare("SELECT * FROM meals WHERE slug = " + slug);` 이렇게 처리할 수도 있지만 사용자의 입력을 그대로 쿼리에 담기때문에 위험하다.  
+> 대신 플레이스 홀더(`?`)를 사용해서 뒤에 오는 메서드(`get()` 등)에 값을 넘긴다.
+
+```javascript
+import sql from "better-sqlite3";
+
+const db = sql("meals.db");
+
+export async function getMeals() {
+  return db.prepare("SELECT * FROM meals").all();
+}
+
+export function getMeal(slug) {
+  return db.prepare("SELECT * FROM meals WHERE slug = ?").get(slug);
+}
+```
+
+사용법:
+
+```javascript
+import { getMeal } from "@/lib/meals";
+
+export default function Page({ params }) {
+  const meal = getMeal(params.mealSlug);
+  ...
+  <h1>{meal.title}</h1>
+}
+```
+
 ## Loading
 
 `loading` 페이지를 추가하여 로딩 페이지를 추가할 수 있다.  
@@ -935,9 +981,82 @@ async function Meals() {
 
 ## Caching
 
-Next.js는 백그라운드에서 공격적인 캐싱을 한다.  
-사용자가 접속한 모든 페이지의 데이터까지 캐싱한다.  
-그래서 처음 데이터를 불러올 때 오래걸렸던 작업도 2번째 부터는 금방 보여줄 수 있다.
+Next.js는 백그라운드에서 사용자가 접속한 모든 페이지의 데이터까지 캐싱한다.  
+그래서 처음 데이터를 불러올 때 오래걸렸던 페이지도 2번째 방문부터는 빠르게 보여줄 수 있다.
+
+## Error Handling
+
+`error` 페이지를 추가할 수 있다. 이 역시 중첩 가능하고 원하는 경로에만 부분적으로 적용할 수 있다.
+발생한 에러의 자세한 정보는 Next.js가 전달하는 `error` prop을 이용한다.  
+이 prop은 엔드유저에게 노출되지 않는다.
+
+`error` 컴포넌트는 클라이언트 컴포넌트이어야 한다. Next.js는 기본적으로 클라이언트 측에서  
+발생하는 오류를 포함한 해당 컴포넌트의 모든 오류를 잡을 수 있도록 보장하기 때문이다.  
+즉, 페이지가 서버에서 렌더링된 후에 수행한다.
+
+```javascript
+"use client";
+
+export default function Error({ error }) {
+  return (
+    <main className="error">
+      <h1>An error occurred!</h1>
+      <p>Failed to fetch meal data. Please try again later.</p>
+    </main>
+  );
+}
+```
+
+## Not Found
+
+`not-found` 페이지를 추가하여 사용자가 존재하지 않는 URL을 입력했을 때(`404`) 대처할 수 있다.  
+이 또한 원하는 부분만 중첩하여 적용할 수 있다.
+
+```javascript
+export default function NotFound() {
+  return (
+    <main className="not-found">
+      <h1>Not found</h1>
+      <p>Unfortunately, we could not find the requested page or resource.</p>
+    </main>
+  );
+}
+```
+
+## Dynamic routing
+
+url에 인코딩된 slug(Dynamic parameters)가 필요하다면 `params` props를 사용하여 해당 경로에 대해 구성된 동적 경로 세그먼트가 키-값 쌍으로 저장된 객체에 접근할 수 있다.
+
+```javascript
+import { getMeal } from "@/lib/meals";
+
+export default function Page({ params }) {
+  const meal = getMeal(params.mealSlug);
+  ...
+  <h1>{meal.title}</h1>
+}
+```
+
+## HTML Output
+
+리액트에서 제공하는 `dangerouslySetInnerHTML` 속성으로 Element에 HTML 코드를 출력할 수 있다.  
+컨텐츠를 HTML로 출력하면 Cross Site Scripting(XSS) 공격에 노출되기 때문에 주의해야 한다.
+
+이 속성은 객체를 값으로 가져야 하고 이 객체가 가진 `__html` 속성에 실제 화면에 표시할 HTML 코드를 작성한다.  
+만약 가져온 HTML 코드에 줄바꿈이 적용되어 있지 않다면 `replace()`를 사용해서 줄바꿈 문자(`\n`)를 `<br>`로 치환한다.
+
+```javascript
+// replace()를 사용하여 줄바꿈 문자(\n)를 <br>로 변경
+meal.instructions = meal.instructions.replace(/\n/g, '<br>')
+  ...
+<p
+  className={classes.instructions}
+  dangerouslySetInnerHTML={{
+    // __html: '...',
+    __html: meal.instructions,
+  }}
+></p>
+```
 
 ## Build-in Components
 
