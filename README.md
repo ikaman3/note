@@ -6,8 +6,14 @@
 
 ## 목차
 
-1. [TOC/목차 생성](#toctable-of-content)
-2. [줄바꿈](#줄바꿈)
+> [TOC/목차 생성](#toctable-of-content)
+> [줄바꿈](#줄바꿈)
+> [헤딩 태그](#헤딩-태그)  
+> [인용 구문](#인용-구문)  
+> [코드 블록](#코드-블록)  
+> [테이블](#테이블)  
+> [접기/펼치기(details)](#접기펼치기details)  
+> []()  
 
 ## TOC(Table Of Content)
 
