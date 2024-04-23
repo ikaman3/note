@@ -1024,10 +1024,8 @@ export default function NotFound() {
 ```
 
 사용자가 존재하지 않는 데이터(meal, community 등)에 접근하려할 때 `undefined`이므로 에러 페이지가 렌더링된다.  
-하지만 이것은 기술적인 측면에서 에러가 아니라 요청한 메뉴를 찾지못한 것 뿐이므로  
-해당 메뉴에서 가장 가까이에 있는 Not Found를 보여주는 것이 합당하다.  
-`next/navigation`에서 `notFound` 함수를 import하여 호출하면 해당 컴포넌트의 실행을 멈추고  
-가장 가까운 `not-found`나 `error` 페이지를 보여준다.  
+하지만 이것은 기술적인 측면에서 에러가 아니라 요청한 메뉴를 찾지못한 것 뿐이므로 Not Found를 보여주는 것이 합당하다.  
+`next/navigation`에서 `notFound` 함수를 import하여 호출하면 해당 컴포넌트의 실행을 멈추고 가장 가까운 `not-found`나 `error` 페이지를 보여준다.  
 `not-found` 파일을 중첩하여 특정 메뉴에 최적화된 화면을 보여줄 수 있다.  
 
 ```javascript
