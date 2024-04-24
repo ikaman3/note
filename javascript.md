@@ -239,3 +239,9 @@ const classes = {
 // classes['header-background'] = 'header-background-class'
 // classes['footer-background'] = 'footer-background-class'
 ```
+
+## Built in Classes
+
+### `FileReader`
+
+[MDN Reference](https://developer.mozilla.org/ko/docs/Web/API/FileReader)
