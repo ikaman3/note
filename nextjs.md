@@ -671,15 +671,6 @@ interval 등을 서버에 설정하는 것이 아니라 브라우저에 페이�
 Next.js에서는 기본적으로 모두 서버 컴포넌트이므로 클라이언트 컴포넌트로 만들려면  
 파일 최상단에 특별한 지시어 `'use client'`를 추가해야 한다.
 
-## Server Action
-
-함수의 body 또는 파일의 최상단에 `"use server"`를 선언하면  
-해당 함수 또는 파일은 서버에서만 작동하는 것을 보장한다.
-
-```javascript
-"use server";
-```
-
 ## DB
 
 ### `better-sqlite3`
@@ -1158,6 +1149,39 @@ export default function ImagePicker({ label, name }) {
   - `onload`: `FileReader` 객체의 속성. 값을 지정하여 Data URL을 얻을 수 있다. [`load`](https://developer.mozilla.org/ko/docs/Web/API/Window/load_event)의 이벤트 핸들러로, 읽기 동작이 성공적으로 수행될 때마다 발생한다.
   - `result`: `FileReader` 객체의 속성. Data URL이 담겨있다.
   - 실행 순서: `readAsDataURL()` 메서드가 완료되면 `onload`에 저장된 함수가 `FileReader`에 의해 실행된다.
+
+## Server Action
+
+`form`의 submit 제어는 기존 리액트처럼 `onSubmit` 속성에 함수를 정의하여 `form`이 제출될 때 실행되게 할 수 있다.  
+그 함수에서 브라우저 기본 동작을 막고 직접 모든 데이터를 수집하여 백엔드로 보낼 것이다.  
+그러나 Next.js 프로젝트는 이미 백엔드와 프론트엔드를 모두 가지고 있으므로 이렇게할 필요가 없다.  
+Server Action은 바닐라 리액트에도 존재하지만 서버 컴포넌트와 비슷하게 제대로 작동하지 않는다.  
+Next.js 같은 프레임워크로 기능의 제한을 풀어주어야 한다.
+
+`form`이 있는 컴포넌트에 함수를 만들고 특별한 지시어 `'use server'`과 `async` 키워드를 추가한다.  
+함수 body에 `'use server'`를 선언하면 서버에서만 작동하는 것을 보장하는 Server Action을 생성한다.  
+컴포넌트는 기본적으로 서버 컴포넌트인 것과 다르게 함수는 Server Action임을 명시해주어야 한다.
+그리고 `form`의 `action` 속성 값에 해당 함수를 설정한다.
+
+Server Action은 해당 컴포넌트가 서버 컴포넌트일 때만 사용할 수 있다.  
+따라서, 클라이언트 컴포넌트에서 사용해야 하거나 서버측의 `form` 제출 제어 로직을 JSX 코드와 분리하고 싶을 수도 있다.  
+이때는 Server Action을 다른 파일에 저장하고 해당 파일의 최상단에 `'use server'`를 작성하면 된다.  
+그러면 해당 파일에서 정의하는 모든 함수가 Server Action이 된다.
+
+```javascript
+asycn function shareMeal() {
+  "use server";
+  const meal = {
+    title: formData.get('title')
+  }
+}
+
+<form action={shareMeal}></form>
+```
+
+- `action`: 일반적으로 요청을 보낼 path를 설정하는 속성(브라우저에 내장된 `form` 제어 기능의 관점). Next.js에서는 이 `form`이 제출되면 요청을 생성하여 웹사이트를 제공하는 Next.js 서버로 보낸다. 그리고 서버에서 Server Action 함수가 실행된다.
+- `formData`: `form`의 `input` 태그들로 모인 데이터가 담긴 객체. JavaScript의 `FormData` Class이다.
+  - `get()`: 특정 `input` 필드에 입력된 데이터에 접근하는 메서드. 해당 필드의 `name`으로 구분한다.
 
 ## Build-in Components
 
