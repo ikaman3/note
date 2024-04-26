@@ -1026,13 +1026,13 @@ export default function NotFound() {
 사용자가 존재하지 않는 데이터(meal, community 등)에 접근하려할 때 `undefined`이므로 에러 페이지가 렌더링된다.  
 하지만 이것은 기술적인 측면에서 에러가 아니라 요청한 메뉴를 찾지못한 것 뿐이므로 Not Found를 보여주는 것이 합당하다.  
 `next/navigation`에서 `notFound` 함수를 import하여 호출하면 해당 컴포넌트의 실행을 멈추고 가장 가까운 `not-found`나 `error` 페이지를 보여준다.  
-`not-found` 파일을 중첩하여 특정 메뉴에 최적화된 화면을 보여줄 수 있다.  
+`not-found` 파일을 중첩하여 특정 메뉴에 최적화된 화면을 보여줄 수 있다.
 
 ```javascript
-import { notFound } from 'next/navigation'
+import { notFound } from "next/navigation";
 
 if (!meal) {
-  notFound()
+  notFound();
 }
 ```
 
@@ -1074,30 +1074,31 @@ meal.instructions = meal.instructions.replace(/\n/g, '<br>')
 ## Custom Image Picker
 
 image picker는 사용자가 form에 추가할 사진을 고르게 하고 form을 접수할 때 이미지를 업로드하는 역할을 한다.  
-복잡하기 때문에 별도의 컴포넌트로 구성하는 것이 좋다.  
+복잡하기 때문에 별도의 컴포넌트로 구성하는 것이 좋다.
 
 ```javascript
+"use client";
 export default function ImagePicker({ label, name }) {
-  const imageInput = useRef()
-  const [pickedImage, setPickedImage] = useState()
+  const imageInput = useRef();
+  const [pickedImage, setPickedImage] = useState();
 
   function handlePickClick() {
-    imageInput.current.click()
+    imageInput.current.click();
   }
 
   function handleImageChange(e) {
-    const file = e.target.files[0]
+    const file = e.target.files[0];
 
     if (!file) {
-      setPickedImage(null)
+      setPickedImage(null);
       return;
     }
 
-    const fileReader = new FileReader()
+    const fileReader = new FileReader();
     fileReader.onload = () => {
-      setPickedImage(fileReader.result)
-    }
-    fileReader.readAsDataURL(file)
+      setPickedImage(fileReader.result);
+    };
+    fileReader.readAsDataURL(file);
   }
 
   return (
@@ -1106,7 +1107,13 @@ export default function ImagePicker({ label, name }) {
       <div className={classes.controls}>
         <div className={classes.preview}>
           {!pickedImage && <p>No image picked yet.</p>}
-          {pickedImage && <Image src={pickedImage} alt="The image selected by the user." fill />}
+          {pickedImage && (
+            <Image
+              src={pickedImage}
+              alt="The image selected by the user."
+              fill
+            />
+          )}
         </div>
         <input
           className={classes.input}
@@ -1118,33 +1125,39 @@ export default function ImagePicker({ label, name }) {
           onChange={handleImageChange}
           required
         />
-      <button className={classes.button} type="button" onClick={handlePickClick}>Pick an Image</button>
+        <button
+          className={classes.button}
+          type="button"
+          onClick={handlePickClick}
+        >
+          Pick an Image
+        </button>
       </div>
     </div>
-  )
+  );
 }
 ```
 
 - `className`: `<input>` 태그를 `display: none`으로 설정하는 CSS가 작성되어 있음
-- `htmlFor`: `<label>` 태그를 `<input>` 태그에 연결시키기 위한 `<input>` 태그의 id  
-- `type="file"`: 파일을 선택하기 위한 `<input>`의 타입  
+- `htmlFor`: `<label>` 태그를 `<input>` 태그에 연결시키기 위한 `<input>` 태그의 id
+- `type="file"`: 파일을 선택하기 위한 `<input>`의 타입
   - `e.target.files`: `file` type의 `<input>`에 자동 생성되는 선택된 모든 파일의 배열
   - `multiple`: 사용자가 여러 개의 파일을 선택할 수 있게 하는 속성
-- `type="button"`: 기본적으로 form을 제출해버리는 `<button>` 태그의 동작을 막기 위한 속성  
-- `accept`: `<input>`에서 접수할 수 있는 파일의 형식 지정  
-- `name`: 업로드한 이미지를 지정하는 작업에 필요  
+- `type="button"`: 기본적으로 form을 제출해버리는 `<button>` 태그의 동작을 막기 위한 속성
+- `accept`: `<input>`에서 접수할 수 있는 파일의 형식 지정
+- `name`: 업로드한 이미지를 지정하는 작업에 필요
 - `onClick`: 클릭 이벤트를 핸들링하기 위한 속성. 이벤트 핸들러는 클라이언트 측에서만 사용
-- `ref`: `<input>`에 클릭 이벤트를 전달하기 위해 사용한 React built in 속성  
+- `ref`: `<input>`에 클릭 이벤트를 전달하기 위해 사용한 React built in 속성
 - `imageInput`: HTML Element를 연결하기 위한 `'react'`의 `useRef()` 훅으로 생성한 `ref`
   - `.current`: 실제로 연결된 element와 object에 접근하기 위해 사용
   - `.click()`: 클릭 메서드 작동
 - `pickedImage`: 선택한 이미지를 preview하기 위한 state
 - `onChange`: 해당 element의 이벤트에 변화가 생길 때마다 작동하는 이벤트 핸들러
 - [`FileReader`](https://developer.mozilla.org/ko/docs/Web/API/FileReader): 이미지 element의 입력값으로 사용되는(`src`로 쓸 수 있는) Data URL을 생성하기 위한 JavaScript built in 클래스
-  - `readAsDataURL()`: Promise, read file 등을 포함하여 아무것도 반환하지 않고 callback도 없다. 오직 읽기 동작을 수행한다.  
+  - `readAsDataURL()`: Promise, read file 등을 포함하여 아무것도 반환하지 않고 callback도 없다. 오직 읽기 동작을 수행한다.
   - `onload`: `FileReader` 객체의 속성. 값을 지정하여 Data URL을 얻을 수 있다. [`load`](https://developer.mozilla.org/ko/docs/Web/API/Window/load_event)의 이벤트 핸들러로, 읽기 동작이 성공적으로 수행될 때마다 발생한다.
   - `result`: `FileReader` 객체의 속성. Data URL이 담겨있다.
-  - 실행 순서: `readAsDataURL()` 메서드가 완료되면 `onload`에 저장된 함수가 `FileReader`에 의해 실행된다.  
+  - 실행 순서: `readAsDataURL()` 메서드가 완료되면 `onload`에 저장된 함수가 `FileReader`에 의해 실행된다.
 
 ## Build-in Components
 
