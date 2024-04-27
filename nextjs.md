@@ -7,26 +7,76 @@ Next.js 강의와 공식 문서에서 얻은 정보를 기록해두는 문서
 > [Next.js는 무엇이고 왜 사용하는가](#nextjs는-무엇이고-왜-사용하는가)  
 > [Next.js의 기능과 장점](#nextjs의-기능과-장점)  
 > [Next.js 프로젝트 생성](#nextjs-프로젝트-생성)  
-> [Next.js의 폴더 구조](#nextjs의-폴더-구조)  
+> [Next.js의 폴더 구조](#nextjs의-폴더-구조)
+>
+> > [Route group](#route-group)  
+> > [Private folder](#private-folder)  
+> > [(Option) material icon theme custom](#option-material-icon-theme-custom)
+>
 > [배포](#배포)  
 > [App Router](#app-router)  
 > [Server Component](#server-component)  
 > [Fullstack Framework](#fullstack-framework)  
 > [Layout](#layout)  
 > [Templates](#templates)  
-> [Metadata](#metadata)  
-> [CSS](#css)  
-> [Linking and Navigating](#linking-and-navigating)  
+> [Metadata](#metadata)
+>
+> > [Static Metadata](#static-metadata)  
+> > [Dynamic Metadata](#dynamic-metadata)
+>
+> [CSS](#css)
+>
+> > [globals.css](#globalscss)  
+> > [Tailwind](#tailwind)  
+> > [CSS Module](#css-module)
+>
+> [Linking and Navigating](#linking-and-navigating)
+>
+> > [`<Link>` Component](#link-component)  
+> > [`useRouter()` hook](#userouter-hook)  
+> > [`redirect` function](#redirect-function)  
+> > [Using the native History API](#using-the-native-history-api)  
+> > [How Routing and Navigation Works](#how-routing-and-navigation-works)
+>
 > [Server vs Client Component in React - 적절한 선택 방법](#server-vs-client-component-in-react---적절한-선택-방법)  
-> [DB](#db)  
+> [DB](#db)
+>
+> > [`better-sqlite3`](#better-sqlite3)  
+> > [Save data](#save-data)
+>
+> [Slug](#slug)  
+> [XSS(Cross Site Scripting)](#xsscross-site-scripting)  
+> [File System API](#file-system-api)  
 > [Loading](#loading)  
-> [Caching](#caching)  
+> [Caching](#caching)
+>
+> > [Triggering Cache Revalidations](#triggering-cache-revalidations)  
+> > [Local File System에 파일 저장 금지](#local-file-system에-파일-저장-금지)
+>
 > [Error Handling](#error-handling)  
 > [Not Found](#not-found)  
 > [Dynamic routing](#dynamic-routing)  
 > [HTML Output](#html-output)  
-> [Build-in Components](#build-in-components)  
+> [Custom Image Picker](#custom-image-picker)  
+> [Server Action](#server-action)
+>
+> > [Server side input validation](#server-side-input-validation)  
+> > [Server Action Response](#server-action-response)
+>
+> [`form` 제출 상태 관리](#form-제출-상태-관리)  
+> [Build-in Components](#build-in-components)
+>
+> > [`<Link>`](#link)  
+> > [`<Image>`](#image)
+>
 > [Linting](#linting)
+>
+> > [Failed to load config "next" to extend from.](#failed-to-load-config-next-to-extend-from)  
+> > [Error: JSX props should not use functions react/jsx-no-bind](#error-jsx-props-should-not-use-functions-reactjsx-no-bind)  
+> > ['prop-types' should be listed in the project's dependencies, not devDependencies import/no-extraneous-dependencies](#prop-types-should-be-listed-in-the-projects-dependencies-not-devdependencies-importno-extraneous-dependencies)  
+> > [Error: 'foo' is missing in props validation react/prop-types](#error-foo-is-missing-in-props-validation-reactprop-types)  
+> > [Error: propType "name" is not required, but has no corresponding defaultProps declaration. react/require-default-props](#error-proptype-name-is-not-required-but-has-no-corresponding-defaultprops-declaration-reactrequire-default-props)  
+> > [Error: Prop type "array" is forbidden react/forbid-prop-types](#error-prop-type-array-is-forbidden-reactforbid-prop-types)
 
 ## NextJS는 무엇이고 왜 사용하는가
 
@@ -76,7 +126,7 @@ Server-side Rendering
 
 Next.js 13에서 추가된 App router는 폴더내에 `page.js` 파일을 작성했을 때 해당 폴더의 이름으로 route 된다.
 
-- 페이지들이 다른 폴더(페이지가 아닌)와 같은 depth에 위치하여 어떤 폴더가 페이지인지 구별하기 어려울 수 있다.
+- 페이지들이 페이지가 아닌 폴더와 같은 depth에 위치하여 어떤 폴더가 페이지인지 구별하기 어려울 수 있다.
 - 프로그래머의 실수로 인해 원치않는 폴더의 route가 생성될 수 있다.
 
 ### Route group
@@ -166,7 +216,7 @@ app 폴더에서 페이지를 설정한다. 이 페이트는 전반적인 웹사
 `page.js`, `layout.js`라는 보호된 파일이 존재하는데,  
 `page.js` 파일은 NextJS에게 해당 페이지를 렌더링해야 한다고 전한다.
 
-`'localhost:3000/about'` 이라는 페이지를 만들고 싶다면,  
+`localhost:3000/about` 이라는 페이지를 만들고 싶다면,  
 `app` 디렉터리 하위에 라우트로 취급되길 원하는 폴더(`about`)를 생성한다.  
 그리고 해당 폴더에 `page.js` 파일이 존재한다면 페이지를 렌더링할 수 있다. 이때, export할 함수 컴포넌트의 이름은 중요하지 않다.
 
@@ -256,12 +306,13 @@ Next.js의 백그라운드에서 자동으로 설정되기 때문이다.
 ## Templates
 
 템플릿은 각 하위 레이아웃이나 페이지를 래핑한다는 점에서 레이아웃과 유사하다.  
-route 전반에 걸쳐 지속되고 상태를 유지하는 레이아웃과 달리,  
-템플릿은 탐색 시 각 하위 항목에 대해 새 인스턴스를 만든다.
+route 전반에 걸쳐 지속되고 상태를 유지하는 레이아웃과 달리, 템플릿은 탐색 시 각 하위 항목에 대해 새 인스턴스를 만든다.
 
 이는 사용자가 템플릿을 공유하는 route 사이를 탐색할 때, 컴포넌트의 새 인스턴스가 마운트되고 DOM 요소가 다시 생성되며  
 상태가 유지되지 않고 effects가 다시 동기화됨을 의미한다.  
-이러한 특정 동작이 필요한 경우가 있을 수 있으며, 그 경우에 템플릿은 레이아웃보다 더 적합한 선택이다. 예를 들어:
+이러한 특정 동작이 필요한 경우가 있을 수 있으며, 그 경우에 템플릿은 레이아웃보다 더 적합한 선택이다.
+
+예를 들어:
 
 - `useEffect`(예: logging page views) 및 `useState`(예: per-page feedback form)에 의존하는 기능
 - 기본 프레임워크 동작을 변경하는 경우: 예를 들어 레이아웃 내부의 정지 경계(Suspense Boundaries)는 레이아웃이 처음 로드될 때만 대체(the fallback)를 표시하고 페이지를 전환할 때는 표시하지 않는다. 템플릿의 경우 각 탐색에 fallback이 표시된다.
@@ -296,9 +347,9 @@ Next.js는 모든 `layout.js` 또는 `page.js` 파일에서 메타데이터를 �
 메타데이터는 Search Engine Crawler에 노출되게 하거나 페이지 링크를 SNS에 공유할 때 보여주기도 한다.  
 자세한 필드는 위의 문서에서 확인할 수 있다.
 
-메타데이터를 `layout.js`에 추가하면 그 `layout`이 감싸는 모든 페이지에 자동으로 적용한다.  
-페이지에 메타데이터가 존재하면 페이지 메타데이터가 우선한다.  
-중첩된 `layout`에 메타데이터가 존재하면 root `layout` 메타데이터가 우선한다.
+- 메타데이터를 `layout.js`에 추가하면 그 `layout`이 감싸는 모든 `page`에 자동으로 적용한다.
+- `page`에 메타데이터가 존재하면 `layout`보다 `page`의 메타데이터가 우선한다.
+- 중첩된 `layout`에 메타데이터가 존재하면 root `layout` 메타데이터가 우선한다.
 
 ### Static Metadata
 
@@ -310,7 +361,7 @@ export const metadata = {
 ```
 
 > Good to know:  
-> 루트 레이아웃에는 수동으로 `<title>` 및 `<meta>`와 같은 `<head>` 태그를 추가해서는 안 된다.  
+> 루트 `layout`에는 수동으로 `<title>` 및 `<meta>`와 같은 `<head>` 태그를 추가해서는 안 된다.  
 > 대신 Metadata API를 사용해야 한다. Metadata API는 스트리밍(streaming) 및 `<head>` 요소의 중복을 처리(de-duplicating)하는 등 고급 요구 사항을 자동으로 처리한다.
 
 ### Dynamic Metadata
@@ -619,7 +670,7 @@ export function LocaleSwitcher() {
 
 App Router는 라우팅 및 네비게이션에 대해 하이브리드 접근 방식을 사용한다.  
 서버에서는 애플리케이션 코드가 자동으로 라우트 세그먼트로 [code-split](https://nextjs.org/docs/app/building-your-application/routing/linking-and-navigating#1-code-splitting)한다.  
-그리고 클라이언트에서는 Next.js가 라우트 세그먼트를 prefetches하고 caches합니다.  
+그리고 클라이언트에서는 Next.js가 라우트 세그먼트를 prefetches하고 caches한다.  
 이것은 사용자가 새로운 route로 이동할 때 브라우저가 페이지를 reload하지 않고 변경된 라우트 세그먼트만 re-render되므로 네비게이션 경험과 성능이 향상된다.
 
 #### 1. Code Splitting
@@ -644,7 +695,7 @@ Next.js에서 라우트를 사전로드하는 두 가지 방법이 있다:
 
 `prefetch` prop을 `false`로 설정하여 사전로드를 비활성화할 수 있다.
 
-> Good to know:
+> Good to know:  
 > 사전로드는 개발 환경에서는 활성화되지 않으며, 오직 프로덕션 환경에서만 활성화된다.
 
 #### 3. Caching
@@ -901,9 +952,13 @@ SQL이 준비되었다면 Server Action에서 해당 함수를 호출할 수 있
 
 JavaScript에서는 `slugify` 같은 패키지를 사용해서 쉽게 변환할 수 있다.
 
+Install:
+
 ```bash
 npm install slugify
 ```
+
+Using:
 
 ```javascript
 meal.slug = slugify(meal.title, { lower: true });
@@ -918,15 +973,21 @@ meal.slug = slugify(meal.title, { lower: true });
 사용자의 HTML 입력값을 받아서 처리할 때 항상 주의해야 할 공격 방법  
 JavaScript에서 `xss` 패키지로 쉽게 살균할 수 있다.
 
+Install:
+
 ```bash
 npm install xss
 ```
+
+Using:
 
 ```javascript
 meal.instructions = xss(meal.instructions);
 ```
 
 ## File System API
+
+[`node:fs`](https://nodejs.org/api/fs.html#file-system) 모듈은 표준 POSIX 함수를 모방하여 파일 시스템과 상호 작용할 수 있도록 한다.
 
 ```javascript
 import fs from "node:fs";
@@ -1323,14 +1384,14 @@ export async function shareMeal(prevState, formData) {
 
 - `shareMeal(prevState, formData)`: `useFormState`의 인수로 넘겨진 Server Action은 이전의 상태와 제출된 `FormData` 두개의 인수를 받아야 한다. 이전의 상태는 사용하지 않아도 받아야만 한다. 왜냐하면 두 번째 인수가 `FormData`로 설정되어 있기 때문이다.
 
-## Form 제출 상태 관리
+## `form` 제출 상태 관리
 
 사용자 경험 개선을 위해 데이터가 제출되는 동안 정상 동작중임을 보여주는 피드백이 있으면 좋다.  
 리액트에서 제공하지만 Next.js에서 제대로 사용할 수 있는 기능인 `useFormStatus` 훅으로 구현할 수 있다.  
 `react-dom`에서 import하며 클라이언트 컴포넌트에서 사용할 수 있다.
 
-status를 받길 원하는 form 안에 선언해야 해당 form의 status를 받을 수 있다.  
-즉, form 안에 별도의 컴포넌트를 넣고 해당 컴포넌트에서 훅을 사용해야 한다.
+status를 받길 원하는 `form` 안에 선언해야 해당 `form`의 status를 받을 수 있다.  
+즉, `form` 안에 별도의 컴포넌트를 넣고 해당 컴포넌트에서 훅을 사용해야 한다.
 
 ```javascript
 "use client";
