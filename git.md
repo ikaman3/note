@@ -6,7 +6,7 @@ git 명령어와 브랜치 전략 등 그 활용법을 정리하는 문서
 
 ## diff
 
-> add 되지않은 (staging 되지않은) 파일의 수정 전, 후 차이를 보여주는 명령어
+add 되지않은 (staging 되지않은) 파일의 수정 전, 후 차이를 보여주는 명령어
 
 ```bash
 git diff
@@ -35,7 +35,7 @@ git checkout -t -b <branch> origin/<branch>
 
 ## filter-branch
 
-> 이미 Remote에 Push된 Commit의 Author, Committer, Email을 변경하는 명령어
+이미 Remote에 Push된 Commit의 Author, Committer, Email을 변경하는 명령어
 
 ```bash
 OLD_NAME=$1
