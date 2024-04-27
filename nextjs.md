@@ -712,144 +712,7 @@ const dummyMeals = [
     creator: "John Doe",
     creator_email: "johndoe@example.com",
   },
-  {
-    title: "Spicy Curry",
-    slug: "spicy-curry",
-    image: "/images/curry.jpg",
-    summary:
-      "A rich and spicy curry, infused with exotic spices and creamy coconut milk.",
-    instructions: `
-      1. Chop vegetables:
-         Cut your choice of vegetables into bite-sized pieces.
-
-      2. Sauté vegetables:
-         In a pan with oil, sauté the vegetables until they start to soften.
-
-      3. Add curry paste:
-         Stir in 2 tablespoons of curry paste and cook for another minute.
-
-      4. Simmer with coconut milk:
-         Pour in 500ml of coconut milk and bring to a simmer. Let it cook for about 15 minutes.
-
-      5. Serve:
-         Enjoy this creamy curry with rice or bread.
-    `,
-    creator: "Max Schwarz",
-    creator_email: "max@example.com",
-  },
-  {
-    title: "Homemade Dumplings",
-    slug: "homemade-dumplings",
-    image: "/images/dumplings.jpg",
-    summary:
-      "Tender dumplings filled with savory meat and vegetables, steamed to perfection.",
-    instructions: `
-      1. Prepare the filling:
-         Mix minced meat, shredded vegetables, and spices.
-
-      2. Fill the dumplings:
-         Place a spoonful of filling in the center of each dumpling wrapper. Wet the edges and fold to seal.
-
-      3. Steam the dumplings:
-         Arrange dumplings in a steamer. Steam for about 10 minutes.
-
-      4. Serve:
-         Enjoy these dumplings hot, with a dipping sauce of your choice.
-    `,
-    creator: "Emily Chen",
-    creator_email: "emilychen@example.com",
-  },
-  {
-    title: "Classic Mac n Cheese",
-    slug: "classic-mac-n-cheese",
-    image: "/images/macncheese.jpg",
-    summary:
-      "Creamy and cheesy macaroni, a comforting classic that's always a crowd-pleaser.",
-    instructions: `
-      1. Cook the macaroni:
-         Boil macaroni according to package instructions until al dente.
-
-      2. Prepare cheese sauce:
-         In a saucepan, melt butter, add flour, and gradually whisk in milk until thickened. Stir in grated cheese until melted.
-
-      3. Combine:
-         Mix the cheese sauce with the drained macaroni.
-
-      4. Bake:
-         Transfer to a baking dish, top with breadcrumbs, and bake until golden.
-
-      5. Serve:
-         Serve hot, garnished with parsley if desired.
-    `,
-    creator: "Laura Smith",
-    creator_email: "laurasmith@example.com",
-  },
-  {
-    title: "Authentic Pizza",
-    slug: "authentic-pizza",
-    image: "/images/pizza.jpg",
-    summary:
-      "Hand-tossed pizza with a tangy tomato sauce, fresh toppings, and melted cheese.",
-    instructions: `
-      1. Prepare the dough:
-         Knead pizza dough and let it rise until doubled in size.
-
-      2. Shape and add toppings:
-         Roll out the dough, spread tomato sauce, and add your favorite toppings and cheese.
-
-      3. Bake the pizza:
-         Bake in a preheated oven at 220°C for about 15-20 minutes.
-
-      4. Serve:
-         Slice hot and enjoy with a sprinkle of basil leaves.
-    `,
-    creator: "Mario Rossi",
-    creator_email: "mariorossi@example.com",
-  },
-  {
-    title: "Wiener Schnitzel",
-    slug: "wiener-schnitzel",
-    image: "/images/schnitzel.jpg",
-    summary:
-      "Crispy, golden-brown breaded veal cutlet, a classic Austrian dish.",
-    instructions: `
-      1. Prepare the veal:
-         Pound veal cutlets to an even thickness.
-
-      2. Bread the veal:
-         Coat each cutlet in flour, dip in beaten eggs, and then in breadcrumbs.
-
-      3. Fry the schnitzel:
-      Heat oil in a pan and fry each schnitzel until golden brown on both sides.
-
-      4. Serve:
-      Serve hot with a slice of lemon and a side of potato salad or greens.
- `,
-    creator: "Franz Huber",
-    creator_email: "franzhuber@example.com",
-  },
-  {
-    title: "Fresh Tomato Salad",
-    slug: "fresh-tomato-salad",
-    image: "/images/tomato-salad.jpg",
-    summary:
-      "A light and refreshing salad with ripe tomatoes, fresh basil, and a tangy vinaigrette.",
-    instructions: `
-      1. Prepare the tomatoes:
-        Slice fresh tomatoes and arrange them on a plate.
-    
-      2. Add herbs and seasoning:
-         Sprinkle chopped basil, salt, and pepper over the tomatoes.
-    
-      3. Dress the salad:
-         Drizzle with olive oil and balsamic vinegar.
-    
-      4. Serve:
-         Enjoy this simple, flavorful salad as a side dish or light meal.
-    `,
-    creator: "Sophia Green",
-    creator_email: "sophiagreen@example.com",
-  },
+  ...
 ];
 
 db.prepare(
@@ -937,6 +800,116 @@ export default function Page({ params }) {
   <h1>{meal.title}</h1>
 }
 ```
+
+### Save data
+
+sql을 작성하는 파일에 데이터 저장 함수를 추가한다.  
+DB에 Slug를 저장해야 하는데 `form`에서 받는 게 아닌 `title`로부터 만들어서 저장한다.
+두 개의 패키지 `slugify`, `xss`가 필요하다.
+
+이미지는 DB가 아닌 파일 시스템에 저장해야 한다. DB는 기본적으로 파일의 저장을 위해 설계되지 않았기 때문이다.  
+업로드된 파일을 public 폴더에 저장하면 어디서든 접근이 용이하여 문제없이 화면에 렌더링할 수 있다.  
+폴더에 파일을 저장(write)하려면 File System API를 사용한다.
+
+```javascript
+export async function saveMeal(meal) {
+  meal.slug = slugify(meal.title, { lower: true });
+  meal.instructions = xss(meal.instructions);
+
+  const extension = meal.image.name.split(".").pop();
+  const fileName = `${meal.slug}.${extension}`;
+
+  const stream = fs.createWriteStream(`public/images/${fileName}`);
+  const bufferedImage = await meal.image.arrayBuffer();
+  stream.write(Buffer.from(bufferedImage), (error) => {
+    if (error) {
+      throw new Error("Saving image failed!");
+    }
+  });
+
+  meal.image = `/images/${fileName}`;
+
+  db.prepare(
+    `
+    INSERT INTO meals
+      (title, summary, instructions, creator, creator_email, image, slug)
+    VALUES (
+      @title,
+      @summary,
+      @instructions,
+      @creator,
+      @creator_email,
+      @image,
+      @slug
+    )
+  `
+  ).run(meal);
+}
+```
+
+> 파일을 실수로 덮어쓰는 것을 방지하려면 파일 이름이 동일한 이름을 가지지 않게  
+> 각 파일 이름에 일부 랜덤 또는 고유한 요소를 추가하는 것이 좋다.
+
+- `meal.image = '/images/${fileName}'`: public 폴더는 서버의 root 단계에 있는 것과 동일하게 동작하므로 path segment에 public을 넣지 않아야 이미지 요청이 정상 작동한다.
+- `prepare()`: statement를 준비하는 메서드
+  - `@field`: better-sqlite3에서 제공하는 문법. 필드의 이름으로 특정 필드를 연결한다. 위의 필드 순서와 동일해야 함에 주의. `run()` 메서드에 인수로 전달한 객체에서 속성 이름을 찾아서 그 값을 추출하고 해당 필드에 저장한다.
+
+SQL이 준비되었다면 Server Action에서 해당 함수를 호출할 수 있다.
+
+## Slug
+
+일반적으로 URL이나 파일 경로 등에 사용되는 문자열을 만들기 위한 텍스트 변환 기술  
+주로 제목이나 이름과 같은 텍스트를 URL에 포함하기 위해 사용하며 공백이나 특수 문자를 제거하고  
+대소문자를 일관되게 처리하여 URL을 깔끔하고 읽기 쉽게 만든다.
+
+예를 들어, `"Hell World!"`라는 제목을 Slug로 변환하면 `"hell-world"`가 될 수 있다.  
+이렇게 바뀐 Slug는 URL에 `xxx.com/article/hell-world`처럼 사용된다.
+
+JavaScript에서는 `slugify` 같은 패키지를 사용해서 쉽게 변환할 수 있다.
+
+```bash
+npm install slugify
+```
+
+```javascript
+meal.slug = slugify(meal.title, { lower: true });
+```
+
+- `slugify()`: slug 생성 함수
+  - 두번째 인수 `{}`: 설정 객체
+    - `lower`: `true`면 모든 문자를 소문자로 설정
+
+## XSS(Cross Site Scripting)
+
+사용자의 HTML 입력값을 받아서 처리할 때 항상 주의해야 할 공격 방법  
+JavaScript에서 `xss` 패키지로 쉽게 살균할 수 있다.
+
+```bash
+npm install xss
+```
+
+```javascript
+meal.instructions = xss(meal.instructions);
+```
+
+## File System API
+
+```javascript
+import fs from "node:fs";
+
+const stream = fs.createWriteStream(`public/images/${fileName}`);
+const bufferedImage = await meal.image.arrayBuffer();
+stream.write(Buffer.from(bufferedImage), (error) => {
+  if (error) {
+    throw new Error("Saving image failed!");
+  }
+});
+```
+
+- `createWriteStream()`: 파일에 데이터를 쓸 수 있도록 하는 `WriteStream`을 생성. 파일을 쓸 path를 인수로 받고, stream 객체를 return한다. path에 반드시 파일 이름을 포함한 경로를 작성한다.
+  - `write()`: 파일 쓰기 메서드. 첫 번째 인수로 저장할 파일인 `Buffer` 타입의 chunk가 필요하다. 두 번째 인수로 쓰기를 마치면 실행할 함수가 필요하다. 이 함수는 `error` 인수를 받는데 정상 완료라면 `null`이 들어있고, 에러가 발생했다면 에러 정보를 가지고 있다.
+- `arrayBuffer()`: 이미지 객체에 정의된 메서드. `Promise`로 래핑된 `ArrayBuffer` 타입을 리턴하므로 `await`을 사용해야 한다.
+- `Buffer.from()`: `ArrayBuffer` 타입을 `Buffer` 타입으로 변환하는 메서드
 
 ## Loading
 
@@ -1174,6 +1147,9 @@ asycn function shareMeal() {
   const meal = {
     title: formData.get('title')
   }
+
+  await saveMeal(meal)
+  redirect('/meals')
 }
 
 <form action={shareMeal}></form>
@@ -1182,6 +1158,7 @@ asycn function shareMeal() {
 - `action`: 일반적으로 요청을 보낼 path를 설정하는 속성(브라우저에 내장된 `form` 제어 기능의 관점). Next.js에서는 이 `form`이 제출되면 요청을 생성하여 웹사이트를 제공하는 Next.js 서버로 보낸다. 그리고 서버에서 Server Action 함수가 실행된다.
 - `formData`: `form`의 `input` 태그들로 모인 데이터가 담긴 객체. JavaScript의 `FormData` Class이다.
   - `get()`: 특정 `input` 필드에 입력된 데이터에 접근하는 메서드. 해당 필드의 `name`으로 구분한다.
+- `redirect()`: `'next/navigation'`에서 import한 함수. 사용자를 다른 페이지로 리다이렉션한다. 리다이렉션할 path를 인수로 받는다.
 
 ## Build-in Components
 
