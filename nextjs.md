@@ -1189,6 +1189,33 @@ export default function MealsFormSubmit() {
   - `pending`: 요청이 진행중이면 `true` 아니면 `false` 값을 가지는 속성
 - `disabled`: 버튼의 활성화 상태를 제어하는 속성. `true`이면 비활성화, `false`이면 활성화
 
+## Server side input validation
+
+사용자가 제출한 입력값이 올바른지 Server side에서 검사해야 한다. 규칙은 더 복잡할 수도 있고 서드 파티 패키지를 사용할 수도 있다.  
+많은 입력값에 같은 유효성 검사를 해야한다면 helper 함수를 만들어서 재사용하는 것이 좋다.
+
+```javascript
+function isInvalidText(text) {
+  return !text || text.trim() === "";
+}
+
+if (
+  isInvalidText(meal.title) ||
+  isInvalidText(meal.summary) ||
+  isInvalidText(meal.instructions) ||
+  isInvalidText(meal.creator) ||
+  isInvalidText(meal.creator_email) ||
+  !meal.creator_email.includes("@") ||
+  !meal.image ||
+  meal.image.size === 0
+) {
+  throw new Error("Invalid input");
+}
+```
+
+- `trim()`: 문자열 앞, 뒤의 공백 제거
+- `includes()`: 특정 문자열이 존재하는지 체크
+
 ## Build-in Components
 
 Next.js의 빌트인 컴포넌트의 자세한 정보
