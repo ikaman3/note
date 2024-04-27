@@ -1160,6 +1160,35 @@ asycn function shareMeal() {
   - `get()`: 특정 `input` 필드에 입력된 데이터에 접근하는 메서드. 해당 필드의 `name`으로 구분한다.
 - `redirect()`: `'next/navigation'`에서 import한 함수. 사용자를 다른 페이지로 리다이렉션한다. 리다이렉션할 path를 인수로 받는다.
 
+## Form 제출 상태 관리
+
+사용자 경험 개선을 위해 데이터가 제출되는 동안 정상 동작중임을 보여주는 피드백이 있으면 좋다.  
+리액트에서 제공하지만 Next.js에서 제대로 사용할 수 있는 기능인 `useFormStatus` 훅으로 구현할 수 있다.  
+`react-dom`에서 import하며 클라이언트 컴포넌트에서 사용할 수 있다.
+
+status를 받길 원하는 form 안에 선언해야 해당 form의 status를 받을 수 있다.  
+즉, form 안에 별도의 컴포넌트를 넣고 해당 컴포넌트에서 훅을 사용해야 한다.
+
+```javascript
+"use client";
+import { useFormStatus } from "react-dom";
+
+export default function MealsFormSubmit() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button disabled={pending}>
+      {pending ? "Submitting..." : "Share Meal"}
+    </button>
+  );
+}
+```
+
+- `useFormStatus()`: `status` 객체를 반환
+- `status`: 다양한 속성을 갖고 있는 객체
+  - `pending`: 요청이 진행중이면 `true` 아니면 `false` 값을 가지는 속성
+- `disabled`: 버튼의 활성화 상태를 제어하는 속성. `true`이면 비활성화, `false`이면 활성화
+
 ## Build-in Components
 
 Next.js의 빌트인 컴포넌트의 자세한 정보
