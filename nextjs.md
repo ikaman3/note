@@ -1160,6 +1160,84 @@ asycn function shareMeal() {
   - `get()`: 특정 `input` 필드에 입력된 데이터에 접근하는 메서드. 해당 필드의 `name`으로 구분한다.
 - `redirect()`: `'next/navigation'`에서 import한 함수. 사용자를 다른 페이지로 리다이렉션한다. 리다이렉션할 path를 인수로 받는다.
 
+### Server side input validation
+
+사용자가 제출한 입력값이 올바른지 Server side에서 검사해야 한다. 규칙은 더 복잡할 수도 있고 서드 파티 패키지를 사용할 수도 있다.  
+많은 입력값에 같은 유효성 검사를 해야한다면 helper 함수를 만들어서 재사용하는 것이 좋다.
+
+```javascript
+function isInvalidText(text) {
+  return !text || text.trim() === "";
+}
+
+if (
+  isInvalidText(meal.title) ||
+  isInvalidText(meal.summary) ||
+  isInvalidText(meal.instructions) ||
+  isInvalidText(meal.creator) ||
+  isInvalidText(meal.creator_email) ||
+  !meal.creator_email.includes("@") ||
+  !meal.image ||
+  meal.image.size === 0
+) {
+  throw new Error("Invalid input.");
+}
+```
+
+- `trim()`: 문자열 앞, 뒤의 공백 제거
+- `includes()`: 특정 문자열이 존재하는지 체크
+
+### Server Action Response
+
+유효성 검사를 더 좋은 방식으로 바꾸기 위해 리다이렉트나 에러 발생도 가능하지만 `response` 객체를 반환할 수도 있다.  
+반환하는 객체는 정해진 형식은 없지만 직렬화 가능한 객체이어야만 한다. 객체에 메서드를 정의하면 안된다는 의미다.  
+왜냐하면 클라이언트로 전달되는 동안 손실 가능성이 있기 때문이다. 문자열이나 숫자, 중첩 객체, 중첩 배열 등의 단순 값들은 잘 동작한다.
+
+```javascript
+if (
+  ...
+  meal.image.size === 0
+) {
+  return {
+    message: "Invalid input."
+  }
+}
+```
+
+Server Action을 사용한 컴포넌트에서 `response`를 사용하기 위해 `react-dom`의 `useFormState` 훅을 이용한다.  
+이 훅은 Server Actions를 통해 제출될 form을 사용하는 페이지나 컴포넌트의 상태를 관리한다.
+클라이언트 컴포넌트에서 사용할 수 있는 훅이다. 이 역시 별도의 컴포넌트로 분리할 수 있다.
+
+```javascript
+import { useFormState } from "react-dom";
+
+export default function ShareMealPage() {
+  const [state, formAction] = useFormState(shareMeal, { message: null });
+
+  return (
+    <form className={classes.form} action={formAction}>
+      ...
+      {state.message && <p>{state.message}</p>}
+    </form>
+  );
+}
+```
+
+- `useFormState()`: form이 제출될 때 동작할 실제 Server Action과 컴포넌트의 초기 state(server action이 동작하기 전이나 response가 돌아오기 전에 `useFormState`가 반환할 초기 값을 의미) 두 개의 인수를 받는다.  
+  두 개의 요소가 있는 배열을 반환한다. 이 컴포넌트의 현재 상태(혹은 현재 response)와 `formAction`이다.
+  - `state`: 두 번째 인수인 초기값이거나 Server Action(`shareMeal`)으로부터 받은 응답이 된다.
+  - `formAction`: form의 `action` 속성에 값으로 설정하면 `useFormState` 훅이 접근해서 state를 관리할 수 있다.
+
+Server Action(`shareMeal`)도 수정이 필요하다. 왜냐하면 `useFormState`에 인수로 넘길 때에는 `useFormState`가 form을 제출하고 Server Action을 실행시키기 위해 두 가지 인수를 넘기기 때문이다.
+
+```javascript
+export async function shareMeal(prevState, formData) {
+  ...
+}
+```
+
+- `shareMeal(prevState, formData)`: `useFormState`의 인수로 넘겨진 Server Action은 이전의 상태와 제출된 `FormData` 두개의 인수를 받아야 한다. 이전의 상태는 사용하지 않아도 받아야만 한다. 왜냐하면 두 번째 인수가 `FormData`로 설정되어 있기 때문이다.
+
 ## Form 제출 상태 관리
 
 사용자 경험 개선을 위해 데이터가 제출되는 동안 정상 동작중임을 보여주는 피드백이 있으면 좋다.  
@@ -1188,33 +1266,6 @@ export default function MealsFormSubmit() {
 - `status`: 다양한 속성을 갖고 있는 객체
   - `pending`: 요청이 진행중이면 `true` 아니면 `false` 값을 가지는 속성
 - `disabled`: 버튼의 활성화 상태를 제어하는 속성. `true`이면 비활성화, `false`이면 활성화
-
-## Server side input validation
-
-사용자가 제출한 입력값이 올바른지 Server side에서 검사해야 한다. 규칙은 더 복잡할 수도 있고 서드 파티 패키지를 사용할 수도 있다.  
-많은 입력값에 같은 유효성 검사를 해야한다면 helper 함수를 만들어서 재사용하는 것이 좋다.
-
-```javascript
-function isInvalidText(text) {
-  return !text || text.trim() === "";
-}
-
-if (
-  isInvalidText(meal.title) ||
-  isInvalidText(meal.summary) ||
-  isInvalidText(meal.instructions) ||
-  isInvalidText(meal.creator) ||
-  isInvalidText(meal.creator_email) ||
-  !meal.creator_email.includes("@") ||
-  !meal.image ||
-  meal.image.size === 0
-) {
-  throw new Error("Invalid input");
-}
-```
-
-- `trim()`: 문자열 앞, 뒤의 공백 제거
-- `includes()`: 특정 문자열이 존재하는지 체크
 
 ## Build-in Components
 
