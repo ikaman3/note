@@ -945,8 +945,59 @@ async function Meals() {
 
 ## Caching
 
+```bash
+npm run build
+npm start
+```
+
+- `npm run build`: Next.js 앱이 배포 환경에서 동작할 수 있게 준비. 기본적으로 서버에 배포할 수 있는 프로젝트를 만들어 준다.
+- `npm start`: 최적화된 코드의 배포 서버를 실행
+
 Next.js는 백그라운드에서 사용자가 접속한 모든 페이지의 데이터까지 캐싱한다.  
 그래서 처음 데이터를 불러올 때 오래걸렸던 페이지도 2번째 방문부터는 빠르게 보여줄 수 있다.
+
+이러한 캐싱 때문에 개발 환경에서 경험할 수 없었던 배포 환경의 문제점이 존재한다.
+서버를 실행하고 데이터를 입력하면 방금 저장한 데이터를 볼 수 없다.  
+Next.js는 배포 환경을 위해 앱을 준비할 때, 동작할 때 거치는 추가 단계가 있다.  
+build process에서 앱에서 Pre-render(사전 렌더)될 수 있는 모든 페이지를 사전 렌더링하고 기본적으로 동적 웹페이지가 아니게 된다.  
+즉, 모든 데이터를 불러오고 렌더링하는 것이다. 그래서 웹 사이트의 가장 첫 방문자도 렌더링을 기다릴 필요없이 바로 완성된 페이지를 볼 수 있다. 그 다음 사전 렌더링된 페이지를 캐싱하여 모든 사용자에게 제공한다.  
+이 방식의 단점은 빌드 프로세스 이후에 등록된 데이터를 다시 가져오지 않는 것이다. 그냥 사전 렌더링된 페이지를 이용한다.
+
+### Triggering Cache Revalidations
+
+**유효성 재검사 트리거**
+
+새로운 데이터를 등록할 때마다 Next.js에 캐시의 전체나 일부를 비우라고 해야한다.  
+내장된 메서드를 사용하면 되며 Server Action에서 데이터를 저장(`saveMeal`)하고 리다이렉트(`redirect()`)하기 전에 사용한다.
+revalidate(유효성 재검사)의 의미는 해당 페이지에 연관된 캐시를 비우는 것을 의미한다.
+`'next/cache'`에서 import한다.
+
+[API Reference](https://nextjs.org/docs/app/api-reference/functions/revalidatePath)
+
+```javascript
+import { revalidatePath } from "next/cache";
+
+await saveMeal(meal);
+revalidatePath("/meals");
+redirect("/meals");
+```
+
+- `revalidatePath()`: Next.js가 특정 path에 속하는 캐시의 유효성 재검사를 하게 한다. 기본값으로 해당 path만 적용되고 중첩된 path는 적용하지 않는다.
+  - `path`: 첫 번째 인수. 유효성 재검사할 path
+  - `type`: 두 번째 인수. 기본 값은 `page`이고 이 path의 이 페이지만 재검사한다는 뜻이다. `layout`으로 설정하면 중첩된 모든 페이지를 재검사한다.
+- `revalidatePath('/', 'layout')`: 웹 사이트의 모든 페이지를 유효성 재검사
+
+### Local File System에 파일 저장 금지
+
+바로 위에서 `revalidatePath()`으로 유효성 재검사를 실행하여 실시간으로 데이터 불러오기에 성공했다.  
+이미지만 제외하고...
+
+public 폴더안의 images 폴더에 저장하고 있기 때문에 이미지가 보이지 않는 것이다.  
+개발 환경에서는 public 접근할 수 있지만 배포 환경은 .next 폴더에 복사되고  
+이 .next 폴더 안에 캐싱된 페이지 등이 모두 들어있고 배포 환경은 .next 폴더가 사용된다.  
+그런데 새로운 이미지를 public 폴더에 저장하면 배포 서버는 해당 폴더에 관여하지 않기 때문에 request time(or runtime)에 이미지를 불러올 수 없다.
+
+이러한 동작은 [공식 문서](https://nextjs.org/docs/pages/building-your-application/optimizing/static-assets)에 설명되어 있고 런타임에 생성된 모든 파일은 AWS S3와 같은 파일 저장 서비스를 이용하는 것을 권장하고 있다.
 
 ## Error Handling
 
