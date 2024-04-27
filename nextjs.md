@@ -290,21 +290,55 @@ export default function Template({ children }) {
 
 `App` 디렉터리에서 [Metadata APIs](https://nextjs.org/docs/app/building-your-application/optimizing/metadata)를 이용하여 `title`이나 `meta` 같은 `<head>` HTML elements를 수정할 수 있다.
 
-메타데이터는 `layout.js` 또는 `page.js` 파일 안에서 [metadata object](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#the-metadata-object)나 [`generateMetadata` function](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function)를 exporting하여 정의할 수 있다.
+메타데이터는 `layout.js` 또는 `page.js` 파일 안에서 [metadata object](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#the-metadata-object)나 [`generateMetadata` function](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function)를 export하여 정의할 수 있다.
+
+Next.js는 모든 `layout.js` 또는 `page.js` 파일에서 메타데이터를 찾아낸다.
+메타데이터는 Search Engine Crawler에 노출되게 하거나 페이지 링크를 SNS에 공유할 때 보여주기도 한다.  
+자세한 필드는 위의 문서에서 확인할 수 있다.
+
+메타데이터를 `layout.js`에 추가하면 그 `layout`이 감싸는 모든 페이지에 자동으로 적용한다.  
+페이지에 메타데이터가 존재하면 페이지 메타데이터가 우선한다.  
+중첩된 `layout`에 메타데이터가 존재하면 root `layout` 메타데이터가 우선한다.
+
+### Static Metadata
 
 ```javascript
 export const metadata = {
-  title: "Next.js",
+  title: "All Meals",
+  description: "Browse the delicious meals shared by our vibrant community.",
 };
-
-export default function Page() {
-  return "...";
-}
 ```
 
 > Good to know:  
 > 루트 레이아웃에는 수동으로 `<title>` 및 `<meta>`와 같은 `<head>` 태그를 추가해서는 안 된다.  
 > 대신 Metadata API를 사용해야 한다. Metadata API는 스트리밍(streaming) 및 `<head>` 요소의 중복을 처리(de-duplicating)하는 등 고급 요구 사항을 자동으로 처리한다.
+
+### Dynamic Metadata
+
+`generateMetadata()`라는 async 함수를 export하여 메타데이터를 동적으로 추가할 수 있다.  
+정적 메타데이터가 존재하지 않는다면 Next.js가 이 함수를 찾아서 실행한다.  
+반드시 이 함수는 metadata 객체를 반환해야 한다.
+
+이 함수는 페이지 컴포넌트가 props로 받는 것과 동일한 데이터를 받는다.  
+동일하게 `params`라는 prop을 받아서 데이터를 가져올 수 있다.
+
+```javascript
+export async function generateMetadata({ params }) {
+  const meal = getMeal(params.mealSlug);
+  if (!meal) {
+    notFound();
+  }
+
+  return {
+    title: meal.title,
+    description: meal.summary,
+  };
+}
+```
+
+이때 유효하지 않은 동적 페이지에 방문하면 Not Found가 아닌 에러 페이지가 나온다.  
+메타데이터는 처음에 만들어지기 때문에 `meal.title`이 `undefined`이므로 에러가 발생하기 때문이다.  
+따라서 `if` 조건문으로 Not Found 페이지로 가도록 해야한다.
 
 ## CSS
 
