@@ -4,6 +4,23 @@ IDE 관련 단축키 등을 기록할 마크다운 문서
 
 ## Visual Studio Code
 
+### CLI Scripts
+
+CLI를 이용해 Extension을 설치할 수 있다.
+
+```bash
+code --install-extension vscjava.vscode-java-debug
+code --install-extension vscjava.vscode-java-pack
+code --install-extension vscjava.vscode-java-test
+code --install-extension redhat.java
+code --install-extension vscjava.vscode-maven
+code --install-extension vscjava.vscode-java-dependency
+code --install-extension vscjava.vscode-spring-initializr
+code --install-extension vscjava.vscode-spring-boot-dashboard
+code --install-extension pivotal.vscode-boot-dev-pack
+code --install-extension pivotal.vscode-spring-boot
+```
+
 ### Shortcuts
 
 Keybinding이 없는 단축키는 ⌘ ⇧ P 입력 후 Command를 입력해서 선택하거나  
