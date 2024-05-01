@@ -203,3 +203,13 @@ Spring Boot는 클래스 경로에 있는 프레임워크를 따라 많은 것�
   - JSON 변환은 Jackson 프레임워크에서 실행된다.
   - Spring Boot Auto Configuration은 Spring Boot Starter Web이 클래스 경로에 있을 때 Bean에서 JSON으로의 MessageConverters를 자동으로 제공한다.  
     이것이 메서드에서 Bean 배열 리스트(`List<Course>`)를 반환할 때 자동으로 JSON으로 파싱되는 이유이다.
+
+## Spring Boot DevTools
+
+자동으로 서버를 재시작하고 코드 변경사항을 적용하여 개발자의 생산성을 높이는 프로젝트다.  
+`pom.xml`에 spring-boot-devtools으로 의존성을 추가할 수 있다.  
+java 파일이나 view 파일, property 파일을 변경하는 경우 자동으로 애플리케이션의 재시작을 트리거하여 서버를 재시작해준다.
+
+> **주의사항**  
+> `pom.xml`을 변경하면 애플리케이션을 수동으로 재시작해야 한다.  
+> Spring Boot DevTools은 `pom.xml`의 변경사항을 처리할 수 없다.
