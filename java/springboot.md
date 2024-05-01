@@ -213,3 +213,37 @@ java 파일이나 view 파일, property 파일을 변경하는 경우 자동으�
 > **주의사항**  
 > `pom.xml`을 변경하면 애플리케이션을 수동으로 재시작해야 한다.  
 > Spring Boot DevTools은 `pom.xml`의 변경사항을 처리할 수 없다.
+
+## Spring Boot Production-Ready
+
+프로덕션 환경에 사용할 수 있는 애플리케이션을 쉽게 만들 수 있도록 돕는 Spring Boot의 중요한 기능들
+
+### Managing App. Configuration using Profiles
+
+- 애플리케이션은 다양한 환경(Dev, QA, Stage, Prod, ...)이 있다.
+- 동일한 애플리케이션의 다양한 환경에는 다양한 설정이 필요하다.
+  - 다른 DB(개발 환경에서는 개발 DB, 프로덕션에서는 프로덕션 DB 등)와 통신, 다른 웹 서비스 호출 등
+  - 환경마다 로깅 레벨이 다른 경우
+
+이것이 프로필이 있는 이유다. 프로필을 통해 환경별 설정을 제공할 수 있다.  
+프로필이 없으면 `application.properties`의 Default Property를 사용한다.
+
+현재 `dev`와 `prod` 환경이 있다고 가정하고 각각 로그 레벨을 `trace`, `info`로 설정하려고 한다.
+
+1. `src/main/resources` 밑에 `application-dev.properties`, `application-prod.properties` 파일을 추가하고 원하는 로그 레벨을 추가
+2. `application.properties`에 프로필을 설정: `spring.profiles.active=prod`
+
+- 특정 프로필을 설정하려면 디폴트 설정(`application.properties`)의 값과 특정 프로필(`application-prod.properties`)의 값을 함께 병합해야 한다.
+- 어떤 것을 설정하든 특정 프로필의 우선순위가 더 높다.
+
+3. `spring.profiles.active`의 값을 `dev`로 변경하면 `dev` 환경의 프로필이 적용된다.
+
+일반적으로 로깅 프레임워크에서 지원하는 로깅 수준은 다음과 같다.  
+순서대로 밑의 로깅 레벨을 모두 포함하여 출력한다.
+
+1. `trace`: 로그에 있는 모든 정보(`trace`, `debug`, `info`, `warning`, `error`) 출력
+2. `debug`: `info`보다 더 많은 정보(`debug`, `info`, `warning`, `error`) 출력
+3. `info`: `info` 수준에서 로깅된 모든 정보(`info`, `warning`, `error`) 출력
+4. `warning`: `error`보다 조금 더 많은 정보(`warning`, `error`) 출력
+5. `error`: Error, Exception만(`error`) 출력
+6. `off`: 로깅을 끈다.
