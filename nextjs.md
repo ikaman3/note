@@ -381,6 +381,13 @@ Next.js는 모든 `layout.js` 또는 `page.js` 파일에서 메타데이터를 �
 - `page`에 메타데이터가 존재하면 `layout`보다 `page`의 메타데이터가 우선한다.
 - 중첩된 `layout`에 메타데이터가 존재하면 root `layout` 메타데이터가 우선한다.
 
+아래의 두 `meta` 태그는 기본적으로 추가된다.
+
+```html
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+```
+
 ### Static Metadata
 
 ```javascript
