@@ -1546,7 +1546,9 @@ zip -r FILENAME.zip FILENAME
 unzip FILENAME.zip
 ```
 
-## 한글이 ???로 보이는 경우
+## Troubleshooting
+
+### 한글이 ???로 보이는 경우
 
 ```bash
 # .zshenv
