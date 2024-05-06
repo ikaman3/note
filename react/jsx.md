@@ -8,8 +8,8 @@ JSX는 확장된 문법이고, React는 JavaScript 라이브러리다.
 종종 함께 사용되기도 하지만 독립적으로 사용할 수도 있다.  
 JSX는 선택사항이지만 대부분의 리액트 프로젝트는 JSX를 사용한다.
 
-```
-<img src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson" />;
+```javascript
+<img src="https://i.imgur.com/MK3eW3As.jpg" alt="Katherine Johnson" />
 ```
 
 - `src` 및 `alt` 속성을 가진 `<img />` 태그
@@ -26,7 +26,7 @@ JSX는 선택사항이지만 대부분의 리액트 프로젝트는 JSX를 사�
 
 - 괄호가 없으면 `return` 뒷 라인의 모든 코드가 무시된다.
 
-```
+```javascript
 <div>
     <h1>...</h1>
     <img
@@ -41,7 +41,7 @@ JSX는 선택사항이지만 대부분의 리액트 프로젝트는 JSX를 사�
 `<div>`를 마크업에 추가하기 싫다면, 빈 태그(`<> </>`)로 대체할 수 있다.  
 이러한 빈 태그는 *Fragment*라고 한다. Fragments는 브라우저상의 HTML 트리 구조에서 흔적없이 그룹화해 준다.
 
-```
+```javascript
 <>
     <h1>...</h1>
     <img
@@ -77,7 +77,7 @@ JSX는 자바스크립트로 바뀌고 JSX에서 작성된 어트리뷰트는 �
 - `stroke-width` --> `strokeWidth`
 - `class` 는 예약어이므로 리액트에서는 DOM의 프로퍼티의 이름을 따서 `className` 으로 대신한다.
 
-```
+```javascript
 <img
   src="https://i.imgur.com/yXOvdOSs.jpg"
   alt="Hedy Lamarr"
@@ -96,37 +96,26 @@ JSX는 자바스크립트로 바뀌고 JSX에서 작성된 어트리뷰트는 �
 
 이러한 문자열 값들을 동적으로 지정하려면 {}를 사용하여 자바스크립트의 값을 사용할 수 있다.
 
-```
+```javascript
 export default function Avatar() {
-  const avatar = 'https://i.imgur.com/7vQD0fPs.jpg';
-  const description = 'Gregorio Y. Zara';
-  return (
-    <img
-      className="avatar"
-      src={avatar}
-      alt={description}
-    />
-  );
+  const avatar = "https://i.imgur.com/7vQD0fPs.jpg";
+  const description = "Gregorio Y. Zara";
+  return <img className="avatar" src={avatar} alt={description} />;
 }
 ```
 
 JSX는 자바스크립트를 작성하는 특별한 방법이고, 중괄호 사이에서 자바스크립트를 사용할 수 있다.  
 `formatDate()`와 같은 함수 호출을 포함해 모든 자바스크립트 표현식은 중괄호 사이에서 작동한다.
 
-```
+```javascript
 const today = new Date();
 
 function formatDate(date) {
-  return new Intl.DateTimeFormat(
-    'en-US',
-    { weekday: 'long' }
-  ).format(date);
+  return new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(date);
 }
 
 export default function TodoList() {
-  return (
-    <h1>To Do List for {formatDate(today)}</h1>
-  );
+  return <h1>To Do List for {formatDate(today)}</h1>;
 }
 ```
 
@@ -140,7 +129,7 @@ JSX 안에서 중괄호는 두 가지 방법으로만 사용할 수 있다.
 
 여러 표현식을 한 객체로 옮기고 중괄호 안의 JSX에서 참조할 수 있다.
 
-```
+```javascript
 const person = {
     name: 'Gregorio Y. Zara',
     theme: {
@@ -152,7 +141,7 @@ const person = {
     <h1>{person.name}'s Todos</h1>
 </div>
 
-# 자바스크립트 표현식을 사용한 URL 생성
+// 자바스크립트 표현식을 사용한 URL 생성
 src={baseUrl + person.imageId + person.imageSize + ".jpg"}
 ```
 
@@ -168,12 +157,14 @@ JSX의 인라인 CSS 스타일에서도 이중 중괄호를 사용한다. 리액
 
 - 인라인 `style` 프로퍼티는 HTML과 다르게 카멜 케이스로 작성하는 것에 주의
 
-```
-<ul style={{
-      backgroundColor: 'black',
-      color: 'pink'
-    }}>
-        ...
+```javascript
+<ul
+  style={{
+    backgroundColor: "black",
+    color: "pink",
+  }}
+>
+  ...
 </ul>
 ```
 
@@ -181,7 +172,7 @@ JSX의 인라인 CSS 스타일에서도 이중 중괄호를 사용한다. 리액
 
 `<Item isPacked={true} />` 이러한 컴포넌트가 있을 때,
 
-```
+```javascript
 if (isPacked) {
   return <li className="item">{name} ✔</li>;
 }
@@ -195,36 +186,22 @@ return <li className="item">{name}</li>;
 컴포넌트는 반드시 무언가를 반환해야 하는데 아무것도 렌더링하고 싶지 않을 수 있다.  
 이 경우에 `null`을 반환할 수 있다.
 
-```
+```javascript
 if (isPacked) {
   return null;
 }
 return <li className="item">{name}</li>;
 ```
 
-- 실제로 컴포넌트가 `null`을 반환하면 개발자가 렌더링하려고 할 때 놀랄 수 있으므로 흔한 경우는 아니다.
-- 또한, `<li>` 중복코드가 유지 보수를 어렵게 할 수 있다.
+실제로 컴포넌트가 `null`을 반환하면 개발자가 렌더링하려고 할 때 놀랄 수 있으므로 흔한 경우는 아니다.  
+또한, `<li>` 중복코드가 유지 보수를 어렵게 할 수 있다.
 
 ### 삼항 조건 연산자
 
-```
-return (
-    <li className="item">
-        {isPacked ? name + ' ✔' : name}
-    </li>
-);
+```javascript
+return <li className="item">{isPacked ? name + " ✔" : name}</li>;
 
-return (
-    <li className="item">
-        {isPacked ? (
-        <del>
-            {name + ' ✔'}
-        </del>
-        ) : (
-            name
-        )}
-    </li>
-);
+return <li className="item">{isPacked ? <del>{name + " ✔"}</del> : name}</li>;
 ```
 
 [위의 예제](#조건부-렌더링)와의 차이는 전혀 없다.
@@ -241,85 +218,74 @@ return (
 - 조건이 `false`이면 전체 표현식이 `false`
 - 리액트는 `false`를 `null` 또는 `undefined`처럼 JSX 트리의 구멍으로 간주하고 아무것도 렌더링하지 않음
 
-```
+```javascript
 <li className="item">
-    {name} {isPacked && '✔'}
+  {name} {isPacked && "✔"}
 </li>
 ```
 
 - `isPacked`이면 '✔' 표시를 렌더링하고, 그렇지 않으면 아무것도 렌더링하지 않음
 
-**주의사항**
-
+> **주의사항**  
 > `&&` 왼쪽에 숫자를 두지 말 것  
 > 자바스크립트는 왼쪽을 boolean으로 변환한다. 왼쪽이 `0`이면 전체 식이(`0`)을 얻고, 리액트는 `0`을 렌더링한다.  
 > 흔한 실수: `messageCount && <p>New messages</p>`  
 > 올바른 예시: `messageCount > 0 && <p>New messages</p>`
 >
-> > 왼쪽을 boolean으로 만들 것
+> 항상 왼쪽을 boolean으로 만들 것
 
 ### 변수에 조건부로 JSX를 할당
 
 `if` 문과 변수를 사용해서 보기좋게 정리할 수 있다.
 
-```
+```javascript
 let itemContent = name;
 if (isPacked) {
-    itemContent = name + " ✔";
+  itemContent = name + " ✔";
 }
 
-<li className="item">
-    {itemContent}
-</li>
+<li className="item">{itemContent}</li>;
 ```
 
-```
+```javascript
 let itemContent = name;
 if (isPacked) {
-    itemContent = (
-        <del>
-            {name + " ✔"}
-        </del>
-    );
+  itemContent = <del>{name + " ✔"}</del>;
 }
-return (
-    <li className="item">
-        {itemContent}
-    </li>
-);
+return <li className="item">{itemContent}</li>;
 ```
 
 ### 정보를 객체로 이동하여 조건을 완전히 제거하는 방법
 
-```
+```javascript
 const drinks = {
-    tea: {
-        part: 'leaf',
-        caffeine: '15–70 mg/cup',
-        age: '4,000+ years'
-    },
-    coffee: {
-        part: 'bean',
-        caffeine: '80–185 mg/cup',
-        age: '1,000+ years'
-    }
+  tea: {
+    part: "leaf",
+    caffeine: "15–70 mg/cup",
+    age: "4,000+ years",
+  },
+  coffee: {
+    part: "bean",
+    caffeine: "80–185 mg/cup",
+    age: "1,000+ years",
+  },
 };
 
 function Drink({ name }) {
-    const info = drinks[name];
-    return (
-        <section>
-            <h1>{name}</h1>
-            <dl>
-                <dt>Part of plant</dt>
-                <dd>{info.part}</dd>
-                <dt>Caffeine content</dt>
-                <dd>{info.caffeine}</dd>
-                <dt>Age</dt>
-                <dd>{info.age}</dd>
-            </dl>
-        </section>
-    );
+  const info = drinks[name];
+  return (
+    <section>
+      <h1>{name}</h1>
+      <dl>
+        <dt>Part of plant</dt>
+        <dd>{info.part}</dd>
+        <dt>Caffeine content</dt>
+        <dd>{info.caffeine}</dd>
+        <dt>Age</dt>
+        <dd>{info.age}</dd>
+      </dl>
+    </section>
+  );
 }
 ```
 
@@ -344,19 +310,64 @@ function Recipe({ id, name, ingredients }) {
 
 화살표 함수는 암시적으로 `=>` 바로 뒤에 식을 반환하기 때문에 `return` 문이 필요없다.
 
-```
-const listItems = chemists.map(person =>
-    <li>...</li> // 암시적 반환!
+```javascript
+const listItems = chemists.map(
+  (person) => <li>...</li> // 암시적 반환!
 );
 ```
 
 하지만 `=>` 뒤에 `{` 중괄호가 오는 경우 `return`을 명시적으로 작성해야 한다.
 
-```
-const listItems = chemists.map(person => { // 중괄호
-    return <li>...</li>;
+```javascript
+const listItems = chemists.map((person) => {
+  // 중괄호
+  return <li>...</li>;
 });
 ```
 
 중괄호를 가진 화살표 함수를 "block body"를 가지고 있다고 말한다.  
 한 줄 이상의 코드를 작성할 수 있지만 `return` 문이 반드시 필요하다.
+
+## Loop
+
+JSX 내에서 중괄호 안에서 일반적인 for 루프를 사용하는 것은 허용되지 않는다.  
+JSX는 JavaScript의 표현식(expression)을 지원하지만, 일반적인 for 루프는 문장(statement)이므로 JSX에서 직접 사용할 수 없다.  
+대신에 JSX 내에서 반복 작업을 수행하려면 배열 메서드(`map`, `filter`, `reduce` 등)나 배열을 사용해야 한다. 배열 메서드를 사용하거나 배열을 생성하여 JSX 내에서 반복 작업을 수행할 수 있다.  
+이러한 방법은 JSX의 표현식으로 사용할 수 있으므로 JSX와 호환된다.
+
+바르지 못한 예시:
+
+```javascript
+{
+  for (let i = 1; i < 6; i++) {
+    <EmotionImgById emotionId={i} />;
+  }
+}
+```
+
+올바른 예시:
+
+```javascript
+{
+  Array.from({ length: 5 }).map((_, i) => (
+    <EmotionImgById key={i + 1} emotionId={i + 1} />
+  ));
+}
+
+// JSX 바깥에서 사용 후 리턴하는 방법
+export default function Home() {
+  const elements = [];
+  for (let i = 1; i <= 5; i++) {
+    elements.push(<EmotionImgById key={i} emotionId={i} />);
+  }
+
+  return <main>{elements}</main>;
+}
+```
+
+- `Array.from()`: 배열 형태의 객체나 Iterable 객체를 받아서 새로운 배열을 생성
+  - `length`: 인자로 전달하는 객체의 길이 속성. 배열의 길이를 결정
+  - `.map((_, i) => (...)`: 메서드로 배열의 각 요소를 순회하고 각 요소에 대한 JSX를 반환  
+    첫 번째 인수는 현재 요소를 나타내는데 `_`는 생략을 뜻함  
+    두 번째 인수(`i`)는 현재 요소의 인덱스를 나타냄
+- 최종적으로, `Array.from()`을 통해 생성된 배열의 각 요소에 대해 `<EmotionImgById>` 컴포넌트가 생성되고, 이들이 `<main>` 요소 내에 렌더링됨
