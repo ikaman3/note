@@ -1125,9 +1125,12 @@ redirect("/meals");
 이미지만 제외하고...
 
 public 폴더안의 images 폴더에 저장하고 있기 때문에 이미지가 보이지 않는 것이다.  
-개발 환경에서는 public 접근할 수 있지만 배포 환경은 .next 폴더에 복사되고  
-이 .next 폴더 안에 캐싱된 페이지 등이 모두 들어있고 배포 환경은 .next 폴더가 사용된다.  
+개발 환경에서는 public 접근할 수 있지만 배포 환경은 `.next` 폴더에 복사되고  
+이 `.next` 폴더 안에 캐싱된 페이지 등이 모두 들어있고 배포 환경은 `.next` 폴더가 사용된다.  
 그런데 새로운 이미지를 public 폴더에 저장하면 배포 서버는 해당 폴더에 관여하지 않기 때문에 request time(or runtime)에 이미지를 불러올 수 없다.
+
+Next.js(또는 React) 프로젝트에서 public 폴더는 source이지 definition이 아니기 때문이다.  
+즉, 클라이언트에게 제공할 원본(source)이어야 하지 클라이언트가 접근하는 목적지여서는 안된다.
 
 이러한 동작은 [공식 문서](https://nextjs.org/docs/pages/building-your-application/optimizing/static-assets)에 설명되어 있고 런타임에 생성된 모든 파일은 AWS S3와 같은 파일 저장 서비스를 이용하는 것을 권장하고 있다.
 
