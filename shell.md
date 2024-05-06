@@ -1372,13 +1372,178 @@ ln -s <source> <target>
 
 ## SSH
 
-> Secure Shell
-> 원격의 컴퓨터와 암호화된 통신을 주고받음
->
-> - `-i` : ssh 공개키 인증을 위한 파일 선택
+Secure Shell
+원격의 컴퓨터와 암호화된 통신을 주고받음
+
+- `-i` : ssh 공개키 인증을 위한 파일 선택
 
 ```bash
 ssh -i "~/coding/aws/.aws/NewKeyPair.pem" ikaman@ec2-3-34-107-69.ap-northeast-2.compute.amazonaws.com
+```
+
+## Compression
+
+압축 형식을 압축률 좋은 순으로 나열:
+`xz > bzip2 > gzip > compress`
+
+### tar
+
+Tape Archive를 위해 고안된 파일 형식과 이런 형식의 파일을 다루는데 사용하는 프로그램  
+여러 개의 파일을 하나로 묶는 개념이며 기본적으로 압축을 하지 않는다.  
+리눅스 환경에서 일반적으로 사용하며 다른 압축 패키지(gzip, bzip2, xz 등)와 함께 사용한다.  
+옵션에 `-`을 붙이지 않아도 된다.
+
+묶기:
+
+```bash
+tar -cf FILENAME.tar FILENAME
+```
+
+묶음풀기:
+
+```bash
+tar -xf FILENAME.tar
+```
+
+원하는 위치에 묶음풀기:
+
+```bash
+tar xvf FILENAME.tar -C /home/ikaman/testdir/
+```
+
+- `c`: 지정된 파일이나 디렉터리를 묶어 하나의 `.tar` 파일 생성
+- `x`: `.tar` 파일 풀기
+- `v`: 작업 중 대상 파일을 화면에 출력
+- `f`: 작업 대상의 이름 지정
+- `r`: 기존의 파일 안에 다른 파일 추가
+- `t`: 묶인 파일의 목록 출력
+- `p`: 권한(permisson)을 원본과 동일하게 유지
+- `Z`: compress 패키지를 사용한 압축 옵션
+- `z`: gzip 패키지를 사용한 압축 옵션
+- `j`: bzip2 패키지를 사용한 압축 옵션
+- `J`: xz 패키지를 사용한 압축 옵션
+
+### gzip
+
+GNU zip으로 GNU에서 만든 압축 프로그램이다. compress를 대체하기 위해 만들어졌으며  
+압축률 조정 등 다양한 기능을 제공한다.  
+리눅스 환경에서 일반적으로 사용하며 주로 `tar` 명령어와 함께 사용한다.
+
+압축:
+
+```bash
+gzip FILENAME
+tar zcvf FILENAME.tar.gz FILENAME
+```
+
+압축된 파일 내용 확인:
+
+```bash
+zcat FILENAME
+```
+
+압축해제:
+
+```bash
+gzip -d FILENAME
+gunzip FILENAME
+tar zxvf FILENAME.tar.gz
+# 원하는 위치에 압축해제
+tar zxvf FILENAME.tar.gz -C /home/ikaman/testdir/
+```
+
+- `d`: 압축해제
+- `1~9`: 압축 레벨. 숫자가 작을 수록 압축률이 줄고 소요시간이 줄어든다.
+- `l`: 압축 파일의 정보 출력
+- `r`: 압축 대상이 디렉터리라면 하위 디렉터리까지 모두 압축
+- `v`: 진행과정을 %와 함께 자세히 출력
+
+### bzip2
+
+줄리안 시워드가 만든 압축 패키지로 버로우즈-휠러 변환 블록정렬 알고리즘과 허브만 부호화를 사용한 압축 프로그램이다.  
+기본적인 사용법은 `-l` 옵션을 제외하고 gzip과 동일하며 gzip보다 압축률이 높지만 압축 시간도 길다.  
+리눅스 환경에서 일반적으로 사용하며 주로 `tar` 명령어와 함께 사용한다.
+
+압축:
+
+```bash
+bzip2 FILENAME
+tar jcvf FILENAME.tar.gz FILENAME
+```
+
+압축된 파일 내용 확인:
+
+```bash
+zcat FILENAME
+```
+
+압축해제:
+
+```bash
+bzip2 -d FILENAME
+bunzip2 FILENAME
+tar jcvf FILENAME.tar.gz
+# 원하는 위치에 압축해제
+tar jxvf FILENAME.tar.gz -C /home/ikaman/testdir/
+```
+
+- `d`: 압축해제
+- `1~9`: 압축 레벨. 숫자가 작을 수록 압축률이 줄고 소요시간이 줄어
+- `r`: 압축 대상이 디렉터리라면 하위 디렉터리까지 모두 압축
+- `v`: 진행과정을 %와 함께 자세히 출력
+- `f`: 존재하는 파일 덮어쓰기
+- `c`: 결과를 표준 출력으로 보낼 때 사용한다. `tar`와 함께 쓸 때 사용
+- `t`: 압축 파일을 검사
+
+### xz
+
+LZMA2 알고리즘을 이용하여 만든 데이터 무손실 압축 프로그램이다.  
+gzip, bzip2보다 높은 압축률을 보여주어 공개용 소프트웨어 사이트에서 이 압축 포맷을 사용하여 파일을 배포한다.  
+기본적인 사용법은 gzip, bzip2와 같다.
+
+압축:
+
+```bash
+xz FILENAME
+tar Jcvf FILENAME
+```
+
+압축된 파일 내용 확인:
+
+```bash
+zcat FILENAME
+```
+
+압축해제:
+
+```bash
+xz -d FILENAME
+unxz FILENAME
+tar Jcvf FILENAME.tar.gz
+# 원하는 위치에 압축해제
+tar Jxvf FILENAME.tar.gz -C /home/ikaman/testdir/
+```
+
+- `z`: 압축할 때 사용하는 옵션. 기본적으로 설정되어 있으므로 사용하지 않아도 됨
+- `d`: 압축해제
+
+### zip
+
+Windows 환경에서 일반적으로 사용하는 압축 확장자
+
+- 장점: 거의 대부분의 OS에서 호환된다.
+- 단점: 용량 압축이 비교적 낮다.
+
+압축:
+
+```bash
+zip -r FILENAME.zip FILENAME
+```
+
+압축해제:
+
+```bash
+unzip FILENAME.zip
 ```
 
 ## 한글이 ???로 보이는 경우
