@@ -1,14 +1,34 @@
 # Spring
 
-## Spring Bean 및 설정
+## Model, ModelMap, ModelAndView 차이점
 
-## Spring IOC Container
+데이터만 저장한다(Model, ModelMap) vs 데이터와 이동하고자 하는 View Page를 같이 저장한다(ModelAndView)  
+
+Model, ModelMap 공통점
+
+- ｀model.addAttribute("변수명");｀
+-　｀modelMap.addAttribute("변수명");｀
+-　둘 다 addAttribute를 사용함
+-　Model or ModelMap에 데이터만 저장 후 View에서 사용목적
+
+Model, ModelMap 차이점
+
+－　Model： 인터페이스
+－　ModelMap： 클래스
+
+ModelAndView
+
+- `addObject()`를 통해 데이터를 저장
+- `setViewName()`을 통해 이동하고자 하는 View를 저장
+- 메소드 안에서 `ModelAndView mav = new ModelAndView();` 
+- `return type ModelAndView`
 
 ## 블로그 글 옮기던거
 
 Spring의 폼 태그는 커맨드 객체(데이터 모델)를 사용하여 HTML 폼 입력 필드와 데이터를 바인딩한다.  
 폼 입력 필드의 값을 커맨드 객체의 속성에 자동으로 매핑하여 컨트롤러에 전달한다.  
-예를 들어, <form:form> 태그를 사용하여 폼을 정의하고, <form:input> 또는 <form:select> 등의 태그를 사용하여 폼 필드를 생성한다. 그런 다음 이러한 필드들은 Spring 컨트롤러에 전송되고, 컨트롤러는 해당 필드들의 값을 커맨드 객체에 바인딩하여 사용할 수 있다.
+예를 들어, <form:form> 태그를 사용하여 폼을 정의하고, <form:input> 또는 <form:select> 등의 태그를 사용하여 폼 필드를 생성한다. 　
+그런 다음 이러한 필드들은 Spring 컨트롤러에 전송되고, 컨트롤러는 해당 필드들의 값을 커맨드 객체에 바인딩하여 사용할 수 있다.
 
 ```java
 // 컨트롤러에서의 커맨드 객체
