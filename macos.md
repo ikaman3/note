@@ -8,6 +8,15 @@
 
 ## Scripts
 
+### Keyboard
+
+키보드를 꾹 누르면 특수문자를 입력하는 창이 나오는데 그 기능을 끄고  
+키 반복 입력으로 되돌리는 스크립트
+
+```bash
+defaults write -g ApplePressAndHoldEnabled -bool false
+```
+
 ### 원격 로그인
 
 ```bash
