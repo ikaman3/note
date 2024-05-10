@@ -1918,3 +1918,18 @@ SmartTable.propTypes = {
   ).isRequired,
 };
 ```
+
+### jsx-a11y/label-has-associated-control
+
+JSX 요소의 접근성 강화를 위한 ESLint 규칙으로 `form`의 `label` element가 어떤 form control와 연결되어 있는지 확인한다.  
+기본 설정으로는 `htmlFor` 속성으로 연결해줘도 에러가 발생해서 규칙을 수정했다.
+
+```json
+"jsx-a11y/label-has-associated-control": [ 2, {
+  "some": [ "nesting", "id" ]
+}],
+```
+
+- `some: []`: 규칙이 하나 이상 만족되어야 함. 배열에는 규칙이 어떻게 적용될지 정의. 여기서는 두 가지 검사 방법을 사용함
+  - `nesting`: `label` 요소가 form control을 직접 감싸고 있는지 확인
+  - `id`: `label` 요소가 form control과 `htmlFor`, `id` 속성을 통해 연결되어 있는지 확인
