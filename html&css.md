@@ -20,4 +20,4 @@ p {
 }
 ```
 
-    > [MDN Link](https://developer.mozilla.org/ko/docs/Web/CSS/white-space)
+> [MDN Link](https://developer.mozilla.org/ko/docs/Web/CSS/white-space)
