@@ -249,8 +249,9 @@ const classes = {
 // classes['header-background'] = 'header-background-class'
 // classes['footer-background'] = 'footer-background-class'
 ```
+## Utils
 
-## 의도적으로 딜레이 주는 방법
+### 의도적으로 딜레이 주는 방법
 
 일반적으로 `setTimeout()` 함수에 콜백이나 `then` 체인을 사용하지만 가독성이 좋지 않다.  
 대신 Promise를 래핑해서 async/await 구문을 이용할 수 있다.  
@@ -258,6 +259,20 @@ const classes = {
 ```javascript
 async function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms))
+}
+```
+
+### 객체가 비었는지 확인하는 방법
+
+객체 프로퍼티를 대상으로 반복문을 실행하다가 프로퍼티가 하나라도 있으면 그 즉시 `false`를 반환하게 코드를 작성  
+
+```javascript
+function isEmpty(obj) {
+  for (let key in obj) {
+    // if the loop has started, there is a property
+    return false;
+  }
+  return true;
 }
 ```
 
