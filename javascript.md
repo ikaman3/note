@@ -250,6 +250,17 @@ const classes = {
 // classes['footer-background'] = 'footer-background-class'
 ```
 
+## 의도적으로 딜레이 주는 방법
+
+일반적으로 `setTimeout()` 함수에 콜백이나 `then` 체인을 사용하지만 가독성이 좋지 않다.  
+대신 Promise를 래핑해서 async/await 구문을 이용할 수 있다.  
+
+```javascript
+async function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+```
+
 ## Built in Classes
 
 ### `FileReader`
