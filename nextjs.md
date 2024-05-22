@@ -77,6 +77,11 @@ Next.js 강의와 공식 문서에서 얻은 정보를 기록해두는 문서
 > > [Error: 'foo' is missing in props validation react/prop-types](#error-foo-is-missing-in-props-validation-reactprop-types)  
 > > [Error: propType "name" is not required, but has no corresponding defaultProps declaration. react/require-default-props](#error-proptype-name-is-not-required-but-has-no-corresponding-defaultprops-declaration-reactrequire-default-props)  
 > > [Error: Prop type "array" is forbidden react/forbid-prop-types](#error-prop-type-array-is-forbidden-reactforbid-prop-types)
+>
+> [Error](#error)  
+>
+> > [뒤로가기하면 'use client' 오류가 나타나는 문제](#뒤로가기하면-use-client-오류가-나타나는-문제)  
+> > [You provided a `value` prop to a form field without an `onChange` handler ...](#you-provided-a-value-prop-to-a-form-field-without-an-onchange-handler-)  
 
 ## NextJS는 무엇이고 왜 사용하는가
 
@@ -1933,3 +1938,21 @@ JSX 요소의 접근성 강화를 위한 ESLint 규칙으로 `form`의 `label` e
 - `some: []`: 규칙이 하나 이상 만족되어야 함. 배열에는 규칙이 어떻게 적용될지 정의. 여기서는 두 가지 검사 방법을 사용함
   - `nesting`: `label` 요소가 form control을 직접 감싸고 있는지 확인
   - `id`: `label` 요소가 form control과 `htmlFor`, `id` 속성을 통해 연결되어 있는지 확인
+
+## Error
+
+### 뒤로가기하면 'use client' 오류가 나타나는 문제
+
+ssr 시에는 데이터가 차서 들어오지만, csr 시(뒤로가기, Link 클릭) 등에는 일시적으로 데이터가 없을 때가 있다.  
+아무것도 없는 로딩 페이지를 보여줘서 해결했다.
+
+### You provided a `value` prop to a form field without an `onChange` handler ...
+
+에러의 원인은 간단하게 말해서 `input` 태그에 값의 변화를 감지하는 `onChange` 핸들러가 존재하지 않기 때문이다.
+
+해결 방법:
+
+- `onChange` 핸들러를 사용
+- `defaultValue` 속성을 사용
+- `readOnly` 속성을 사용
+ 
