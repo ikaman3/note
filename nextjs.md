@@ -208,6 +208,22 @@ VSCode에서 extension을 설정할 수 있는 `settings.json`을 수정하여 �
 }
 ```
 
+## Configuration
+
+### env
+
+루트 디렉터리에 `.env.local` 파일을 생성하여 정의한다.  
+
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:9999
+```
+
+사용법:
+
+```javascript
+const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/topics`)
+```
+
 ## 배포
 
 프로젝트 폴더에서 `npm run dev`를 실행하면 개발 서버가 시작되고, 기본적으로 `localhost:3000`에서 확인할 수 있다.
