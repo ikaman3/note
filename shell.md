@@ -1667,7 +1667,7 @@ auth: password
 password: <password>
 cert: /path/to/pem/fullchain.pem
 cert-key: /path/to/pem/privkey.pem
-user-data-dir: /Users/main/coding
+# user-data-dir: /Users/main/coding
 ```
 
 - `bind-addr` : 서비스할 주소. 기본값은 `127.0.0.1`
@@ -1679,7 +1679,7 @@ user-data-dir: /Users/main/coding
   - `true` : https를 사용한다.
   - TSL 인증서의 경로를 입력하면 해당 인증서를 사용한다.
 - `cert-key` : TSL 인증서의 private key 경로
-- `user-data-dir` : 접속했을 때 workspace를 설정하는 옵션?(확인 필요, 작동 안 하는 듯)
+- `user-data-dir` : 접속했을 때 workspace를 설정하는 옵션(사용자의 workspace data를 저장하는 경로를 지정하는 옵션)
 
 homebrew를 이용한 서버 실행 및 중지
 
