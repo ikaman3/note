@@ -259,3 +259,14 @@ export default function TeaGathering() {
 
 - 동일한 렌더링중에 생성된 변수를 변경하는 것은 괜찮다.
 - 지역 변형: 다른 컴포넌트에서 이 현상이 벌어진 것을 모르는 것
+
+## React Server Components
+
+서버 컴포넌트는 번들링 전에 클라이언트 앱이나 SSR 서버와는 분리된 환경에서 미리 렌더링되는 새로운 유형의 컴포넌트다.  
+이 별도의 환경이 바로 React 서버 컴포넌트에서의 *“서버”*다. 서버 컴포넌트는 빌드 시간에 CI 서버에서 한 번 실행되거나, 각 요청마다 웹 서버를 통해 실행될 수 있다.
+
+[React Server Components](https://ko.react.dev/reference/rsc/server-components#async-components-with-server-components)  
+
+  - 서버 컴포넌트 사용
+  - 서버 컴포넌트에 상호작용 추가
+  - 서버 컴포넌트와 비동기 컴포넌트 함께 사용
