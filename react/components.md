@@ -262,11 +262,117 @@ export default function TeaGathering() {
 
 ## React Server Components
 
-서버 컴포넌트는 번들링 전에 클라이언트 앱이나 SSR 서버와는 분리된 환경에서 미리 렌더링되는 새로운 유형의 컴포넌트다.  
-이 별도의 환경이 바로 React 서버 컴포넌트에서의 *“서버”*다. 서버 컴포넌트는 빌드 시간에 CI 서버에서 한 번 실행되거나, 각 요청마다 웹 서버를 통해 실행될 수 있다.
-
 [React Server Components](https://ko.react.dev/reference/rsc/server-components#async-components-with-server-components)  
 
-  - 서버 컴포넌트 사용
-  - 서버 컴포넌트에 상호작용 추가
-  - 서버 컴포넌트와 비동기 컴포넌트 함께 사용
+> 서버 컴포넌트는 `"use server"`로 표시된다는 오해가 있지만, 서버 컴포넌트에 대한 지시어(Directives)는 없다. `"use server"` 지시어는 서버 액션에 사용된다.
+
+서버 컴포넌트는 번들링 전에 클라이언트 앱이나 SSR 서버와는 분리된 환경에서 미리 렌더링되는 새로운 유형의 컴포넌트다.  
+이 별도의 환경이 바로 React 서버 컴포넌트에서의 *“서버”*다. 서버 컴포넌트는 빌드 시간에 CI 서버에서 한 번 실행되거나, 각 요청마다 웹 서버를 통해 실행될 수 있다.  
+
+### 서버 컴포넌트에 상호작용 추가
+
+서버 컴포넌트는 브라우저로 전송되지 않으므로 `useState`와 같은 상호작용 API를 사용할 수 없다.  
+서버 컴포넌트에 상호작용을 추가하려면 `"use client"` 지시문을 사용하여 클라이언트 컴포넌트와 함께 구성할 수 있다.  
+예제는 먼저 `Notes`를 서버 컴포넌트로 렌더링한 다음 번들러에 `Expandable` 클라이언트 컴포넌트의 번들을 생성하도록 지시한다.  
+브라우저에서는 클라이언트 컴포넌트가 서버 컴포넌트의 출력을 `props`로 받는다.
+
+```javascript
+// Server Component
+import Expandable from './Expandable';
+
+async function Notes() {
+  const notes = await db.notes.getAll();
+  return (
+    <div>
+      {notes.map(note => (
+        <Expandable key={note.id}>
+          <p note={note} />
+        </Expandable>
+      ))}
+    </div>
+  )
+}
+```
+
+```javascript
+// Client Component
+"use client"
+
+export default function Expandable({children}) {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <div>
+      <button
+        onClick={() => setExpanded(!expanded)}
+      >
+        Toggle
+      </button>
+      {expanded && children}
+    </div>
+  )
+}
+```
+
+```javascript
+<head>
+  <!-- the bundle for Client Components -->
+  <script src="bundle.js" />
+</head>
+<body>
+  <div>
+    <Expandable key={1}>
+      <p>this is the first note</p>
+    </Expandable>
+    <Expandable key={2}>
+      <p>this is the second note</p>
+    </Expandable>
+    <!--...-->
+  </div> 
+</body>
+```
+
+### 서버 컴포넌트와 함께 비동기 컴포넌트 사용하기
+
+서버 컴포넌트는 async/await를 사용하는 새로운 방법을 소개한다.  
+비동기 컴포넌트에서 `await`를 사용할 때 React는 중단하고, Promise가 해결될 때까지 렌더링을 기다린 후 다시 렌더링을 재개한다.  
+이는 서버/클라이언트 경계를 넘어 서스펜스 스트리밍 지원과 함께 작동한다.  
+심지어 서버에서 Promise를 생성하고 클라이언트에서 이를 기다릴 수 있다.  
+
+`note` 콘텐츠는 페이지 렌더링에 중요한 데이터이므로 서버에서 `await` 한다.  
+댓글(`comments`)은 중요도가 낮아 페이지 아래에 표시되므로 서버에서 Promise를 시작하고 클라이언트에서 `use` API를 사용하여 기다린다.  
+이는 클라이언트에서 중단되지만 `note` 콘텐츠가 렌더링되는 것을 차단하지 않는다.  
+비동기 컴포넌트는 클라이언트에서 지원되지 않으므로 Promise를 `use`로 기다린다.  
+
+```javascript
+// Server Component
+import db from './database';
+
+async function Page({id}) {
+  // Will suspend the Server Component.
+  const note = await db.notes.get(id);
+  
+  // NOTE: not awaited, will start here and await on the client. 
+  const commentsPromise = db.comments.get(note.id);
+  return (
+    <div>
+      {note}
+      <Suspense fallback={<p>Loading Comments...</p>}>
+        <Comments commentsPromise={commentsPromise} />
+      </Suspense>
+    </div>
+  );
+}
+```
+
+```javascript
+// Client Component
+"use client";
+import {use} from 'react';
+
+function Comments({commentsPromise}) {
+  // NOTE: this will resume the promise from the server.
+  // It will suspend until the data is available.
+  const comments = use(commentsPromise);
+  return comments.map(commment => <p>{comment}</p>);
+}
+```
