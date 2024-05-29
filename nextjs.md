@@ -78,7 +78,7 @@ Next.js 강의와 공식 문서에서 얻은 정보를 기록해두는 문서
 > > [Error: propType "name" is not required, but has no corresponding defaultProps declaration. react/require-default-props](#error-proptype-name-is-not-required-but-has-no-corresponding-defaultprops-declaration-reactrequire-default-props)  
 > > [Error: Prop type "array" is forbidden react/forbid-prop-types](#error-prop-type-array-is-forbidden-reactforbid-prop-types)
 >
-> [Error](#error)  
+> [Troubleshooting](#troubleshooting)  
 >
 > > [뒤로가기하면 'use client' 오류가 나타나는 문제](#뒤로가기하면-use-client-오류가-나타나는-문제)  
 > > [You provided a `value` prop to a form field without an `onChange` handler ...](#you-provided-a-value-prop-to-a-form-field-without-an-onchange-handler-)  
@@ -1954,7 +1954,7 @@ JSX 요소의 접근성 강화를 위한 ESLint 규칙으로 `form`의 `label` e
   - `nesting`: `label` 요소가 form control을 직접 감싸고 있는지 확인
   - `id`: `label` 요소가 form control과 `htmlFor`, `id` 속성을 통해 연결되어 있는지 확인
 
-## Error
+## Troubleshooting
 
 ### 뒤로가기하면 'use client' 오류가 나타나는 문제
 
