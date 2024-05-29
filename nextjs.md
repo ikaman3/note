@@ -13,6 +13,7 @@ Next.js 강의와 공식 문서에서 얻은 정보를 기록해두는 문서
 > > [Private folder](#private-folder)  
 > > [(Option) material icon theme custom](#option-material-icon-theme-custom)
 >
+> [Configuration](#configuration)  
 > [배포](#배포)  
 > [App Router](#app-router)  
 > [Server Component](#server-component)  
