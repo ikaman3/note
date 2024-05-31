@@ -106,6 +106,22 @@ Promise가 리졸브되면 `use` Hook이 값을 참조하고 `Message` 컴포넌
 
 ## lazy
 
+[React Docs](https://ko.react.dev/reference/react/lazy)  
+
+```javascript
+const SomeComponent = lazy(load)
+```
+
+```javascript
+import { lazy } from 'react';
+
+const MarkdownPreview = lazy(() => import('./MarkdownPreview.js'));
+```
+
+로딩 중인 컴포넌트 코드가 처음으로 렌더링 될 때까지 연기할 수 있다.  
+`lazy`를 이용하여 로딩하는 React 컴포넌트를 선언하려면 컴포넌트 외부에서 `lazy`를 호출한다.  
+로딩 중에 loading indicator를 표시하려면 `<Suspense>`를 사용한다.  
+
 ## createRoot
 
 ## hydrateRoot
