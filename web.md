@@ -1,6 +1,6 @@
 # Web
 
-웹 개발에 필요한 지식을 정리하는 문서  
+웹 개발에 관련된 정보를 정리하는 문서  
 MDN과 RFC를 참고  
 
 [Mozilla Developer Network](https://developer.mozilla.org/ko/docs/Web)  

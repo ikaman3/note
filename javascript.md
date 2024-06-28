@@ -249,6 +249,19 @@ const classes = {
 // classes['header-background'] = 'header-background-class'
 // classes['footer-background'] = 'footer-background-class'
 ```
+
+## console
+
+### 실행 시간 측정
+
+`console.time('name')`, `console.timeEnd('name')`를 사용
+
+```javascript
+console.time('filter array');
+const visibleTodos = filterTodos(todos, tab);
+console.timeEnd('filter array');
+```
+
 ## Utils
 
 ### 의도적으로 딜레이 주는 방법
@@ -275,9 +288,3 @@ function isEmpty(obj) {
   return true;
 }
 ```
-
-## Built in Classes
-
-### `FileReader`
-
-[MDN Reference](https://developer.mozilla.org/ko/docs/Web/API/FileReader)
