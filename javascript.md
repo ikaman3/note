@@ -252,6 +252,19 @@ const classes = {
 
 ## console
 
+### 객체가 동일한지 비교
+
+아래와 같이 비교하길 원하는 객체를 콘솔에 출력하고 브라우저 콘솔에서 해당 로그를 우클릭한다.  
+'store object as global variable' 버튼을 눌러 전역 변수로 저장하고 `Object.is()` 메서드를 사용해서 비교한다.  
+
+```javascript
+const visibleTodos = useMemo(() => filterTodos(todos, tab), [todos, tab]);
+console.log([todos, tab]);
+
+// 브라우저 콘솔
+Object.is(temp1[0], temp2[0]);
+```
+
 ### 실행 시간 측정
 
 `console.time('name')`, `console.timeEnd('name')`를 사용
