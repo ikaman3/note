@@ -65,6 +65,7 @@ Next.js 강의와 공식 문서에서 얻은 정보를 기록해두는 문서
 > > [Server Action Response](#server-action-response)
 >
 > [`form` 제출 상태 관리](#form-제출-상태-관리)  
+> [Parallel Routes](#parallel-routes)  
 > [Build-in Components](#build-in-components)
 >
 > > [`<Link>`](#link)  
@@ -1411,15 +1412,15 @@ if (
 }
 ```
 
-Server Action을 사용한 컴포넌트에서 `response`를 사용하기 위해 `react-dom`의 `useFormState` 훅을 이용한다.  
+Server Action을 사용한 컴포넌트에서 `response`를 사용하기 위해 `react`의 `useActionState` 훅을 이용한다.  
 이 훅은 Server Actions를 통해 제출될 form을 사용하는 페이지나 컴포넌트의 상태를 관리한다.
 클라이언트 컴포넌트에서 사용할 수 있는 훅이다. 이 역시 별도의 컴포넌트로 분리할 수 있다.
 
 ```javascript
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 
 export default function ShareMealPage() {
-  const [state, formAction] = useFormState(shareMeal, { message: null });
+  const [state, formAction] = useActionState(shareMeal, { message: null });
 
   return (
     <form className={classes.form} action={formAction}>
@@ -1430,12 +1431,12 @@ export default function ShareMealPage() {
 }
 ```
 
-- `useFormState()`: form이 제출될 때 동작할 실제 Server Action과 컴포넌트의 초기 state(server action이 동작하기 전이나 response가 돌아오기 전에 `useFormState`가 반환할 초기 값을 의미) 두 개의 인수를 받는다.  
+- `useActionState()`: form이 제출될 때 동작할 실제 Server Action과 컴포넌트의 초기 state(server action이 동작하기 전이나 response가 돌아오기 전에 `useActionState`가 반환할 초기 값을 의미) 두 개의 인수를 받는다.  
   두 개의 요소가 있는 배열을 반환한다. 이 컴포넌트의 현재 상태(혹은 현재 response)와 `formAction`이다.
   - `state`: 두 번째 인수인 초기값이거나 Server Action(`shareMeal`)으로부터 받은 응답이 된다.
-  - `formAction`: form의 `action` 속성에 값으로 설정하면 `useFormState` 훅이 접근해서 state를 관리할 수 있다.
+  - `formAction`: form의 `action` 속성에 값으로 설정하면 `useActionState` 훅이 접근해서 state를 관리할 수 있다.
 
-Server Action(`shareMeal`)도 수정이 필요하다. 왜냐하면 `useFormState`에 인수로 넘길 때에는 `useFormState`가 form을 제출하고 Server Action을 실행시키기 위해 두 가지 인수를 넘기기 때문이다.
+Server Action(`shareMeal`)도 수정이 필요하다. 왜냐하면 `useActionState`에 인수로 넘길 때에는 `useActionState`가 form을 제출하고 Server Action을 실행시키기 위해 두 가지 인수를 넘기기 때문이다.
 
 ```javascript
 export async function shareMeal(prevState, formData) {
@@ -1443,7 +1444,7 @@ export async function shareMeal(prevState, formData) {
 }
 ```
 
-- `shareMeal(prevState, formData)`: `useFormState`의 인수로 넘겨진 Server Action은 이전의 상태와 제출된 `FormData` 두개의 인수를 받아야 한다. 이전의 상태는 사용하지 않아도 받아야만 한다. 왜냐하면 두 번째 인수가 `FormData`로 설정되어 있기 때문이다.
+- `shareMeal(prevState, formData)`: `useActionState`의 인수로 넘겨진 Server Action은 이전의 상태와 제출된 `FormData` 두개의 인수를 받아야 한다. 이전의 상태는 사용하지 않아도 받아야만 한다. 왜냐하면 두 번째 인수가 `FormData`로 설정되어 있기 때문이다.
 
 ## `form` 제출 상태 관리
 
@@ -1473,6 +1474,18 @@ export default function MealsFormSubmit() {
 - `status`: 다양한 속성을 갖고 있는 객체
   - `pending`: 요청이 진행중이면 `true` 아니면 `false` 값을 가지는 속성
 - `disabled`: 버튼의 활성화 상태를 제어하는 속성. `true`이면 비활성화, `false`이면 활성화
+
+## Parallel Routes
+
+별도의 route를 가지는 여러 개의 컨텐츠를 동일한 페이지에서 렌더링하는 것  
+병렬 라우트를 추가하려는 경로(폴더)에 레이아웃을 추가해야 한다. 또한, 병렬 라우트마다 하나의 하위 폴더를 추가한다.  
+이때 병렬 라우트의 폴더 이름은 `@`으로 시작한다.
+
+```bash
+archive
+    ├─@archive
+    └─@latest
+```
 
 ## Build-in Components
 
