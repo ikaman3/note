@@ -1484,7 +1484,24 @@ export default function MealsFormSubmit() {
 ```bash
 archive
     ├─@archive
-    └─@latest
+    ├─@latest
+    └─layout.js
+```
+
+Next.js는 인접한 경로에 있는 `layout` 컴포넌트에 병렬 라우트를 prop으로 전달한다.  
+이제 `layout` 컴포넌트는 `children`뿐만 아니라 위에서 만든 병렬 라우트도 prop으로 받는다.  
+병렬 라우트 prop의 이름은 해당 폴더의 `@` 뒤의 이름과 동일하다.  
+
+```javascript
+export default function ArchiveLayout({archive, latest}) {
+  return (
+    <div>
+      <h1></h1>
+      <section id='archive-filter'>{archive}</section>
+      <section id='archive-latest'>{latest}</section>
+    </div>
+  )
+}
 ```
 
 ## Build-in Components
