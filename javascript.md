@@ -1,6 +1,41 @@
 # JavaScript
 
-자바스크립트 배운거 기록
+자바스크립트 정보 기록
+
+## 연산
+
+### Unary plus operator
+
+단항 더하기(`+`)는 피연산자 앞에 위치하며 피연산자를 평가하지만, 만약 피연산자가 숫자가 아니라면 숫자로 변환을 시도한다.  
+단항 부정(`-`)도 숫자가 아닌 값을 변환할 수 있지만, 숫자에 다른 연산을 수행하지 않기 때문에 단항 더하기는 어떤 것을 숫자로 변환하는 가장 빠르고 선호하는 방법이다.  
+
+```javascript
+const x = 1;
+const y = -1;
+
+console.log(+x);
+// Expected output: 1
+
+console.log(+y);
+// Expected output: -1
+
+console.log(+'');
+// Expected output: 0
+
+console.log(+true);
+// Expected output: 1
+
+console.log(+false);
+// Expected output: 0
+
+console.log(+'hello');
+// Expected output: NaN
+```
+
+> `parseInt()`와의 차이점  
+> - 단항 더하기는 소수도 그대로 변환하지만 `parseInt()`는 정수로 바꾼다.
+> - `parseInt()`는 문자열에서 숫자를 파싱하며 문자열을 걸러내지만 단항 더하기는 모든 입력을 거름 없이 받아들인다. 따라서 `parseInt("5개")`를 하면 `5`를 반환하지만 `+"5개"`를 하면 `NaN`을 반환한다.
+
 
 ## 문자열
 
@@ -11,6 +46,30 @@
 ```javascript
 topic.body.replace(/\n/g, '<br>')
 ```
+
+### `startsWith()`
+
+String.prototype.startsWith()  
+어떤 문자열의 문자로 시작하는지 확인하여 결과를 적절하게 `true` 혹은 `false`로 반환하는 메서드  
+대소문자를 구분한다.  
+
+```javascript
+startsWith(searchString)
+startsWith(searchString, position)
+```
+
+```javascript
+const str1 = 'Saturday night plans';
+
+console.log(str1.startsWith('Sat'));
+// Expected output: true
+
+console.log(str1.startsWith('Sat', 3));
+// Expected output: false
+```
+
+- `searchString`: 이 문자열의 시작 부분에서 검색할 문자. 정규식이 될 수 없다. 정규식이 아닌 모든 값은 문자열로 강제로 변환되므로 이를 생략하거나 `undefined`를 전달하면 `startsWith()`가 `"undefined"` 문자열을 검색하게 되는데, 이는 원하는 경우가 거의 없다.
+- `position`: `searchString`이 발견될 것으로 예상되는 시작 위치(`searchString`의 첫 번째 문자의 인덱스)다. 기본값은 `0`
 
 ## 템플릿 리터럴
 
