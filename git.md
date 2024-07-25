@@ -54,6 +54,23 @@ git branch -u origin/<branch> <branch>
 git switch -c <branch> origin/<branch>
 ```
 
+브랜치 삭제
+
+```bash
+# 다른 브랜치로 이동
+git switch main
+
+#  로컬 브랜치 삭제
+git branch -d <branch_name>
+
+#  원격 브랜치 삭제
+git push -d origin <branch_name>
+git push --delete origin <branch_name>
+
+# bash 연산자 사용하여 한 줄로 실
+git switch main && git branch -d <branch_name> && git push origin -d <branch_name>
+```
+
 ## remote
 
 로컬 저장소에서 원격 저장소(origin)에 더 이상 존재하지 않는 원격 추적 브랜치들을 제거  
