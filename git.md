@@ -19,38 +19,37 @@ git diff
 
 ## branch
 
-원격 브랜치에 현재 로컬 브랜치를 추적(Tracking)하게 함  
-
-- 로컬에 브랜치를 생성해주지 않음
+브랜치 생성
 
 ```bash
-git checkout -t origin/<branch>
+# 로컬에 브랜치 생성
+git branch <branch>
+# 로컬에 브랜치를 생성하면서 해당 브랜치로 전환
+git switch -c <branch> main
+
+# (원격 브랜치가 존재)로컬에 브랜치를 생성하면서 원격의 브랜치와 연결
+# --track 옵션을 생략해도 자동으로 추적 관계를 설정함
+# --track 옵션을 -c 옵션과 함께 사용할 경우 -t로 줄일 수 없음
+git switch -c <branch> origin/<branch>
+git switch -c <branch> --track origin/<branch>
+
+# (원격 브랜치가 없음)로컬에 브랜치를 생성하면서 해당 브랜치로 전환 후 원격에 새로운 브랜치 생성
+git switch -c <branch> main && git push -u origin <branch>
 ```
 
-로컬에 브랜치 생성  
+- `-c`: create
+- `-t`: track
+- `-u`: `--set-upstream`
+
+브랜치 추적
 
 ```bash
-git checkout -b <branch>
-```
-
-로컬에 브랜치를 생성하면서 원격의 브랜치와 연결  
-
-```bash
-git checkout -t -b <branch> origin/<branch>
-git checkout -b <branch> origin/<branch>
-```
-
-이미 원격 브랜치가 존재하는 경우 추적 관계 설정
-
-```bash
+# 원격 브랜치를 추적하는 로컬 브랜치를 생성하고 생성된 로컬 브랜치로 전환
+git switch --track origin/<branch>
+# 원격 브랜치가 존재하는 경우 추적 관계 설정
 git branch -u origin/<branch> <branch>
-```
 
-원격 브랜치를 가져오면서 동시에 추적 관계를 설정  
-
-- Git 2.22 버전 이상에서 사용 가능
-
-```bash
+# 원격 브랜치를 가져오면서 동시에 추적 관계를 설정
 git switch -c <branch> origin/<branch>
 ```
 
@@ -85,9 +84,12 @@ git switch main && git branch -d <branch_name> && git push origin -d <branch_nam
 git remote prune origin
 # 실제로 제거하지 않고 제거될 브랜치들을 미리 확인
 git remote prune origin --dry-run
+git remote prune origin -n
 # fetch 작업과 함께 prune을 동시에 수행
 git fetch --prune
 ```
+
+- `-n`: `--dry-run`
 
 ## fetch
 
