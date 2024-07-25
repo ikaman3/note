@@ -57,6 +57,26 @@ function handleClick() {
 `useState`가 반환하는 `set` 함수를 사용하면 state를 다른 값으로 업데이트하고 리렌더링을 촉발할 수 있다.  
 여기에는 다음 state를 직접 전달하거나, 이전 state로부터 계산한 함수를 전달할 수도 있다.
 
+## useRef()
+
+렌더링에 필요하지 않은 값을 참조할 수 있는 리액트 훅  
+state와는 다르게 ref는 변경해도 리렌더링을 촉발하지 않음. 즉 ref는 컴포넌트의 시각적 출력에 영향을 미치지 않는 정보 저장에 적합  
+리렌더링 사이에 정보를 저장할 수 있으며 각각의 컴포넌트에 로컬로 저장된다.  
+
+```javascript
+// 선언
+const fileInput = useRef(null)
+
+// JSX 태그의 참조 전달
+<input
+  ...
+  ref={fileInput}
+/>
+
+// 사용
+fileInput.current?.click()
+fileInput.current.value = ''
+```
 
 ## useActionState()
 
