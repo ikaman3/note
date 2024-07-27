@@ -72,7 +72,7 @@ git switch main && git branch -d <branch_name> && git push origin -d <branch_nam
 
 ## remote
 
-로컬 저장소에서 원격 저장소(origin)에 더 이상 존재하지 않는 원격 추적 브랜치들을 제거  
+로컬 저장소에서 원격 저장소(origin)에 더 이상 존재하지 않는 원격 추적 브랜치들을 제거
 
 - 원격 저장소와 로컬 저장소의 동기화
 - 불필요한 원격 추적 브랜치 제거
@@ -118,7 +118,7 @@ git merge origin/main
 
 현재 작업 중인 변경사항을 임시로 저장하고 나중에 다시 적용할 수 있게 해주는 명령어
 
--  `n`은 stash 인덱스 번호
+- `n`은 stash 인덱스 번호
 
 ```bash
 # 변경사항 임시 저장하기

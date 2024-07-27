@@ -2,25 +2,22 @@
 
 ## Model, ModelMap, ModelAndView 차이점
 
-데이터만 저장한다(Model, ModelMap) vs 데이터와 이동하고자 하는 View Page를 같이 저장한다(ModelAndView)  
+데이터만 저장한다(Model, ModelMap) vs 데이터와 이동하고자 하는 View Page를 같이 저장한다(ModelAndView)
 
 Model, ModelMap 공통점
 
-- ｀model.addAttribute("변수명");｀
--　｀modelMap.addAttribute("변수명");｀
--　둘 다 addAttribute를 사용함
--　Model or ModelMap에 데이터만 저장 후 View에서 사용목적
+- ｀ model.addAttribute("변수명");｀ -　｀ modelMap.addAttribute("변수명");｀ -　둘 다 addAttribute를 사용함 -　 Model or ModelMap에 데이터만 저장 후 View에서 사용목적
 
 Model, ModelMap 차이점
 
-－　Model： 인터페이스
-－　ModelMap： 클래스
+－　 Model： 인터페이스
+－　 ModelMap： 클래스
 
 ModelAndView
 
 - `addObject()`를 통해 데이터를 저장
 - `setViewName()`을 통해 이동하고자 하는 View를 저장
-- 메소드 안에서 `ModelAndView mav = new ModelAndView();` 
+- 메소드 안에서 `ModelAndView mav = new ModelAndView();`
 - `return type ModelAndView`
 
 ## 블로그 글 옮기던거

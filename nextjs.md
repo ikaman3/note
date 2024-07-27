@@ -80,10 +80,10 @@ Next.js 강의와 공식 문서에서 얻은 정보를 기록해두는 문서
 > > [Error: propType "name" is not required, but has no corresponding defaultProps declaration. react/require-default-props](#error-proptype-name-is-not-required-but-has-no-corresponding-defaultprops-declaration-reactrequire-default-props)  
 > > [Error: Prop type "array" is forbidden react/forbid-prop-types](#error-prop-type-array-is-forbidden-reactforbid-prop-types)
 >
-> [Troubleshooting](#troubleshooting)  
+> [Troubleshooting](#troubleshooting)
 >
 > > [뒤로가기하면 'use client' 오류가 나타나는 문제](#뒤로가기하면-use-client-오류가-나타나는-문제)  
-> > [You provided a `value` prop to a form field without an `onChange` handler ...](#you-provided-a-value-prop-to-a-form-field-without-an-onchange-handler-)  
+> > [You provided a `value` prop to a form field without an `onChange` handler ...](#you-provided-a-value-prop-to-a-form-field-without-an-onchange-handler-)
 
 ## NextJS는 무엇이고 왜 사용하는가
 
@@ -214,7 +214,7 @@ VSCode에서 extension을 설정할 수 있는 `settings.json`을 수정하여 �
 
 ### env
 
-루트 디렉터리에 `.env.local` 파일을 생성하여 정의한다.  
+루트 디렉터리에 `.env.local` 파일을 생성하여 정의한다.
 
 ```bash
 NEXT_PUBLIC_API_URL=http://localhost:9999
@@ -223,7 +223,7 @@ NEXT_PUBLIC_API_URL=http://localhost:9999
 사용법:
 
 ```javascript
-const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/topics`)
+const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/topics`);
 ```
 
 ## 배포
@@ -1490,17 +1490,17 @@ archive
 
 Next.js는 인접한 경로에 있는 `layout` 컴포넌트에 병렬 라우트를 prop으로 전달한다.  
 이제 `layout` 컴포넌트는 `children`뿐만 아니라 위에서 만든 병렬 라우트도 prop으로 받는다.  
-병렬 라우트 prop의 이름은 해당 폴더의 `@` 뒤의 이름과 동일하다.  
+병렬 라우트 prop의 이름은 해당 폴더의 `@` 뒤의 이름과 동일하다.
 
 ```javascript
-export default function ArchiveLayout({archive, latest}) {
+export default function ArchiveLayout({ archive, latest }) {
   return (
     <div>
       <h1></h1>
-      <section id='archive-filter'>{archive}</section>
-      <section id='archive-latest'>{latest}</section>
+      <section id="archive-filter">{archive}</section>
+      <section id="archive-latest">{latest}</section>
     </div>
-  )
+  );
 }
 ```
 
@@ -2001,4 +2001,3 @@ ssr 시에는 데이터가 차서 들어오지만, csr 시(뒤로가기, Link �
 - `onChange` 핸들러를 사용
 - `defaultValue` 속성을 사용
 - `readOnly` 속성을 사용
- 

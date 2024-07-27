@@ -7,7 +7,7 @@
 ### Unary plus operator
 
 단항 더하기(`+`)는 피연산자 앞에 위치하며 피연산자를 평가하지만, 만약 피연산자가 숫자가 아니라면 숫자로 변환을 시도한다.  
-단항 부정(`-`)도 숫자가 아닌 값을 변환할 수 있지만, 숫자에 다른 연산을 수행하지 않기 때문에 단항 더하기는 어떤 것을 숫자로 변환하는 가장 빠르고 선호하는 방법이다.  
+단항 부정(`-`)도 숫자가 아닌 값을 변환할 수 있지만, 숫자에 다른 연산을 수행하지 않기 때문에 단항 더하기는 어떤 것을 숫자로 변환하는 가장 빠르고 선호하는 방법이다.
 
 ```javascript
 const x = 1;
@@ -19,7 +19,7 @@ console.log(+x);
 console.log(+y);
 // Expected output: -1
 
-console.log(+'');
+console.log(+"");
 // Expected output: 0
 
 console.log(+true);
@@ -28,14 +28,14 @@ console.log(+true);
 console.log(+false);
 // Expected output: 0
 
-console.log(+'hello');
+console.log(+"hello");
 // Expected output: NaN
 ```
 
-> `parseInt()`와의 차이점  
+> `parseInt()`와의 차이점
+>
 > - 단항 더하기는 소수도 그대로 변환하지만 `parseInt()`는 정수로 바꾼다.
 > - `parseInt()`는 문자열에서 숫자를 파싱하며 문자열을 걸러내지만 단항 더하기는 모든 입력을 거름 없이 받아들인다. 따라서 `parseInt("5개")`를 하면 `5`를 반환하지만 `+"5개"`를 하면 `NaN`을 반환한다.
-
 
 ## 문자열
 
@@ -44,27 +44,27 @@ console.log(+'hello');
 문자열을 치환하는 메서드
 
 ```javascript
-topic.body.replace(/\n/g, '<br>')
+topic.body.replace(/\n/g, "<br>");
 ```
 
 ### `startsWith()`
 
 String.prototype.startsWith()  
 어떤 문자열의 문자로 시작하는지 확인하여 결과를 적절하게 `true` 혹은 `false`로 반환하는 메서드  
-대소문자를 구분한다.  
+대소문자를 구분한다.
 
 ```javascript
-startsWith(searchString)
-startsWith(searchString, position)
+startsWith(searchString);
+startsWith(searchString, position);
 ```
 
 ```javascript
-const str1 = 'Saturday night plans';
+const str1 = "Saturday night plans";
 
-console.log(str1.startsWith('Sat'));
+console.log(str1.startsWith("Sat"));
 // Expected output: true
 
-console.log(str1.startsWith('Sat', 3));
+console.log(str1.startsWith("Sat", 3));
 // Expected output: false
 ```
 
@@ -314,7 +314,7 @@ const classes = {
 ### 객체가 동일한지 비교
 
 아래와 같이 비교하길 원하는 객체를 콘솔에 출력하고 브라우저 콘솔에서 해당 로그를 우클릭한다.  
-'store object as global variable' 버튼을 눌러 전역 변수로 저장하고 `Object.is()` 메서드를 사용해서 비교한다.  
+'store object as global variable' 버튼을 눌러 전역 변수로 저장하고 `Object.is()` 메서드를 사용해서 비교한다.
 
 ```javascript
 const visibleTodos = useMemo(() => filterTodos(todos, tab), [todos, tab]);
@@ -329,9 +329,9 @@ Object.is(temp1[0], temp2[0]);
 `console.time('name')`, `console.timeEnd('name')`를 사용
 
 ```javascript
-console.time('filter array');
+console.time("filter array");
 const visibleTodos = filterTodos(todos, tab);
-console.timeEnd('filter array');
+console.timeEnd("filter array");
 ```
 
 ## export
@@ -340,7 +340,17 @@ console.timeEnd('filter array');
 
 ```javascript
 // 배열 내보내기
-export let months = ['Jan', 'Feb', 'Mar','Apr', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+export let months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 // 상수 내보내기
 export const MODULES_BECAME_STANDARD_YEAR = 2015;
@@ -365,7 +375,7 @@ function sayBye(user) {
   alert(`Bye, ${user}!`);
 }
 
-export {sayHi, sayBye}; // 두 함수를 내보냄
+export { sayHi, sayBye }; // 두 함수를 내보냄
 ```
 
 `export`문을 함수 선언부 위에 적어주는 것도 동일하게 동작한다.
@@ -384,36 +394,36 @@ export {sayHi as hi, sayBye as bye};
 
 ```javascript
 // 📁 main.js
-import * as say from './say.js';
+import * as say from "./say.js";
 
-say.hi('John'); // Hello, John!
-say.bye('John'); // Bye, John!
+say.hi("John"); // Hello, John!
+say.bye("John"); // Bye, John!
 ```
 
 ## import
 
 ```javascript
 // 📁 main.js
-import {sayHi, sayBye} from './say.js';
+import { sayHi, sayBye } from "./say.js";
 
-sayHi('John'); // Hello, John!
-sayBye('John'); // Bye, John!
+sayHi("John"); // Hello, John!
+sayBye("John"); // Bye, John!
 ```
 
 가져올 것이 많으면 `import * as <obj>` 처럼 객체 형태로 원하는 것들을 가지고 올 수 있다.
 
 ```javascript
 // 📁 main.js
-import * as say from './say.js';
+import * as say from "./say.js";
 
-say.sayHi('John');
-say.sayBye('John');
+say.sayHi("John");
+say.sayBye("John");
 ```
 
 이렇게 '한꺼번에 모든 걸 가져오는 방식’을 사용하면 코드가 짧아진다. 그런데도 어떤 걸 가져올 땐 그 대상을 구체적으로 명시하는 게 좋다.
 
 1. 웹팩(webpack)과 같은 모던 빌드 툴은 로딩 속도를 높이기 위해 모듈들을 한데 모으는 번들링과 최적화를 수행한다. 이 과정에서 사용하지 않는 리소스가 삭제되기도 한다.  
-아래와 같이 프로젝트에 서드파티 라이브러리인 `say.js`를 도입하였다 가정한다. 이 라이브러리엔 수 많은 함수가 있다.  
+   아래와 같이 프로젝트에 서드파티 라이브러리인 `say.js`를 도입하였다 가정한다. 이 라이브러리엔 수 많은 함수가 있다.
 
 ```javascript
 // 📁 say.js
@@ -422,12 +432,13 @@ export function sayBye() { ... }
 export function becomeSilent() { ... }
 ```
 
-현재로선 `say.js`의 수 많은 함수 중 단 하나만 필요하기 때문에, 이 함수만 가져와 본다.  
+현재로선 `say.js`의 수 많은 함수 중 단 하나만 필요하기 때문에, 이 함수만 가져와 본다.
 
 ```javascript
 // 📁 main.js
-import {sayHi} from './say.js';
+import { sayHi } from "./say.js";
 ```
+
 빌드 툴은 실제 사용되는 함수가 무엇인지 파악해, 그렇지 않은 함수는 최종 번들링 결과물에 포함하지 않는다. 이 과정에서 불필요한 코드가 제거되기 때문에 빌드 결과물의 크기가 작아진다.  
 이런 최적화 과정은 '가지치기(tree-shaking)'라고 부른다.
 
@@ -436,14 +447,14 @@ import {sayHi} from './say.js';
 
 ### as
 
-`as`를 사용하면 이름을 바꿔서 모듈을 가져올 수 있다.  
+`as`를 사용하면 이름을 바꿔서 모듈을 가져올 수 있다.
 
 ```javascript
 // 📁 main.js
-import {sayHi as hi, sayBye as bye} from './say.js';
+import { sayHi as hi, sayBye as bye } from "./say.js";
 
-hi('John'); // Hello, John!
-bye('John'); // Bye, John!
+hi("John"); // Hello, John!
+bye("John"); // Bye, John!
 ```
 
 ## Utils
@@ -451,17 +462,17 @@ bye('John'); // Bye, John!
 ### 의도적으로 딜레이 주는 방법
 
 일반적으로 `setTimeout()` 함수에 콜백이나 `then` 체인을 사용하지만 가독성이 좋지 않다.  
-대신 Promise를 래핑해서 async/await 구문을 이용할 수 있다.  
+대신 Promise를 래핑해서 async/await 구문을 이용할 수 있다.
 
 ```javascript
 async function delay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 ```
 
 ### 객체가 비었는지 확인하는 방법
 
-객체 프로퍼티를 대상으로 반복문을 실행하다가 프로퍼티가 하나라도 있으면 그 즉시 `false`를 반환하게 코드를 작성  
+객체 프로퍼티를 대상으로 반복문을 실행하다가 프로퍼티가 하나라도 있으면 그 즉시 `false`를 반환하게 코드를 작성
 
 ```javascript
 function isEmpty(obj) {
