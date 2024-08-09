@@ -32,6 +32,8 @@ Keybinding을 등록해서 사용할 수 있음
 | Go Forward 앞으로 가기                                    | ⌃ ⇧ -      | canNavigateForward | System |
 | Transform to Lowercase/Uppercase/Title Case 대소문자 변환 |            |                    | System |
 | 같은 변수를 사용하는 모든 위치를 확인 | Shift + F12 |                    | System |
+| Workspace 내의 파일 검색 | Ctrl + P |                    | System |
+| Clear Recently Opened 최근 열었던 파일 검색 기록 삭제 | |                    | System |
 
 - Transform to Lowercase/Uppercase/Title Case
 
