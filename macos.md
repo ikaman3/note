@@ -191,6 +191,12 @@ system_command "/usr/bin/killall",
 	must_succeed: true
 ```
 
+## Applications
+
+### Automator
+
+workflow 저장위치: `/Users/main/Library/Services`
+
 ## Error
 
 ### MacOS - Windows 간 한글 자소분리 문제
@@ -208,7 +214,7 @@ convmv 패키지를 사용하여 해결할 수 있을 것으로 생각했으나,
 에어드롭으로 윈도우에서 사용하는 텍스트 인코딩의 파일을 보내려고 하면 에러가 발생한다.  
 그러므로 에어드롭으로 보낼 파일은 한글을 사용하지 않거나 애플 기기에서 이름을 복붙하여 재설정해줘야 한다.
 
-#### 무엇이 문제인가?
+#### 원인
 
 위의 링크에 따르면, MacOS와 Windows 양쪽에서 사용하는 조합형, 완성형 한글 표기 모두 국제 표준에 해당한다.  
 그러나 MacOS에서 Default로 사용하는 조합형 표기는 한국의 표준이 아니다.  
