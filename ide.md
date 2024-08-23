@@ -1,6 +1,6 @@
 # IDE or Editter
 
-IDE 관련 단축키 등을 기록할 마크다운 문서
+IDE 관련 정보를 기록할 마크다운 문서
 
 ## Visual Studio Code
 
@@ -53,6 +53,10 @@ Keybinding을 등록해서 사용할 수 있음
 
 > Prettier  
 > 소스코드를 일관된 스타일로 작성할 수 있게 변환하는 도구
+
+#### Red Hat Dependency Analytics
+
+이녀석이 package.json에 "폴더 이름": "file:" 자동으로 추가해버림
 
 ## Eclipse
 
