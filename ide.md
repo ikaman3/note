@@ -60,6 +60,8 @@ Keybinding을 등록해서 사용할 수 있음
 
 ## Eclipse
 
+### 설정
+
 ### Shortcuts
 
 #### 소스코드 창만 보기
@@ -73,3 +75,9 @@ Keybinding을 등록해서 사용할 수 있음
 #### Resource 찾기
 
 > Ctrl + Shift + r
+
+#### 자동 import
+
+Organize Imports  
+
+> Ctrl + Shift + o
