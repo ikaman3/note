@@ -64,20 +64,9 @@ Keybinding을 등록해서 사용할 수 있음
 
 ### Shortcuts
 
-#### 소스코드 창만 보기
-
-> Ctrl + m
-
-#### 파일 찾기
-
-> Ctrl + h
-
-#### Resource 찾기
-
-> Ctrl + Shift + r
-
-#### 자동 import
-
-Organize Imports  
-
-> Ctrl + Shift + o
+| Command                                                   | Keybinding  |
+| :-------------------------------------------------------- | :---------- |
+| 소스코드 창만 보기                                          | Ctrl + m |
+| 파일 찾기                                   | Ctrl + h     |
+| Resource 찾기 |    Ctrl + Shift + r         |
+| 자동 import(Organize Imports)                | Ctrl + Shift + o   |
