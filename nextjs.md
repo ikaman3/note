@@ -632,6 +632,18 @@ export default function Page() {
 > Recommendation:
 > `useRouter`를 사용해야 하는 특정 요구사항이 없는 한 라우트 간의 이동에 `<Link>` 컴포넌트를 사용할 것
 
+### 상대경로
+
+현재 페이지의 URL 경로를 기준으로 './'의 의미를 설명드리겠습니다:
+현재 페이지가 '/sample/post/create'인 경우:
+'./' = '/sample/post/'
+현재 페이지가 '/sample/post/update'인 경우:
+'./' = '/sample/post/'
+현재 페이지가 '/sample/post/list'인 경우:
+'./' = '/sample/post/'
+즉, './'는 현재 URL의 마지막 세그먼트를 제외한 경로를 가리킵니다. 이는 파일 시스템의 디렉토리 구조와 유사하게 동작합니다.
+예를 들어, '/sample/post/create' 페이지에서 './list'로 라우팅하면 '/sample/post/list'로 이동하게 됩니다.
+
 ### `redirect` function
 
 서버 컴포넌트라면 대신 `redirect` 함수를 사용할 수 있다.
