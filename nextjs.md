@@ -635,14 +635,18 @@ export default function Page() {
 ### 상대경로
 
 현재 페이지의 URL 경로를 기준으로 './'의 의미를 설명드리겠습니다:
-현재 페이지가 '/sample/post/create'인 경우:
+현재 페이지가 '/sample/post/create'인 경우:  
 './' = '/sample/post/'
-현재 페이지가 '/sample/post/update'인 경우:
-'./' = '/sample/post/'
+현재 페이지가 '/sample/post/view/1234'인 경우:  
+'./' = '/sample/post/view'  
+현재 페이지가 '/sample/post/update/1234'인 경우:
+'./' = '/sample/post/update'
 현재 페이지가 '/sample/post/list'인 경우:
 './' = '/sample/post/'
 즉, './'는 현재 URL의 마지막 세그먼트를 제외한 경로를 가리킵니다. 이는 파일 시스템의 디렉토리 구조와 유사하게 동작합니다.
 예를 들어, '/sample/post/create' 페이지에서 './list'로 라우팅하면 '/sample/post/list'로 이동하게 됩니다.
+
+`./`는 동적 파라미터가 포함된 경우에도 맨 마지막 세그먼트를 제외한 경로를 가리킨다. 따라서 뒤에 세그먼트가 추가된 라우트에서 다른 라우트로 이동할 때는 `../`으로 상위 라우트로 이동하도록 해야한다.
 
 ### `redirect` function
 
