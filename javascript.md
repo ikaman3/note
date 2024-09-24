@@ -522,6 +522,14 @@ function isEmpty(obj) {
 }
 ```
 
+### 오늘 날짜 얻기
+
+```javascript
+const today = new Date();
+const kstDate = new Date(today.getTime() + (9 * 60 * 60 * 1000)); // 한국 시간대에 맞추기 위한 처리
+const formattedDate = kstDate.toISOString().split('T')[0];
+```
+
 ## Debug
 
 ### Sourcemap
