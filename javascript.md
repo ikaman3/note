@@ -309,6 +309,44 @@ const classes = {
 // classes['footer-background'] = 'footer-background-class'
 ```
 
+## flatMap
+
+flatMap은 JavaScript 배열 메서드로, 배열의 각 요소에 대해 주어진 콜백 함수를 실행하고, 그 결과를 새로운 배열로 평탄화(flatten)하여 반환합니다. 주요 특징은 다음과 같습니다:
+
+1. 매핑과 평탄화를 동시에 수행:
+   - map()과 유사하게 각 요소를 변환하지만, 결과가 중첩 배열일 경우 한 단계 평탄화합니다.
+
+2. 콜백 함수의 반환값:
+   - 단일 값이나 배열을 반환할 수 있습니다.
+   - 배열을 반환하면 그 배열의 요소들이 결과 배열에 개별적으로 추가됩니다.
+
+3. 깊이 1 수준만 평탄화:
+   - 중첩된 배열 구조에서 한 단계만 평탄화합니다.
+
+4. 원본 배열 변경 없음:
+   - 원본 배열을 수정하지 않고 새로운 배열을 반환합니다.
+
+예시:
+
+```javascript
+// 기본 사용
+const numbers = [1, 2, 3, 4];
+const result = numbers.flatMap(x => [x, x * 2]);
+console.log(result); // [1, 2, 2, 4, 3, 6, 4, 8]
+
+// 중첩 배열 처리
+const phrases = ["hello world", "the quick brown fox"];
+const words = phrases.flatMap(phrase => phrase.split(" "));
+console.log(words); // ["hello", "world", "the", "quick", "brown", "fox"]
+
+// 조건부 요소 추가
+const numbers = [1, 2, 3, 4, 5];
+const result = numbers.flatMap(n => n % 2 === 0 ? [n, n * 2] : [n]);
+console.log(result); // [1, 2, 4, 3, 4, 8, 5]
+```
+
+flatMap은 map과 flat을 순차적으로 적용하는 것과 유사하지만, 더 효율적이고 간결한 코드를 작성할 수 있게 해줍니다. 특히 배열 요소를 변환하면서 동시에 결과를 평탄화해야 할 때 유용합니다.
+
 ## console
 
 ### 객체가 동일한지 비교
