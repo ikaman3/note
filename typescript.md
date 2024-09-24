@@ -1,25 +1,27 @@
+# Typescript
+
 ## 타입 시스템
 
 TS는 정적 타입 시스템을 제공합니다. 변수의 타입을 명시적으로 선언할 수 있습니다.
 
 ```typescript
 // 변수 선언
-let age: number = 25;
-let username: string = "John Doe";
-let isStudent: boolean = true;
+let age: number = 25
+let username: string = 'John Doe'
+let isStudent: boolean = true
 
 // 배열
-let numbers: number[] = [1, 2, 3, 4, 5];
+let numbers: number[] = [1, 2, 3, 4, 5]
 
 // 객체
 let person: { name: string; age: number } = {
-  name: "Jane Doe",
+  name: 'Jane Doe',
   age: 30,
-};
+}
 
 // 함수
 function greet(name: string): string {
-  return `Hello, ${name}!`;
+  return `Hello, ${name}!`
 }
 ```
 
@@ -30,77 +32,77 @@ function greet(name: string): string {
 ```typescript
 // 인터페이스
 interface Person {
-  name: string;
-  age: number;
+  name: string
+  age: number
 }
 
 let person: Person = {
-  name: "Alice",
+  name: 'Alice',
   age: 28,
-};
+}
 
 // 타입 별칭
 type Point = {
-  x: number;
-  y: number;
-};
+  x: number
+  y: number
+}
 
 let point: Point = {
   x: 10,
   y: 20,
-};
+}
 ```
 
 ## 타입 정의
 
 ```typescript
-import { ReactNode } from "react";
-import { Metadata } from "next";
+import { ReactNode } from 'react'
+import { Metadata } from 'next'
 
 // 메타데이터 생성 함수 타입
 export type GenerateMetadata = (props: {
-  params: { [key: string]: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}) => Promise<Metadata> | Metadata;
+  params: { [key: string]: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}) => Promise<Metadata> | Metadata
 
 // 라우트 세그먼트 설정 타입
 export type RouteSegmentConfig = {
-  dynamic?: "auto" | "force-dynamic" | "error" | "force-static";
-  revalidate?: "force-cache" | number;
+  dynamic?: 'auto' | 'force-dynamic' | 'error' | 'force-static'
+  revalidate?: 'force-cache' | number
   fetchCache?:
-    | "auto"
-    | "default-cache"
-    | "only-cache"
-    | "force-cache"
-    | "force-no-store";
-  runtime?: "nodejs" | "edge";
-  preferredRegion?: string | string[];
-};
+    | 'auto'
+    | 'default-cache'
+    | 'only-cache'
+    | 'force-cache'
+    | 'force-no-store'
+  runtime?: 'nodejs' | 'edge'
+  preferredRegion?: string | string[]
+}
 
 // 기본 페이지 props 타입 정의
 // 추가 파라미터가 필요없는 경우 사용
 export type BasePageProps = {
-  children?: ReactNode;
-  searchParams?: { [key: string]: string | string[] | undefined };
-  params?: { [key: string]: string };
-};
+  children?: ReactNode
+  searchParams?: { [key: string]: string | string[] | undefined }
+  params?: { [key: string]: string }
+}
 
 // 추가 props를 위한 제네릭 타입
-export type PageProps<T = {}> = BasePageProps & T;
+export type PageProps<T = {}> = BasePageProps & T
 
 // 레이아웃 props 타입 정의
 export type LayoutProps = {
-  children: ReactNode;
-};
+  children: ReactNode
+}
 
 // 기능별 컴포넌트 props 타입 정의
 // 필요한 prop을 제네릭으로 추가하여 사용 가능
 // <T = {}>: 이 부분은 제네릭 타입 매개변수를 정의합니다.
 // = {}: 기본값으로 빈 객체를 설정합니다. 즉, 추가 props가 지정되지 않으면 빈 객체가 사용됩니다.
-export type CreatePageProps<T = {}> = PageProps<T>;
-export type ViewPageProps<T = {}> = PageProps<T>;
-export type UpdatePageProps<T = {}> = PageProps<T>;
-export type ListPageProps<T = {}> = PageProps<T>;
+export type CreatePageProps<T = {}> = PageProps<T>
+export type ViewPageProps<T = {}> = PageProps<T>
+export type UpdatePageProps<T = {}> = PageProps<T>
+export type ListPageProps<T = {}> = PageProps<T>
 ```
 
 예시:
@@ -166,8 +168,8 @@ export const generateMetadata = async ({ params, searchParams }: GenerateMetadat
 
 ```typescript
 type Example = {
-  [key: string]: number;
-};
+  [key: string]: number
+}
 ```
 
 위의 예제에서 Example 타입은 문자열 키를 가지며, 각 키에 대응하는 값은 숫자 타입입니다. 이는 객체의 모든 키-값 쌍이 특정 타입을 따르도록 보장합니다.
@@ -176,20 +178,20 @@ type Example = {
 
 ```typescript
 function totalPay(payment: { [key: string]: number }): number {
-  let total = 0;
+  let total = 0
   for (const key in payment) {
-    total += payment[key];
+    total += payment[key]
   }
-  return total;
+  return total
 }
 
 const salaries = {
   salary: 2000,
   bonus: 500,
   incentive: 300,
-};
+}
 
-console.log(totalPay(salaries)); // 2800
+console.log(totalPay(salaries)) // 2800
 ```
 
 위 함수 totalPay는 키가 문자열이고 값이 숫자인 객체를 인자로 받습니다. 이 함수는 객체의 모든 값을 합산하여 반환합니다.
@@ -204,17 +206,17 @@ console.log(totalPay(salaries)); // 2800
 인덱스 시그니처는 유니온 타입과 함께 사용할 수도 있습니다:
 
 ```typescript
-type StringOrNumber = string | number;
+type StringOrNumber = string | number
 
 interface Example {
-  [key: string]: StringOrNumber;
+  [key: string]: StringOrNumber
 }
 
 const example: Example = {
-  name: "Alice",
+  name: 'Alice',
   age: 30,
   isStudent: false, // 오류: boolean 타입은 허용되지 않음
-};
+}
 ```
 
 위 예제에서 Example 인터페이스는 문자열 키를 가지며, 각 키에 대응하는 값은 문자열 또는 숫자 타입이어야 합니다. boolean 타입의 값은 허용되지 않으므로 오류가 발생합니다.
@@ -227,11 +229,11 @@ const example: Example = {
 
 ```typescript
 function identity<T>(arg: T): T {
-  return arg;
+  return arg
 }
 
-let output1 = identity<string>("Hello");
-let output2 = identity<number>(42);
+let output1 = identity<string>('Hello')
+let output2 = identity<number>(42)
 ```
 
 ## 유니온 타입과 인터섹션 타입
@@ -239,109 +241,109 @@ let output2 = identity<number>(42);
 유니온 타입은 여러 타입 중 하나를 가질 수 있는 변수를 정의합니다.
 
 ```typescript
-let value: string | number;
-value = "Hello";
-value = 42;
+let value: string | number
+value = 'Hello'
+value = 42
 ```
 
 인터섹션 타입은 여러 타입을 결합합니다.
 
 ```typescript
 interface A {
-  a: string;
+  a: string
 }
 
 interface B {
-  b: number;
+  b: number
 }
 
-type C = A & B;
+type C = A & B
 
 let obj: C = {
-  a: "Hello",
+  a: 'Hello',
   b: 42,
-};
+}
 ```
 
 ## 커스텀 훅에 TS 적용
 
 ```typescript
-import { useState } from "react";
+import { useState } from 'react'
 
 function useCounter(initialValue: number) {
-  const [count, setCount] = useState<number>(initialValue);
+  const [count, setCount] = useState<number>(initialValue)
 
-  const increment = () => setCount(count + 1);
-  const decrement = () => setCount(count - 1);
+  const increment = () => setCount(count + 1)
+  const decrement = () => setCount(count - 1)
 
-  return { count, increment, decrement };
+  return { count, increment, decrement }
 }
 
-export default useCounter;
+export default useCounter
 ```
 
 ```typescript
 // hooks/useLocalStorage.ts
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react'
 
 function useLocalStorage<T>(
   key: string,
-  initialValue: T
+  initialValue: T,
 ): [T, (value: T) => void] {
-  const [storedValue, setStoredValue] = useState<T>(initialValue);
+  const [storedValue, setStoredValue] = useState<T>(initialValue)
 
   useEffect(() => {
-    const item = window.localStorage.getItem(key);
+    const item = window.localStorage.getItem(key)
     if (item) {
-      setStoredValue(JSON.parse(item));
+      setStoredValue(JSON.parse(item))
     }
-  }, [key]);
+  }, [key])
 
   const setValue = (value: T) => {
-    setStoredValue(value);
-    window.localStorage.setItem(key, JSON.stringify(value));
-  };
+    setStoredValue(value)
+    window.localStorage.setItem(key, JSON.stringify(value))
+  }
 
-  return [storedValue, setValue];
+  return [storedValue, setValue]
 }
 
-export default useLocalStorage;
+export default useLocalStorage
 ```
 
 ## form 처리
 
 ```typescript
 // components/ContactForm.tsx
-import { FC, useState, FormEvent } from "react";
+import { FC, useState, FormEvent } from 'react'
 
 interface FormData {
-  name: string;
-  email: string;
-  message: string;
+  name: string
+  email: string
+  message: string
 }
 
 const ContactForm: FC = () => {
   const [formData, setFormData] = useState<FormData>({
-    name: "",
-    email: "",
-    message: "",
-  });
+    name: '',
+    email: '',
+    message: '',
+  })
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Form submitted:", formData);
+    e.preventDefault()
+    console.log('Form submitted:', formData)
     // 여기서 폼 데이터를 처리합니다 (예: API 요청 등)
-  };
+  }
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -367,26 +369,26 @@ const ContactForm: FC = () => {
       />
       <button type="submit">Send</button>
     </form>
-  );
-};
+  )
+}
 
-export default ContactForm;
+export default ContactForm
 ```
 
 ## API 호출 결과 타입 정의
 
 ```typescript
-import axios from "axios";
+import axios from 'axios'
 
 interface User {
-  id: number;
-  name: string;
-  email: string;
+  id: number
+  name: string
+  email: string
 }
 
 async function fetchUsers(): Promise<User[]> {
-  const response = await axios.get<User[]>("https://api.example.com/users");
-  return response.data;
+  const response = await axios.get<User[]>('https://api.example.com/users')
+  return response.data
 }
 ```
 
@@ -397,22 +399,22 @@ App Router에서 페이지 컴포넌트는 일반적으로 다음과 같이 타�
 // app/page.tsx
 
 ```typescript
-import { Metadata } from "next";
+import { Metadata } from 'next'
 
 type Props = {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
+  params: { id: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
 
 export const metadata: Metadata = {
-  title: "My Page",
-};
+  title: 'My Page',
+}
 
 const Page = ({ params, searchParams }: Props) => {
-  return <h1>My Page</h1>;
-};
+  return <h1>My Page</h1>
+}
 
-export default Page;
+export default Page
 ```
 
 ### Props 타입: 제네릭 VS 파라미터
@@ -453,33 +455,33 @@ API 라우트에서는 NextRequest와 NextResponse를 사용하여 타입을 지
 
 ```typescript
 // app/api/hello/route.ts
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
-  return NextResponse.json({ id });
+  const { searchParams } = new URL(request.url)
+  const id = searchParams.get('id')
+  return NextResponse.json({ id })
 }
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
-  return NextResponse.json({ receivedData: body });
+  const body = await request.json()
+  return NextResponse.json({ receivedData: body })
 }
 ```
 
 ```typescript
 // app/page.tsx
-import { FC } from "react";
+import { FC } from 'react'
 
 interface PageProps {
-  params: { id: string };
+  params: { id: string }
 }
 
 const Page: FC<PageProps> = ({ params }) => {
-  return <div>Page ID: {params.id}</div>;
-};
+  return <div>Page ID: {params.id}</div>
+}
 
-export default Page;
+export default Page
 ```
 
 ### 파일 내부에 정의하는 경우:
@@ -510,9 +512,9 @@ export default Page;
 
 ```typescript
 export type BasePageProps = {
-  params: { [key: string]: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
+  params: { [key: string]: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
 ```
 
 ### 페이지별 특정 타입:
@@ -521,13 +523,13 @@ export type BasePageProps = {
 // app/users/[id]/page.tsx
 
 ```typescript
-import { BasePageProps } from "@/types/page";
+import { BasePageProps } from '@/types/page'
 
 type UserPageProps = BasePageProps & {
   params: {
-    id: string;
-  };
-};
+    id: string
+  }
+}
 
 export default function UserPage({ params, searchParams }: UserPageProps) {
   // ...
@@ -547,13 +549,13 @@ typescript
 // components/Button.tsx
 
 ```typescript
-import React from "react";
+import React from 'react'
 
 type ButtonProps = {
-  onClick: () => void;
-  children: React.ReactNode;
-  disabled?: boolean;
-};
+  onClick: () => void
+  children: React.ReactNode
+  disabled?: boolean
+}
 
 export const Button: React.FC<ButtonProps> = ({
   onClick,
@@ -564,8 +566,8 @@ export const Button: React.FC<ButtonProps> = ({
     <button onClick={onClick} disabled={disabled}>
       {children}
     </button>
-  );
-};
+  )
+}
 ```
 
 ## 상태 관리 타입 지정
@@ -575,35 +577,35 @@ typescript
 // store/userSlice.ts
 
 ```typescript
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 type User = {
-  id: string;
-  name: string;
-};
+  id: string
+  name: string
+}
 
 type UserState = {
-  currentUser: User | null;
-  isLoading: boolean;
-};
+  currentUser: User | null
+  isLoading: boolean
+}
 
 const initialState: UserState = {
   currentUser: null,
   isLoading: false,
-};
+}
 
 const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<User>) => {
-      state.currentUser = action.payload;
+      state.currentUser = action.payload
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload;
+      state.isLoading = action.payload
     },
   },
-});
+})
 ```
 
 ## API 응답 타입 지정
@@ -614,18 +616,18 @@ typescript
 
 ```typescript
 export type Post = {
-  id: number;
-  title: string;
-  body: string;
-};
+  id: number
+  title: string
+  body: string
+}
 
 // utils/api.ts
-import { Post } from "../types/api";
+import { Post } from '../types/api'
 
 export async function fetchPosts(): Promise<Post[]> {
-  const response = await fetch("https://jsonplaceholder.typicode.com/posts");
-  if (!response.ok) throw new Error("Failed to fetch posts");
-  return response.json();
+  const response = await fetch('https://jsonplaceholder.typicode.com/posts')
+  if (!response.ok) throw new Error('Failed to fetch posts')
+  return response.json()
 }
 ```
 
@@ -639,13 +641,13 @@ typescript
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      NEXT_PUBLIC_API_URL: string;
-      DATABASE_URL: string;
+      NEXT_PUBLIC_API_URL: string
+      DATABASE_URL: string
     }
   }
 }
 
-export {};
+export {}
 ```
 
 이렇게 타입을 지정하면, 프로세스 환경 변수를 사용할 때 자동 완성과 타입 체크가 가능해집니다.  
