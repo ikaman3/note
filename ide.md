@@ -6,6 +6,8 @@ IDE 관련 정보를 기록할 마크다운 문서
 
 ### CLI Scripts
 
+#### Install Extension
+
 CLI를 이용해 Extension을 설치할 수 있다.
 
 ```bash
@@ -19,6 +21,12 @@ code --install-extension vscjava.vscode-spring-initializr
 code --install-extension vscjava.vscode-spring-boot-dashboard
 code --install-extension pivotal.vscode-boot-dev-pack
 code --install-extension pivotal.vscode-spring-boot
+```
+
+#### Upgrade VSCode
+
+```bash
+winget upgrade --id Microsoft.VisualStudioCode
 ```
 
 ### Shortcuts
