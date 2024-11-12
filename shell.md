@@ -1655,6 +1655,8 @@ done
 XML은 한글을 HTML 엔티티 인코딩으로 변환하여 처리한다. 한글을 이 인코딩으로 변환해서  
 산출물 작업을 편하게 했다.  
 
+이거는 perl을 사용하여 변환했는데 16진수 인코딩을 사용할 가능성이 있었다.  
+
 ```bash
 #!/bin/bash
 
@@ -1669,7 +1671,34 @@ encoded_text=$(echo "$input_text" | encode_to_html_entities)
 
 echo "인코딩된 결과:"
 echo "$encoded_text"
+```
 
+이 스크립트는 bash 명령어만을 사용하여 10진수 인코딩으로 출력한다.  
+
+```bash
+#!/bin/bash
+
+encode_to_decimal_html_entities() {
+    local input="$1"
+    local output=""
+    
+    while IFS= read -r -n1 char; do
+        if [[ -n "$char" ]]; then
+            printf -v decimal_value '%d' "'$char"
+            output+="&#$decimal_value;"
+        fi
+    done <<< "$input"
+    
+    echo "$output"
+}
+
+echo "인코딩할 한글 텍스트를 입력하세요:"
+read input_text
+
+encoded_text=$(encode_to_decimal_html_entities "$input_text")
+
+echo "인코딩된 결과:"
+echo "$encoded_text"
 ```
 
 ## Packages
