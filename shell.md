@@ -1650,6 +1650,28 @@ for folder in 僕の心のヤバイやつ*; do
 done
 ```
 
+### HTML 엔티티 인코딩 변환
+
+XML은 한글을 HTML 엔티티 인코딩으로 변환하여 처리한다. 한글을 이 인코딩으로 변환해서  
+산출물 작업을 편하게 했다.  
+
+```bash
+#!/bin/bash
+
+encode_to_html_entities() {
+    perl -MHTML::Entities -CS -pe 'encode_entities($_)'
+}
+
+echo "인코딩할 한글 텍스트를 입력하세요:"
+read input_text
+
+encoded_text=$(echo "$input_text" | encode_to_html_entities)
+
+echo "인코딩된 결과:"
+echo "$encoded_text"
+
+```
+
 ## Packages
 
 ### code-server
