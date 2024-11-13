@@ -50,6 +50,22 @@ Keybinding을 등록해서 사용할 수 있음
   - Uppercase : 모두 대문자로 변환
   - Titlecase : 단어의 첫 글자는 대문자, 나머지는 소문자로 변환
 
+### 이미지 삽입
+
+[젤다](https://dohokin.com/?p=1993)
+
+설정에서 `Markdwon > Copy Files: Destination`에 Item을 추가한다  
+
+| Item | Value |
+| :--- | :--- |
+| **/* | images/${fileName} |
+
+이러면 `images` 폴더 안에 파일이름으로 이미지가 저장되며 해당 경로를 자동으로 삽입해준다.  
+
+> 예시  
+>  
+> ![alt text](images/122337536_p0_master1200.jpg)
+
 ### Extensions
 
 #### Linter
