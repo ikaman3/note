@@ -1556,7 +1556,7 @@ unzip FILENAME.zip
 export LANG=ko_KR.UTF-8
 ```
 
-## Make use of script
+## 스크립트 모음
 
 ### sshd_update
 
@@ -1699,6 +1699,48 @@ encoded_text=$(encode_to_decimal_html_entities "$input_text")
 
 echo "인코딩된 결과:"
 echo "$encoded_text"
+```
+
+### snakeToCamel
+
+snake_case 인 DB의 컬럼을 프론트에서 쓰는 camelCase로 바꾸기 위한 스크립트
+
+```bash
+#!/bin/bash
+
+# 입력 파일에서 변수 목록을 읽어옵니다.
+input_file="input.txt"
+
+# 결과를 저장할 출력 파일을 지정합니다.
+output_file="output.txt"
+
+# 입력 파일의 각 줄에 대해 처리합니다.
+while IFS= read -r line
+do
+    # '_'로 구분된 단어들을 배열로 나눕니다.
+    IFS='_' read -ra words <<< "$line"
+    
+    # 결과 문자열을 초기화합니다.
+    result=""
+    
+    # 각 단어를 처리합니다.
+    for i in "${!words[@]}"
+    do
+        if [ $i -eq 0 ]; then
+            # 첫 번째 단어는 그대로 소문자로 사용합니다.
+            result+="${words[i],,}"
+        else
+            # 나머지 단어들은 첫 글자만 대문자로 변환합니다.
+            word="${words[i],,}"
+            result+="${word^}"
+        fi
+    done
+    
+    # 결과를 출력 파일에 씁니다.
+    echo "$result" >> "$output_file"
+done < "$input_file"
+
+echo "변환이 완료되었습니다. 결과는 $output_file 파일에 저장되었습니다."
 ```
 
 ## Packages
