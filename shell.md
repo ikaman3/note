@@ -1743,6 +1743,58 @@ done < "$input_file"
 echo "변환이 완료되었습니다. 결과는 $output_file 파일에 저장되었습니다."
 ```
 
+### remove-duplicates
+
+```bash
+#!/bin/bash
+
+input_file="input.txt"
+output_file="output.txt"
+
+# 총 라인 수 계산
+total_lines=$(wc -l < "$input_file")
+
+# 임시 파일 생성
+temp_file=$(mktemp)
+
+# 진행 상황 변수 초기화
+current_line=0
+
+echo "처리를 시작합니다..."
+
+# 입력 파일의 각 줄을 처리
+while IFS= read -r line
+do
+    # 현재 라인 수 증가
+    ((current_line++))
+
+    # 진행률 계산 및 표시 (1%마다 표시)
+    progress=$((current_line * 100 / total_lines))
+    if (( progress % 1 == 0 )); then
+        echo -ne "진행률: $progress%\r"
+    fi
+
+    # 컬럼명과 코멘트 추출
+    column=$(echo "$line" | awk -F" COMMENT " '{print $1}')
+    comment=$(echo "$line" | awk -F"'" '{print $2}')
+    
+    # 추출된 정보를 임시 파일에 저장
+    echo "$column|$comment" >> "$temp_file"
+done < "$input_file"
+
+echo -ne "진행률: 100%\n"
+echo "중복 제거 중..."
+
+# 중복 제거 및 결과 파일 생성 (덮어쓰기)
+sort -u "$temp_file" | awk -F'|' '{print $1 " COMMENT '\''" $2 "'\''," }' > "$output_file"
+
+# 임시 파일 삭제
+rm "$temp_file"
+
+echo "처리가 완료되었습니다."
+echo "중복이 제거된 결과가 $output_file에 저장되었습니다."
+```
+
 ## Packages
 
 ### code-server
