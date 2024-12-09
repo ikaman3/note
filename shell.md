@@ -1757,63 +1757,108 @@ echo "변환이 완료되었습니다. 결과는 $output_file 파일에 저장�
 ## aprv_amt 승인금액
 ## aprv_rspns_cd 승인응답코드
 ## ...
-##
 ## tableName=t_card_apvl_dtl
 ## aprv_amt 승인금액
 ## aprv_no 승인번호
-##
+## 
 ## 3. 결과는 append_comment_output.txt 파일에 출력
 
-# 파일 경로 설정
 INPUT_FILE="append_comment_input.txt"
 OUTPUT_FILE="append_comment_output.txt"
 
-# 중복된 컬럼을 제거하기 위한 임시 파일
+# 임시 파일 생성
 temp_file=$(mktemp)
 
-# 테이블 이름과 컬럼 목록을 저장할 배열
-declare -A columns
-current_table=""
+# 입력 파일의 마지막에 빈 줄 추가 (마지막 줄 처리를 위해)
+sed -i -e '$a\' "$INPUT_FILE"
 
-# 파일에서 한 줄씩 읽기
-while IFS= read -r line; do
-    # 테이블 이름이 정의된 줄을 처리
+while IFS= read -r line || [[ -n "$line" ]]; do
     if [[ "$line" =~ ^tableName= ]]; then
-        # 이전 테이블의 컬럼들을 처리해서 temp_file에 기록
-        if [[ -n "$current_table" && ${#columns[@]} -gt 0 ]]; then
-            for col in "${!columns[@]}"; do
-                echo "$col COMMENT '${columns[$col]}'" >> "$temp_file"
-            done
-        fi
-        # 테이블 이름 추출
-        current_table=$(echo "$line" | sed 's/^tableName=\(.*\)/\1/')
-        columns=()  # 컬럼 목록 초기화
+        continue  # 테이블 이름 줄은 건너뛰기
     elif [[ "$line" =~ ^[a-zA-Z0-9_]+ ]]; then
-        # 컬럼 이름과 주석이 있는 줄 (예: 컬럼명 주석)
         column=$(echo "$line" | awk '{print $1}')
         comment=$(echo "$line" | cut -d' ' -f2-)
-
-        # 해당 컬럼이 처음 등장하는 경우에만 배열에 추가
-        if [[ -z "${columns[$column]}" ]]; then
-            columns[$column]="$comment"
+        echo "$column COMMENT '$comment'" >> "$temp_file"
+        
+        # _cd 컬럼에 대한 _nm 컬럼 추가
+        if [[ "$column" =~ _cd$ ]]; then
+            nm_col="${column}_nm"
+            nm_comment="${comment}명"
+            echo "$nm_col COMMENT '$nm_comment'" >> "$temp_file"
         fi
     fi
 done < "$INPUT_FILE"
 
-# 마지막 테이블도 처리
-if [[ -n "$current_table" && ${#columns[@]} -gt 0 ]]; then
-    for col in "${!columns[@]}"; do
-        echo "$col COMMENT '${columns[$col]}'" >> "$temp_file"
-    done
-fi
-
-# output.txt로 출력 (중복 컬럼 제거)
+# 중복 제거 후 결과 파일 생성
 sort -u "$temp_file" > "$OUTPUT_FILE"
 
 # 임시 파일 삭제
 rm -f "$temp_file"
 
 echo "처리가 완료되었습니다. 결과는 $OUTPUT_FILE에 저장되었습니다."
+```
+
+### remove_duplicates
+
+```bash
+#!/bin/bash
+
+# 유가보조금 내부연계 테이블을 통합한 View 생성 스크립트
+# 사용법
+## 1. remove_duplicates_input.txt 파일 생성
+## 2. input 파일에 아래의 형식으로 중복을 제거할 테이블의 컬럼과 주석을 작성
+##
+## aprv_amt COMMENT '승인금액',
+## aprv_no COMMENT '승인번호',
+## ...
+##
+## 3. 결과는 remove_duplicates_output.txt 파일에 출력
+
+input_file="remove_duplicates_input.txt"
+output_file="remove_duplicates_output.txt"
+
+# 총 라인 수 계산
+total_lines=$(wc -l < "$input_file")
+
+# 임시 파일 생성
+temp_file=$(mktemp)
+
+# 진행 상황 변수 초기화
+current_line=0
+
+echo "처리를 시작합니다..."
+
+# 입력 파일의 각 줄을 처리
+while IFS= read -r line
+do
+    # 현재 라인 수 증가
+    ((current_line++))
+
+    # 진행률 계산 및 표시 (1%마다 표시)
+    progress=$((current_line * 100 / total_lines))
+    if (( progress % 1 == 0 )); then
+        echo -ne "진행률: $progress%\r"
+    fi
+
+    # 컬럼명과 코멘트 추출
+    column=$(echo "$line" | awk -F" COMMENT " '{print $1}')
+    comment=$(echo "$line" | awk -F"'" '{print $2}')
+    
+    # 추출된 정보를 임시 파일에 저장
+    echo "$column|$comment" >> "$temp_file"
+done < "$input_file"
+
+echo -ne "진행률: 100%\n"
+echo "중복 제거 중..."
+
+# 중복 제거 및 결과 파일 생성 (덮어쓰기)
+sort -u "$temp_file" | awk -F'|' '{print $1 " COMMENT '\''" $2 "'\''," }' > "$output_file"
+
+# 임시 파일 삭제
+rm "$temp_file"
+
+echo "처리가 완료되었습니다."
+echo "중복이 제거된 결과가 $output_file에 저장되었습니다."
 ```
 
 ### process_columns
@@ -1832,6 +1877,7 @@ echo "처리가 완료되었습니다. 결과는 $OUTPUT_FILE에 저장되었습
 ## ...
 ##
 ## 3. 결과는 process_columns_output.txt 파일에 출력
+
 list_file="process_columns_list.txt"
 input_file="process_columns_input.txt"
 output_file="process_columns_output.txt"
