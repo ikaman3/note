@@ -1909,6 +1909,10 @@ sed -n '/^-- 모든 컬럼/,$p' "$INPUT_FILE" | tail -n +2 | awk -F' COMMENT' '{
 
 echo "처리를 시작합니다..."
 
+# 총 테이블 수 계산
+total_tables=$(grep -c '^-- ' "$INPUT_FILE")
+processed_tables=0
+
 # 각 테이블 처리
 current_table=""
 while IFS= read -r line || [[ -n "$line" ]]; do
@@ -1929,6 +1933,10 @@ while IFS= read -r line || [[ -n "$line" ]]; do
             > "$temp_output"
             > "$temp_table_columns"
         fi
+        
+        ((processed_tables++))
+        progress=$((processed_tables * 100 / total_tables))
+        echo -ne "진행률: $progress%\r"
         
         current_table=${line#-- }
         echo "-- $current_table" >> "$OUTPUT_FILE"
@@ -1952,7 +1960,7 @@ if [[ -n "$current_table" ]]; then
     cat "$temp_output" >> "$OUTPUT_FILE"
 fi
 
-echo "처리가 완료되었습니다."
+echo -e "\n처리가 완료되었습니다."
 echo "결과가 $OUTPUT_FILE에 저장되었습니다."
 
 # 임시 파일 삭제
