@@ -247,3 +247,14 @@ java 파일이나 view 파일, property 파일을 변경하는 경우 자동으�
 4. `warning`: `error`보다 조금 더 많은 정보(`warning`, `error`) 출력
 5. `error`: Error, Exception만(`error`) 출력
 6. `off`: 로깅을 끈다.
+
+## 알게된것
+
+### Tuple
+
+QueryDsl을 사용중 select문에서 Q클래스만 남기니까 get 메서드를 호출할 수 없는 에러가 발생함.
+
+> Tuple은 여러 필드를 포함할 수 있는 데이터 구조입니다.  
+> QueryDSL에서 select 구문에 포함된 필드들만 Tuple에 저장됩니다.  
+> 즉, select(qClass)을 사용하면 qClass 객체 전체가 아닌, 그 객체의 필드들이 Tuple에 저장됩니다.  
+> 만약 qClass이 Entity의 필드들을 포함하는 Q 클래스라면, select(qClass)은 해당 Entity의 모든 필드를 선택하는 것이 아니라 필요한 필드만 선택하게 됩니다.
