@@ -1888,11 +1888,19 @@ echo "중복이 제거된 결과가 $output_file에 저장되었습니다."
 
 # 유가보조금 내부연계 테이블을 통합한 View 생성 스크립트
 # 사용법
-## 1. append_comment_output.txt 파일을 input으로 사용
-## 2. 결과는 process_columns_output.txt 파일에 출력
+## 1. append_comment_output.txt 파일을 input으로, process_columns_cd.txt를 코드매핑 파일로 사용
+## 2. 코드 파일은 아래의 형식으로 저장
+## 
+## t_tx_doc_apply_dtl	use_se_cd	사용구분코드	CDG0
+## t_tx_doc_apply_dtl	koi_cd	유종코드	CTG0
+## t_tx_doc_apply_m	aprv_cd	승인코드	CDS0
+## t_tx_doc_apply_m	koi_cd	유종코드	CTG0
+##
+## 3. 결과는 process_columns_output.txt 파일에 출력
 
 INPUT_FILE="append_comment_output.txt"
 OUTPUT_FILE="process_columns_output.txt"
+CD_FILE="process_columns_cd.txt"
 
 # 임시 파일 생성
 temp_all_columns=$(mktemp)
@@ -1911,6 +1919,36 @@ echo "처리를 시작합니다..."
 total_tables=$(grep -c '^-- ' "$INPUT_FILE")
 processed_tables=0
 
+# cd.txt 파일 읽어서 코드 정보 저장
+declare -A code_info
+while IFS=$'\t' read -r table column comment code; do
+    key="${column}"
+    code_info[$key]=$code
+done < "$CD_FILE"
+
+process_column() {
+    local column=$1
+    local is_present=$2
+    
+    if [[ "$column" =~ _cd_nm$ ]]; then
+        cd_column="${column%_nm}"
+        if [[ -n "${code_info[$cd_column]}" ]]; then
+            if [ "$is_present" = true ]; then
+                # 줄바꿈을 제거하고 한 줄로 출력
+                printf "    fsm_code('%s', %s) AS %s,\n" "${code_info[$cd_column]//[$'\n\r']}" "$cd_column" "$column" >> "$temp_output"
+            else
+                printf "    NULL AS %s,\n" "$column" >> "$temp_output"
+            fi
+        fi
+    else
+        if [ "$is_present" = true ]; then
+            printf "    %s,\n" "$column" >> "$temp_output"
+        else
+            printf "    NULL AS %s,\n" "$column" >> "$temp_output"
+        fi
+    fi
+}
+
 # 각 테이블 처리
 current_table=""
 while IFS= read -r line || [[ -n "$line" ]]; do
@@ -1920,11 +1958,15 @@ while IFS= read -r line || [[ -n "$line" ]]; do
             # 이전 테이블 처리 완료
             while IFS= read -r column; do
                 if grep -q "^$column$" "$temp_table_columns"; then
-                    echo "$column," >> "$temp_output"
+                    process_column "$column" true
                 else
-                    echo "NULL AS $column," >> "$temp_output"
+                    process_column "$column" false
                 fi
             done < "$temp_all_columns"
+            
+            # 마지막 컴마 제거 및 줄바꿈 추가
+            sed -i '$ s/,$//' "$temp_output"
+            echo "" >> "$temp_output"
             
             cat "$temp_output" >> "$OUTPUT_FILE"
             echo "" >> "$OUTPUT_FILE"
@@ -1949,11 +1991,15 @@ done < "$INPUT_FILE"
 if [[ -n "$current_table" ]]; then
     while IFS= read -r column; do
         if grep -q "^$column$" "$temp_table_columns"; then
-            echo "$column," >> "$temp_output"
+            process_column "$column" true
         else
-            echo "NULL AS $column," >> "$temp_output"
+            process_column "$column" false
         fi
     done < "$temp_all_columns"
+    
+    # 마지막 컴마 제거 및 줄바꿈 추가
+    sed -i '$ s/,$//' "$temp_output"
+    echo "" >> "$temp_output"
     
     cat "$temp_output" >> "$OUTPUT_FILE"
 fi
