@@ -1768,32 +1768,54 @@ OUTPUT_FILE="append_comment_output.txt"
 
 # 임시 파일 생성
 temp_file=$(mktemp)
+all_columns_file=$(mktemp)
+
+# output.txt 초기화
+> "$OUTPUT_FILE"
+
+# 현재 처리 중인 테이블 이름
+current_table=""
 
 # 입력 파일의 마지막에 빈 줄 추가 (마지막 줄 처리를 위해)
 sed -i -e '$a\' "$INPUT_FILE"
 
+process_table() {
+    if [[ -n "$current_table" ]]; then
+        echo "-- $current_table" >> "$OUTPUT_FILE"
+        cat "$temp_file" >> "$OUTPUT_FILE"
+        echo "" >> "$OUTPUT_FILE"
+        cat "$temp_file" >> "$all_columns_file"
+        > "$temp_file"
+    fi
+}
+
 while IFS= read -r line || [[ -n "$line" ]]; do
-    if [[ "$line" =~ ^tableName= ]]; then
-        continue  # 테이블 이름 줄은 건너뛰기
-    elif [[ "$line" =~ ^[a-zA-Z0-9_]+ ]]; then
-        column=$(echo "$line" | awk '{print $1}')
-        comment=$(echo "$line" | cut -d' ' -f2-)
-        echo "$column COMMENT '$comment'" >> "$temp_file"
-        
-        # _cd 컬럼에 대한 _nm 컬럼 추가
-        if [[ "$column" =~ _cd$ ]]; then
-            nm_col="${column}_nm"
-            nm_comment="${comment}명"
-            echo "$nm_col COMMENT '$nm_comment'" >> "$temp_file"
-        fi
+    read -r table_name column comment <<< "$line"
+    
+    if [[ "$table_name" != "$current_table" ]]; then
+        process_table
+        current_table="$table_name"
+    fi
+
+    echo "$column COMMENT '$comment'," >> "$temp_file"
+    
+    # _cd 컬럼에 대한 _nm 컬럼 추가
+    if [[ "$column" =~ _cd$ ]]; then
+        nm_col="${column}_nm"
+        nm_comment="${comment}명"
+        echo "$nm_col COMMENT '$nm_comment'," >> "$temp_file"
     fi
 done < "$INPUT_FILE"
 
-# 중복 제거 후 결과 파일 생성
-sort -u "$temp_file" > "$OUTPUT_FILE"
+# 마지막 테이블 처리
+process_table
+
+# 모든 컬럼 중복 제거 후 출력
+echo "-- 모든 컬럼" >> "$OUTPUT_FILE"
+sort -u "$all_columns_file" >> "$OUTPUT_FILE"
 
 # 임시 파일 삭제
-rm -f "$temp_file"
+rm -f "$temp_file" "$all_columns_file"
 
 echo "처리가 완료되었습니다. 결과는 $OUTPUT_FILE에 저장되었습니다."
 ```
