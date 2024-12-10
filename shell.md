@@ -1753,13 +1753,11 @@ echo "변환이 완료되었습니다. 결과는 $output_file 파일에 저장�
 ## 1. append_comment_input.txt 파일 생성
 ## 2. input 파일에 아래와 같이 테이블 이름과 해당 테이블의 컬럼과 주석을 작성
 ## 
-## tableName=t_tx_mon_deal
-## aprv_amt 승인금액
-## aprv_rspns_cd 승인응답코드
+## t_tx_doc_apply_m aprv_amt 승인금액
+## t_tx_doc_apply_m aprv_rspns_cd 승인응답코드
 ## ...
-## tableName=t_card_apvl_dtl
-## aprv_amt 승인금액
-## aprv_no 승인번호
+## t_rfid_calc_dtl aprv_amt 승인금액
+## t_rfid_calc_dtl aprv_no 승인번호
 ## 
 ## 3. 결과는 append_comment_output.txt 파일에 출력
 
