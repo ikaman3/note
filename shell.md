@@ -1750,7 +1750,7 @@ echo "변환이 완료되었습니다. 결과는 $output_file 파일에 저장�
 
 # 유가보조금 내부연계 테이블을 통합한 View 생성 스크립트
 # 사용법
-## 1. append_comment_input.txt 파일 생성
+## 1. append_comment_input.txt 파일 생성, cd.txt를 코드매핑 파일로 사용
 ## 2. input 파일에 아래와 같이 테이블 이름과 해당 테이블의 컬럼과 주석을 작성
 ## 
 ## t_tx_doc_apply_m aprv_amt 승인금액
@@ -1759,10 +1759,17 @@ echo "변환이 완료되었습니다. 결과는 $output_file 파일에 저장�
 ## t_rfid_calc_dtl aprv_amt 승인금액
 ## t_rfid_calc_dtl aprv_no 승인번호
 ## 
+## 코드 파일은 아래의 형식으로 저장
+## t_tx_doc_apply_dtl	use_se_cd	사용구분코드	CDG0
+## t_tx_doc_apply_dtl	koi_cd	유종코드	CTG0
+## t_tx_doc_apply_m	aprv_cd	승인코드	CDS0
+## t_tx_doc_apply_m	koi_cd	유종코드	CTG0
+
 ## 3. 결과는 append_comment_output.txt 파일에 출력
 
 INPUT_FILE="append_comment_input.txt"
 OUTPUT_FILE="append_comment_output.txt"
+CD_FILE="process_columns_cd.txt"
 
 # 임시 파일 생성
 temp_file=$(mktemp)
@@ -1773,6 +1780,13 @@ all_columns_file=$(mktemp)
 
 # 현재 처리 중인 테이블 이름
 current_table=""
+
+# cd.txt 파일 읽어서 코드 정보 저장
+declare -A code_info
+while IFS=$'\t' read -r table column comment code; do
+    key="${column}"
+    code_info[$key]=$code
+done < "$CD_FILE"
 
 # 입력 파일의 마지막에 빈 줄 추가 (마지막 줄 처리를 위해)
 sed -i -e '$a\' "$INPUT_FILE"
@@ -1801,7 +1815,9 @@ while IFS= read -r line || [[ -n "$line" ]]; do
     if [[ "$column" =~ _cd$ ]]; then
         nm_col="${column}_nm"
         nm_comment="${comment}명"
-        echo "$nm_col COMMENT '$nm_comment'," >> "$temp_file"
+        if [[ -n "${code_info[$column]}" ]]; then
+            echo "$nm_col COMMENT '$nm_comment'," >> "$temp_file"
+        fi
     fi
 done < "$INPUT_FILE"
 
@@ -1818,69 +1834,6 @@ rm -f "$temp_file" "$all_columns_file"
 echo "처리가 완료되었습니다. 결과는 $OUTPUT_FILE에 저장되었습니다."
 ```
 
-### remove_duplicates
-
-```bash
-#!/bin/bash
-
-# 유가보조금 내부연계 테이블을 통합한 View 생성 스크립트
-# 사용법
-## 1. remove_duplicates_input.txt 파일 생성
-## 2. input 파일에 아래의 형식으로 중복을 제거할 테이블의 컬럼과 주석을 작성
-##
-## aprv_amt COMMENT '승인금액',
-## aprv_no COMMENT '승인번호',
-## ...
-##
-## 3. 결과는 remove_duplicates_output.txt 파일에 출력
-
-input_file="remove_duplicates_input.txt"
-output_file="remove_duplicates_output.txt"
-
-# 총 라인 수 계산
-total_lines=$(wc -l < "$input_file")
-
-# 임시 파일 생성
-temp_file=$(mktemp)
-
-# 진행 상황 변수 초기화
-current_line=0
-
-echo "처리를 시작합니다..."
-
-# 입력 파일의 각 줄을 처리
-while IFS= read -r line
-do
-    # 현재 라인 수 증가
-    ((current_line++))
-
-    # 진행률 계산 및 표시 (1%마다 표시)
-    progress=$((current_line * 100 / total_lines))
-    if (( progress % 1 == 0 )); then
-        echo -ne "진행률: $progress%\r"
-    fi
-
-    # 컬럼명과 코멘트 추출
-    column=$(echo "$line" | awk -F" COMMENT " '{print $1}')
-    comment=$(echo "$line" | awk -F"'" '{print $2}')
-    
-    # 추출된 정보를 임시 파일에 저장
-    echo "$column|$comment" >> "$temp_file"
-done < "$input_file"
-
-echo -ne "진행률: 100%\n"
-echo "중복 제거 중..."
-
-# 중복 제거 및 결과 파일 생성 (덮어쓰기)
-sort -u "$temp_file" | awk -F'|' '{print $1 " COMMENT '\''" $2 "'\''," }' > "$output_file"
-
-# 임시 파일 삭제
-rm "$temp_file"
-
-echo "처리가 완료되었습니다."
-echo "중복이 제거된 결과가 $output_file에 저장되었습니다."
-```
-
 ### process_columns
 
 ```bash
@@ -1888,7 +1841,7 @@ echo "중복이 제거된 결과가 $output_file에 저장되었습니다."
 
 # 유가보조금 내부연계 테이블을 통합한 View 생성 스크립트
 # 사용법
-## 1. append_comment_output.txt 파일을 input으로, process_columns_cd.txt를 코드매핑 파일로 사용
+## 1. append_comment_output.txt 파일을 input으로, cd.txt를 코드매핑 파일로 사용
 ## 2. 코드 파일은 아래의 형식으로 저장
 ## 
 ## t_tx_doc_apply_dtl	use_se_cd	사용구분코드	CDG0
@@ -1900,7 +1853,7 @@ echo "중복이 제거된 결과가 $output_file에 저장되었습니다."
 
 INPUT_FILE="append_comment_output.txt"
 OUTPUT_FILE="process_columns_output.txt"
-CD_FILE="process_columns_cd.txt"
+CD_FILE="cd.txt"
 
 # 임시 파일 생성
 temp_all_columns=$(mktemp)
