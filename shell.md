@@ -1890,9 +1890,9 @@ echo "중복이 제거된 결과가 $output_file에 저장되었습니다."
 
 # 유가보조금 내부연계 테이블을 통합한 View 생성 스크립트
 # 사용법
-## 1. process_columns_list.txt, process_columns_input.txt 파일 생성
-## 2. list, input 파일에 아래와 같이 테이블 이름과 해당 테이블의 컬럼과 주석을 작성
-##    - list는 존재여부 판단의 기준이될 컬럼, input은 각 SELECT문에 넣을 전체 컬럼들
+## 1. process_columns_input.txt, process_columns_list.txt 파일 생성
+## 2. input, list 파일에 아래와 같이 테이블 이름과 해당 테이블의 컬럼과 주석을 작성
+##    - input은 존재여부 판단의 기준이 될 전체 컬럼, list은 각 테이블의 SELECT문에 넣을 컬럼들
 ##
 ## aprv_amt COMMENT '승인금액',
 ## aprv_no COMMENT '승인번호',
@@ -1900,52 +1900,70 @@ echo "중복이 제거된 결과가 $output_file에 저장되었습니다."
 ##
 ## 3. 결과는 process_columns_output.txt 파일에 출력
 
-list_file="process_columns_list.txt"
-input_file="process_columns_input.txt"
-output_file="process_columns_output.txt"
+INPUT_FILE="append_comment_output.txt"
+OUTPUT_FILE="process_columns_output.txt"
 
 # 임시 파일 생성
-temp_list=$(mktemp)
-temp_input=$(mktemp)
+temp_all_columns=$(mktemp)
+temp_table_columns=$(mktemp)
+temp_output=$(mktemp)
 
-# list.txt와 input.txt에서 컬럼명만 추출
-awk -F" COMMENT " '{print $1}' "$list_file" | sort > "$temp_list"
-awk -F" COMMENT " '{print $1}' "$input_file" | sort > "$temp_input"
-
-# 총 라인 수 계산
-total_lines=$(wc -l < "$temp_input")
+# 모든 컬럼 추출
+sed -n '/^-- 모든 컬럼/,$p' "$INPUT_FILE" | tail -n +2 | awk -F' COMMENT' '{print $1}' | sed 's/,$//' > "$temp_all_columns"
 
 # output.txt 초기화
-> "$output_file"
-
-# 진행 상황 변수 초기화
-current_line=0
+> "$OUTPUT_FILE"
 
 echo "처리를 시작합니다..."
 
-# input.txt의 각 라인 처리
-while IFS= read -r column
-do
-    # 현재 라인 수 증가
-    ((current_line++))
-
-    # 진행률 계산 및 표시 (1% 단위)
-    progress=$((current_line * 100 / total_lines))
-    echo -ne "진행률: $progress%\r"
-
-    if grep -q "^$column$" "$temp_list"; then
-        echo "$column," >> "$output_file"
-    else
-        echo "NULL AS $column," >> "$output_file"
+# 각 테이블 처리
+current_table=""
+while IFS= read -r line || [[ -n "$line" ]]; do
+    if [[ "$line" =~ ^--[[:space:]] ]]; then
+        # 새 테이블 시작
+        if [[ -n "$current_table" ]]; then
+            # 이전 테이블 처리 완료
+            while IFS= read -r column; do
+                if grep -q "^$column$" "$temp_table_columns"; then
+                    echo "$column," >> "$temp_output"
+                else
+                    echo "NULL AS $column," >> "$temp_output"
+                fi
+            done < "$temp_all_columns"
+            
+            cat "$temp_output" >> "$OUTPUT_FILE"
+            echo "" >> "$OUTPUT_FILE"
+            > "$temp_output"
+            > "$temp_table_columns"
+        fi
+        
+        current_table=${line#-- }
+        echo "-- $current_table" >> "$OUTPUT_FILE"
+    elif [[ "$line" =~ ^[a-zA-Z0-9_]+ ]]; then
+        # 컬럼 정보
+        column=$(echo "$line" | awk '{print $1}' | sed 's/,$//')
+        echo "$column" >> "$temp_table_columns"
     fi
-done < "$temp_input"
+done < "$INPUT_FILE"
 
-echo -ne "진행률: 100%\n"
+# 마지막 테이블 처리
+if [[ -n "$current_table" ]]; then
+    while IFS= read -r column; do
+        if grep -q "^$column$" "$temp_table_columns"; then
+            echo "$column," >> "$temp_output"
+        else
+            echo "NULL AS $column," >> "$temp_output"
+        fi
+    done < "$temp_all_columns"
+    
+    cat "$temp_output" >> "$OUTPUT_FILE"
+fi
+
 echo "처리가 완료되었습니다."
-echo "결과가 $output_file에 저장되었습니다."
+echo "결과가 $OUTPUT_FILE에 저장되었습니다."
 
 # 임시 파일 삭제
-rm "$temp_list" "$temp_input"
+rm -f "$temp_all_columns" "$temp_table_columns" "$temp_output"
 ```
 
 ## Packages
