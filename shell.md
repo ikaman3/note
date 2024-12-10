@@ -1890,15 +1890,8 @@ echo "중복이 제거된 결과가 $output_file에 저장되었습니다."
 
 # 유가보조금 내부연계 테이블을 통합한 View 생성 스크립트
 # 사용법
-## 1. process_columns_input.txt, process_columns_list.txt 파일 생성
-## 2. input, list 파일에 아래와 같이 테이블 이름과 해당 테이블의 컬럼과 주석을 작성
-##    - input은 존재여부 판단의 기준이 될 전체 컬럼, list은 각 테이블의 SELECT문에 넣을 컬럼들
-##
-## aprv_amt COMMENT '승인금액',
-## aprv_no COMMENT '승인번호',
-## ...
-##
-## 3. 결과는 process_columns_output.txt 파일에 출력
+## 1. append_comment_output.txt 파일을 input으로 사용
+## 2. 결과는 process_columns_output.txt 파일에 출력
 
 INPUT_FILE="append_comment_output.txt"
 OUTPUT_FILE="process_columns_output.txt"
