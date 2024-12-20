@@ -1714,6 +1714,9 @@ input_file="input.txt"
 # 결과를 저장할 출력 파일을 지정합니다.
 output_file="output.txt"
 
+# 출력 파일을 초기화합니다 (기존 내용을 모두 지웁니다).
+> "$output_file"
+
 # 입력 파일의 각 줄에 대해 처리합니다.
 while IFS= read -r line
 do
